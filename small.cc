@@ -4,6 +4,7 @@
 #include <cctype>
 using namespace std;
 
+
 void getnumber (ifstream *infp, char &curch, bool &eofile, int &number)
 {
 	//int number = 0;//curch - '0';
@@ -36,6 +37,9 @@ void skipspaces(ifstream *infp, char &curch, bool &eofile)
 
 int main (int argc, char **argv)
 {
+
+	const int maxlength=8;
+	typedef string namestring;
 
 	ifstream inf;
 	char ch;
