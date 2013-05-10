@@ -4,6 +4,19 @@
 #include <cctype>
 using namespace std;
 
+void getnumber (ifstream *infp, char &curch, bool &eofile, int &number)
+{
+	int number = 0;//curch - '0';
+	int digit = 0;
+
+	while ((curch-'0') >= 0 && (curch-'0') <10 && eofile == false)
+	{
+		number += (curch - '0')*10^digit;
+		digit++;
+		eofile = (infp->get(curch)==0);
+	}	
+}
+
 void skipspaces(ifstream *infp, char &curch, bool &eofile)
 {
 	while (curch == ' ' && eofile == false)
@@ -35,7 +48,7 @@ int main (int argc, char **argv)
 //	eofile = (inf.get(ch)==0);
 
 	while (!eofile) {
-		skipspaces(&inf,ch,eofile);
+		getnumber(&inf,ch,eofile);
 		cout <<ch;
 //		if (isspace(ch)) cout << ".";
 //		else cout << ch;
