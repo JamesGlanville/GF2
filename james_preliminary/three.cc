@@ -10,6 +10,7 @@
 using namespace std;
 
 typedef string namestring;
+typedef int name_index;
 /*
 typedef vector< tuple <int, string>> nl;
 typedef int name_index;
@@ -22,23 +23,20 @@ nl.push_back(tuple<int,string>(21,"JIM"));
 
 vector <string> name_list;
 
-/*name_index lookup (namestring str)
+name_index lookup (namestring str)
 {
 	
-}*/
+}
 
 void print_name_table()
 {
-	for (int i=0; i<name_list.size(); i++)
+//	for (int i=0; i<name_list.size(); i++)
+//	for (vector<string>::iterator it = name_list.begin(); it!= name_list.end(); it++)
+	for (auto &i : name_list)
 	{
 		cout << "Index: " << i << " ";
 		cout << "Name: " << name_list[i] << endl;
 	}
-//	for (nl::const_iterator i = name_list.begin(); i != name_list.end(); ++i)
-//	{
-//		cout << "Index: " << i->get<0>();
-//		cout << " Name: " << i->get<1>() << endl;
-//	}
 }
 
 void getname (ifstream *infp, char &curch, bool &eofile, namestring &str)
