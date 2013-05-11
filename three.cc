@@ -6,22 +6,18 @@ using namespace std;
 
 typedef string namestring;
 
+name lookup (namestring str)
+{
+	
+}
+
 void getname (ifstream *infp, char &curch, bool &eofile, namestring &str)
 {
-//	int length = 0;
-	str.clear();
+	str.clear(); //Sets str to zero-length string.
 	
 	while ((((curch-'0') >= 0 && (curch-'0') <10) || ((curch-'A')>=0 && (curch-'z') <= 0)) && eofile == false)
 	{
-//		if (length<8) 
-//		{
-			str.push_back(curch);
-//		}
-//		else
-//		{
-//			cout << "Warning, character \"" << (char)curch << "\" not saved." << endl;
-//		}
-//		length++;
+		str.push_back(curch); //Appends curch to str.
 		eofile = (infp->get(curch)==0);
 	}
 	
@@ -34,24 +30,21 @@ void getname (ifstream *infp, char &curch, bool &eofile, namestring &str)
 		else 
 		{
 			cout << "Warning: name \'" << str  <<"\' was truncated." << endl;
-			cout << "Name: " << str.substr(0,8) << endl;
+			cout << "Name: " << str.substr(0,8) << endl; //Prints only first 8 chars of str.
 		}
 	}
 }
 
 void getnumber (ifstream *infp, char &curch, bool &eofile, int &number)
 {
-	//int number = 0;//curch - '0';
 	number= 0;
-	int digit = 0;
+//	int digit = 0;
 
 	while ((curch-'0') >= 0 && (curch-'0') <10 && eofile == false)
 	{
-//		cout << "n"<<number<<"d"<<digit<<"c"<<(curch-'0')<<endl;
-		number = number *10;
-		number += (curch - '0');
-//		number += (curch - '0')*(10^digit);
-		digit++;
+		number = number *10; //Decimal left shift by 1 place.
+		number += (curch - '0'); //Fill in least significant decimal place.
+//		digit++;
 		eofile = (infp->get(curch)==0);
 	}	
 
@@ -69,7 +62,6 @@ void skipspaces(ifstream *infp, char &curch, bool &eofile)
 
 int main (int argc, char **argv)
 {
-
 	const int maxlength=8;
 
 	ifstream inf;
