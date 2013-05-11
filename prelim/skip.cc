@@ -37,10 +37,6 @@ void skipspaces (ifstream *infp, char &curch, bool &eofile)
 {
   while (isspace(curch) && eofile == 0) {
     eofile = (infp->get(curch) == 0);
-    if (curch == 0) {
-      eofile = 1;
-      return;
-    }
   }
   return;
 }
