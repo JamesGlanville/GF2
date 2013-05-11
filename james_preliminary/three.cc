@@ -9,8 +9,33 @@ using namespace std;
 
 typedef string namestring;
 typedef int name_index;
+typedef unsigned int length;
 
 vector <namestring> name_list;
+
+length namelength (name_index id)
+{
+	if (id < name_list.size())
+	{
+		cout << name_list[id].length();
+	}
+	else
+	{
+		cout << "Error, index out of range." << endl;
+	}	
+}
+
+void writename (name_index id)
+{
+	if (id < name_list.size())
+	{
+		cout << name_list[id];
+	}
+	else
+	{
+		cout << "Error, index out of range." << endl;
+	}
+}
 
 name_index lookup (namestring str)
 {
@@ -66,13 +91,11 @@ void getname (ifstream *infp, char &curch, bool &eofile, namestring &str)
 void getnumber (ifstream *infp, char &curch, bool &eofile, int &number)
 {
 	number= 0;
-//	int digit = 0;
 
 	while ((curch-'0') >= 0 && (curch-'0') <10 && eofile == false)
 	{
 		number = number *10; //Decimal left shift by 1 place.
 		number += (curch - '0'); //Fill in least significant decimal place.
-//		digit++;
 		eofile = (infp->get(curch)==0);
 	}	
 
