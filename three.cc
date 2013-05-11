@@ -8,23 +8,35 @@ typedef string namestring;
 
 void getname (ifstream *infp, char &curch, bool &eofile, namestring &str)
 {
-	int length = 0;
+//	int length = 0;
 	str.clear();
 	
 	while ((((curch-'0') >= 0 && (curch-'0') <10) || ((curch-'A')>=0 && (curch-'z') <= 0)) && eofile == false)
 	{
-		if (length<=8) 
-		{
+//		if (length<8) 
+//		{
 			str.push_back(curch);
-		}
-		else
-		{
-			cout << "Warning, character \"" << (char)curch << "\" not saved." << endl;
-		}
-		length++;
+//		}
+//		else
+//		{
+//			cout << "Warning, character \"" << (char)curch << "\" not saved." << endl;
+//		}
+//		length++;
 		eofile = (infp->get(curch)==0);
 	}
-	cout << "Name:" << str << endl ;
+	
+	if (str.length() > 0)
+	{
+		if (str.length() <=8)
+		{
+			cout << "Name: " << str << endl ;
+		}
+		else 
+		{
+			cout << "Warning: name \'" << str  <<"\' was truncated." << endl;
+			cout << "Name: " << str.substr(0,8) << endl;
+		}
+	}
 }
 
 void getnumber (ifstream *infp, char &curch, bool &eofile, int &number)
