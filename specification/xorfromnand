@@ -5,6 +5,8 @@ DEVICES
 	N2 = NAND(2);
 	N3 = NAND(2);
 	N4 = NAND(2);
+	SWA = SW;
+	SWB = SW;
 }
 
 CONNECTIONS
@@ -22,5 +24,11 @@ CONNECTIONS
 MONITORS
 {
 	OUT1 <= N4.O; 
+}
+
+INIT
+{
+	SWA.O=1;
+	SWB.O=0;
 }
 }
