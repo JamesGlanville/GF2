@@ -39,11 +39,10 @@ void writename (name_index id)
 
 name_index lookup (namestring str)
 {
-	auto result = find(name_list.begin(), name_list.end(), str);
 	
-	if (result != name_list.end())
+	if (find(name_list.begin(), name_list.end(), str) != name_list.end())
 	{
-		return distance(name_list.begin(),result);
+		return distance(name_list.begin(),find(name_list.begin(), name_list.end(), str));
 	}
 	else
 	{
