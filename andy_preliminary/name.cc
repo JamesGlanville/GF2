@@ -31,17 +31,6 @@ int main (int argc, char **argv)
     exit(1);
   }
 
-  /*
-  // main loop: get to first number, get number then print it.
-  while (!eofile) {
-    inf.get(ch);
-    skipspaces(&inf, ch, eofile);
-    if (eofile) break;
-    getnumber(&inf, ch, eofile, number);
-    cout << number << endl;
-  }
-  */
-
   // main loop: get each namestring and print it.
   eofile = false;
   while(!eofile) {

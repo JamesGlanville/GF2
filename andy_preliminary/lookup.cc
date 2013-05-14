@@ -4,12 +4,14 @@
 #include <cctype>
 #include <cstring>
 #include <vector>
+#include "check.h"
 using namespace std;
 
 const int maxlength = 8;	// max chars in namestring
 typedef string namestring;	// define namestring type
 vector<namestring> nametable;	// vector storing namestrings
 typedef unsigned int name;	// represents name (index to nametable)
+typedef unsigned int length;
 
 void skipspaces (ifstream *infp, char &curch, bool &eofile);
 void getnumber (ifstream *infp, char &curch, bool &eofile, int &number);
@@ -17,6 +19,7 @@ void getname (ifstream *infp, char &curch, bool &eofile, namestring &str);
 name lookup (namestring str);
 void printnames ();
 void writename (name id);
+length namelength (name id);
 
 int main (int argc, char **argv)
 {
@@ -53,7 +56,17 @@ int main (int argc, char **argv)
   
   printnames();
 
+  check checker;
+
+  checker.ckstr(str);
+
   inf.close();
+}
+
+length namelength (name id) {
+  namestring namecount = nametable[id];
+  length namelength = namecount.length();
+  return namelength;
 }
 
 void writename (name id) {
@@ -65,6 +78,7 @@ void printnames () {
     //    cout << nametable[i] << endl;
     //       cout << "printing " << i << endl;
     writename(i);
+    cout << "Length is: " << namelength(i) << endl << endl;
   }
 }
 
