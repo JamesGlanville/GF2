@@ -1,0 +1,5 @@
+DEFINITION = '{' DEVICES CONNECTIONS MONITORS INIT '}'
+DEVICES =  'DEVICES' '{' device {device} '}'
+device = devicename '=' devicetype [ '(' digit {digit} ')' ] ';'
+devicename = letter {letter | digit}
+devicetype = 'AND' | 'NAND' | 'OR' | 'NOR' | 'XOR' | 'DTYPE' | 'CLK' | 'SW'
