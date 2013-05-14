@@ -29,6 +29,7 @@ int main (int argc, char **argv)
   while (!eofile) {
     inf.get(ch);
     skipspaces(&inf, ch, eofile);
+    if (eofile) break;
     getnumber(&inf, ch, eofile, number);
     cout << number << endl;
   }
