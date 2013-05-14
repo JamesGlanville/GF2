@@ -10,7 +10,7 @@ DEVICES
 CONNECTIONS
 {
 	A1.1 <= N1.O;
-	A1.2 <= I1.O;
+	A1.2 <= I1.O; /*Comments can /* be nested.*/*/
 	A2.1 <= I1.0;
 	A2.2 <= A1.O;
 	A2.3 <= N1.NO;
@@ -22,7 +22,7 @@ CONNECTIONS
 
 MONITORS
 {
-	OUTPUT <= I1.O;
+	OUTPUT <= I1.O; 
 	CLK    <= A1.O;
 }
 }
