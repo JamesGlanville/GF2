@@ -1,0 +1,31 @@
+{
+DEVICES
+{
+	D1 = DTYPE;
+	D2 = DTYPE;
+	D3 = DTYPE;
+	CLK1 = CLK;
+}
+
+CONNECTIONS
+{
+	D1.CLK <= CLK1;
+	D2.CLK <= CLK1;
+	D3.CLK <= CLK1;
+	D1.D   <= D3.NO;
+	D2.D   <= D1.NO;
+	D3.D   <= D2.NO;
+}
+
+MONITORS
+{
+	OUT1 <= D1.O; 
+	OUT2 <= D2.O; 
+	OUT3 <= D3.O; 
+}
+
+INIT
+{
+	CLK1 = 1;
+}
+}
