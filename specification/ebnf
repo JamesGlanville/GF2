@@ -1,10 +1,19 @@
-DEFINITION = '{' devices connections monitors init'}'
-devices = '{' device {device} '}'
-device = devicename '=' devtype ';'
-devicename = letter {letter}
-devtype = 'AND'|'NAND'|'OR'|'INV'|'XOR' '(' digit {digit} ')'
+DEFINITION = '{' DEVICES CONNECTIONS MONITORS INIT '}'
 
-connections = 'CONNECTIONS' '{' connection {connection} '}'
+DEVICES =  'DEVICES' '{' device {device} '}'
+device = devicename '=' devicetype [ '(' digit {digit} ')' ] ';'
+devicename = letter {letter | digit}
+devicetype = 'AND' | 'NAND' | 'OR' | 'NOR' | 'XOR' | 'DTYPE' | 'CLK' | 'SW'
+
+CONNECTIONS = 'CONNECTIONS' '{' connection {connection} '}'
 connection = input '<=' output ';'
 input = letter {letter|digit} ['.'letter|digit{letter|digit}]
 output = letter {letter|digit} ['.'letter|digit{letter|digit}]
+
+MONITORS = 'MONITORS' '{' monitor {monitor} '}'
+monitor = monitorname '<=' output ';'
+output = letter {letter|digit} ['.'letter|digit{letter|digit}]
+
+INIT = 'INIT' '{' {init} '}'
+init = devicename '=' digit{digit} ';'
+devicename = letter {letter | digit}
