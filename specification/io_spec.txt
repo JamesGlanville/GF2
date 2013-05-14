@@ -1,0 +1,12 @@
+Logic gates:
+inputs 1 - N
+output: .o
+
+clock:
+output: .o
+
+switch:
+output: .o
+
+dtype:
+input: .d .s .r .c
