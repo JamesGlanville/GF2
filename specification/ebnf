@@ -12,6 +12,7 @@ output = letter {letter|digit} ['.'letter|digit{letter|digit}]
 
 MONITORS = 'MONITORS' '{' monitor {monitor} '}'
 monitor = monitorname '<=' output ';'
+monitorname = letter{letter|digit}
 
 INIT = 'INIT' '{' {init} '}'
 init = devicename '=' digit{digit} ';'
