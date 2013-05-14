@@ -16,6 +16,7 @@ void getnumber (ifstream *infp, char &curch, bool &eofile, int &number);
 void getname (ifstream *infp, char &curch, bool &eofile, namestring &str);
 name lookup (namestring str);
 void printnames ();
+void writename (name id);
 
 int main (int argc, char **argv)
 {
@@ -44,23 +45,26 @@ int main (int argc, char **argv)
     if (eofile) break;
     if (isalpha(ch)) {
       getname(&inf, ch, eofile, str);
-      lookup (str);
-      //  cout << str << endl;
     }
     else if (isdigit(ch)) {
       getnumber(&inf, ch, eofile, number);
-      // cout << number << endl;
     }
   }
-
+  
   printnames();
 
   inf.close();
 }
 
+void writename (name id) {
+  cout << id <<":" << nametable[id] << endl;
+}
+
 void printnames () {
   for (int i = 0; i < nametable.size(); i++) {
-    cout << nametable[i] << endl;
+    //    cout << nametable[i] << endl;
+    //       cout << "printing " << i << endl;
+    writename(i);
   }
 }
 
@@ -85,6 +89,7 @@ void getname (ifstream *infp, char &curch, bool &eofile, namestring &str) {
   }
   if (strlength > maxlength)
     cout << "Error: Namestring " << str << " is too long." << endl;
+  lookup(str);
   return;
 }
 
