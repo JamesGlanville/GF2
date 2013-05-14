@@ -1,0 +1,8 @@
+INPUTS: 1 -> N (16)
+OUTPUTS: O, NO
+
+Devices:
+CLK, SW
+AND NAND OR NOR DTYPE XOR
+
+
