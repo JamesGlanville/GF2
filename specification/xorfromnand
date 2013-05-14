@@ -1,0 +1,26 @@
+{
+DEVICES
+{
+	N1 = NAND(2);
+	N2 = NAND(2);
+	N3 = NAND(2);
+	N4 = NAND(2);
+}
+
+CONNECTIONS
+{
+	N1.1 <= A;
+	N1.2 <= B;
+	N2.1 <= A;
+	N2.2 <= N1.O;
+	N3.1 <= N1.O;
+	N3.2 <= B;
+	N4.1 <= N2.O;
+	N4.2 <= N3.O;
+}
+
+MONITORS
+{
+	OUT1 <= N4.O; 
+}
+}
