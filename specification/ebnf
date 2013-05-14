@@ -6,5 +6,5 @@ devtype = 'AND'|'NAND'|'OR'|'INV'|'XOR' '(' digit {digit} ')'
 
 connections = 'CONNECTIONS' '{' connection {connection} '}'
 connection = input '<=' output ';'
-input = letter {letter|digit}
-output = letter {letter|digit}
+input = letter {letter|digit} ['.'letter|digit{letter|digit}]
+output = letter {letter|digit} ['.'letter|digit{letter|digit}]
