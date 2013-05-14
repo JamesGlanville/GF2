@@ -1,5 +1,10 @@
-DEFINITION = '{' devices connections monitors '}'
+DEFINITION = '{' devices connections monitors init'}'
 devices = '{' device {device} '}'
 device = devicename '=' devtype ';'
 devicename = letter {letter}
 devtype = 'AND'|'NAND'|'OR'|'INV'|'XOR' '(' digit {digit} ')'
+
+connections = 'CONNECTIONS' '{' connection {connection} '}'
+connection = input '<=' output ';'
+input = letter {letter|digit}
+output = letter {letter|digit}
