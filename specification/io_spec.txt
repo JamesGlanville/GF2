@@ -10,3 +10,4 @@ output: .o
 
 dtype:
 input: .d .s .r .c
+output: .o .no
