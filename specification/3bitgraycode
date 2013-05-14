@@ -1,0 +1,47 @@
+{
+DEVICES
+{
+	XN1 = XNOR(2);
+	XOR1 = XOR(2);
+	JK1 = JK();
+	JK2 = JK();
+	JK3 = JK();
+	A1 = AND(2);
+	A2 = AND(2);
+	A3 = AND(2);
+	A4 = AND(2);
+}
+
+CONNECTIONS
+{
+	JK1.J <= XN1.O;
+	JK1.K <= XOR1.O;
+	JK1.CLK <= CLK;
+	JK2.J <= A1.O;
+	JK2.K <= A2.O;
+	JK2.CLK <= CLK;
+	JK3.J <= A4.O;
+	JK3.K <= A3.O;
+	JK3.CLK <= CLK;
+	XN1.1 <= JK2.O;
+	XN1.2 <= JK3.O;
+	XOR1.1 <= JK2.O;
+	XOR1.2 <= JK3.O;
+	A1.1 <= JK1.O;
+	A1.2 <= JK3.NO;
+	A2.1 <= JK1.O;
+	A2.2 <= JK3.O;
+	A3.1 <= JK2.NO;
+	A3.2 <= JK1.NO;
+	A4.1 <= JK2.O;
+	A4.2 <= JK1.NO;
+}
+
+MONITORS
+{
+	OUT1 <= JK1.O; 
+	OUT2 <= JK2.O;
+	OUT3 <= JK3.O;
+	CLK  <= CLK;
+}
+}

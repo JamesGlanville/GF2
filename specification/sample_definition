@@ -1,0 +1,28 @@
+{
+DEVICES
+{
+	A1 = AND(2);
+	A2 = AND(3);
+	N1 = NAND(2);
+	I1 = INV();
+}
+
+CONNECTIONS
+{
+	A1.1 <= N1.O;
+	A1.2 <= I1.O; /*Comments can /* be nested.*/*/
+	A2.1 <= I1.0;
+	A2.2 <= A1.O;
+	A2.3 <= N1.NO;
+	N1.1 <= A2.O;
+	N1.2 <= A1.O;
+	I1   <= A1.O;
+
+}
+
+MONITORS
+{
+	OUTPUT <= I1.O; 
+	CLK    <= A1.O;
+}
+}
