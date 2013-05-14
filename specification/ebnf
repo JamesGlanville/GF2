@@ -1,5 +1,5 @@
 DEFINITION = '{' devices connections monitors '}'
-devices = '{' {device} '}'
+devices = '{' device {device} '}'
 device = devicename '=' devtype ';'
 devicename = letter {letter}
 devtype = 'AND'|'NAND'|'OR'|'INV'|'XOR' '(' digit {digit} ')'

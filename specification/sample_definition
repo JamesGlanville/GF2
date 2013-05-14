@@ -4,7 +4,8 @@ DEVICES
 	A1 = AND(2);
 	A2 = AND(3);
 	N1 = NAND(2);
-	I1 = INV();
+	SW = SW;
+	CLK1 = CLK;
 }
 
 CONNECTIONS
@@ -16,7 +17,7 @@ CONNECTIONS
 	A2.3 <= N1.NO;
 	N1.1 <= A2.O;
 	N1.2 <= A1.O;
-	I1   <= A1.O;
+	I1   <= SW.O;
 
 }
 
@@ -25,4 +26,11 @@ MONITORS
 	OUTPUT <= I1.O; 
 	CLK    <= A1.O;
 }
+
+INIT
+{
+	SW = 1;
+	CLK1 = 4;
+}
+
 }
