@@ -2,6 +2,7 @@
 #define names_h
 
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -13,6 +14,7 @@ typedef int name;
 typedef string namestring;
 
 class names{
+	vector<namestring> nametable;
 
   /* put stuff that the class uses internally here */
 
