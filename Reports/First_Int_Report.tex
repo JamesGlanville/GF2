@@ -11,17 +11,20 @@
 \usepackage{fullpage}                  % Set up page for small margins etc
 
 \usepackage{graphicx}                  % For including images in document
-\usepackage{placeins}                  % Allows use of \FloatBarrier
+%\usepackage{placeins}                  % Allows use of \FloatBarrier
 % to avoid images or tables
 % moving into next section
-\usepackage{subfig}                    % For subfigures...
+%\usepackage{subfig}                    % For subfigures...
 
 \usepackage{amsmath}                   % For improving maths/formula typesetting
-\usepackage{tabularx}                  % Table changing package
+%\usepackage{tabularx}                  % Table changing package
 
-\usepackage{algpseudocode}             % For producing algorithms/flowcharts
+%\usepackage{algpseudocode}             % For producing algorithms/flowcharts
+
 \usepackage{listings}                  % For including source code in document
-
+\lstset{
+  basicstyle = \small
+}
 
 % Provide command for scientific notation
 \providecommand{\e}[1]{\ensuremath{\times10^{#1}}}
@@ -59,12 +62,36 @@ project to allow implementation and testing to be carried out by
 different team members.
 
 The work is to be distributed as follows: Andrew will code the GUI,
-and James and George will write and test the scanner and parser.
+and James and George will write and test the scanner and parser. The
+time frame for the development is that the software should be designed
+by the end of Tuesday 21$^{\mathrm{st}}$ May; implemented and unit
+tested by Tuesday 28$^{\mathrm{th}}$; allowing time for system
+integration and testing by 11.00am on Friday 31$^{\mathrm{st}}$ May.
 
 \section{Syntax Specification}
 
 The syntax for the circuit definition files was defined and described
-using the following EBNF code:
+using the following EBNF grammar:
+\begin{lstlisting}
+DEFINITION = `{' DEVICES CONNECTIONS MONITORS INIT `}'
+
+DEVICES =  `DEVICES' `{' device {device} `}'
+device = devicename `=' devicetype [ `(' digit {digit} `)' ] `;'
+devicename = letter {letter | digit}
+devicetype = `AND' | `NAND' | `OR' | `NOR' | `XOR' | `DTYPE' | `CLK' | `SW'
+
+CONNECTIONS = `CONNECTIONS' `{' connection {connection} `}'
+connection = input `<=' output `;'
+input = letter {letter|digit} [`.'letter|digit{letter|digit}]
+output = letter {letter|digit} [`.'letter|digit{letter|digit}]
+
+MONITORS = `MONITORS' `{' monitor {monitor} `}'
+monitor = monitorname `<=' output `;'
+monitorname = letter{letter|digit}
+
+INIT = `INIT' `{' {init} `}'
+init = devicename `=' digit{digit} `;'
+\end{lstlisting}
 
 
 
