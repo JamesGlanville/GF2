@@ -1,0 +1,58 @@
+% File name: Reports/First_Int_Report.tex
+% First Interim Report for GF2 Software project. Details intro and
+% general approach, teamwork planning, EBNF for syntax, informal
+% description of semantics; error handling and example definition
+% files and corresponding logic circuits
+% Author: James Glanville, George Aryris and Andy Holt
+% Date: Wed 15 May 2013 16:51
+
+\documentclass[a4paper,11pt]{article}  % Standard document class
+\usepackage[english]{babel}            % Set document language
+\usepackage{fullpage}                  % Set up page for small margins etc
+
+\usepackage{graphicx}                  % For including images in document
+\usepackage{placeins}                  % Allows use of \FloatBarrier
+% to avoid images or tables
+% moving into next section
+\usepackage{subfig}                    % For subfigures...
+
+\usepackage{amsmath}                   % For improving maths/formula typesetting
+\usepackage{tabularx}                  % Table changing package
+
+\usepackage{algpseudocode}             % For producing algorithms/flowcharts
+\usepackage{listings}                  % For including source code in document
+
+
+% Provide command for scientific notation
+\providecommand{\e}[1]{\ensuremath{\times10^{#1}}}
+\providecommand{\degrees}{\ensuremath{^{\circ}}}
+
+% Define title here:
+\title{Project GF2: Software\\ First Interim Report\\ Software Design
+  Team 1}
+\author{George Ayris\\ gdwa2\\ Emmanuel \and James Glanville\\
+jg597\\ Emmanuel \and Andrew Holt\\ ah635\\ Emmanuel}
+\date{21 May 2013}
+
+\begin{document}
+
+% generate title
+\maketitle
+
+\section{Introduction}
+
+\subsection{Teamwork Planning}
+
+\section{Syntax Specification}
+
+\section{Semantics Specification}
+
+\section{Error Handling}
+
+\section{Example Circuits and Definition Files}
+
+\subsection{XOR Circuit Composed of NAND Gates}
+
+\subsection{3-bit Gray Code Counter}
+
+\end{document}
