@@ -30,6 +30,7 @@ class scanner {
 	bool eofile;
 	int linenum;
 	int commentnest; //This stores the number of opening /*'s - closing */'s.
+	void rewind();
 
 
 

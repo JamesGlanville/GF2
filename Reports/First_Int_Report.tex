@@ -179,7 +179,7 @@ The following two examples show how to define logic circuits using our
 definition language. Both are common logic applications, the first is
 making a more complex logic device from the easiest to manufacture
 device, the NAND gate. The other shows how to define a common
-sequential logic, a 3 but Gray Code counter, implemented in D-type
+sequential logic, a 3 bit shift register, implemented in D-type
 bistables.
 
 \subsection{XOR Circuit Composed of NAND Gates}
@@ -233,17 +233,17 @@ specification file is shown below.
 
 \end{lstlisting}
 
-\subsection{3-bit Gray Code Counter}
+\subsection{3-bit Shift Register}
 
-The 3-bit Gray code counter is shown in figure \ref{fig:3bitgray}, and
+The 3-bit shift register is shown in figure \ref{fig:3bitsr}, and
 specified below.
 
 \begin{figure}[!h]
   \begin{center}
     \includegraphics[width=0.8\textwidth]{3bitGrayCounter.png}
   \end{center}
-  \caption{3 bit Gray code counter from D-type bistables}
-  \label{fig:3bitgray}
+  \caption{3 bit shift register from D-type bistables}
+  \label{fig:3bitsr}
 \end{figure}
 
 \begin{lstlisting}
