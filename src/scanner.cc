@@ -2,19 +2,39 @@
 
 using namespace std;
 
-scanner::scanner(string filename)
+scanner::scanner(names* name, const wxCharBuffer blah)
 {
+	symbol s;
+	int id;
+	int num;
+	
+	nametable = name;
+	string filename = "/home/james/GF2/specification/sample_definition";
 	inf.open(filename.c_str());
 	if (!inf) {
 		cout << "Error: cannot open file " << filename << " for reading " << endl;
 		exit(1);
 	}
+	
+	while(!eofile){
+	getsymbol( s,id,num);
+
+	cout << "Symbol: " << s ;
+	if (s==namesym){cout << " Id: " << nametable->getname(id); }
+	if (s==numsym){cout << " Num: " << num;}
+	cout << endl;
+}
+	
 }
 
 void scanner::rewind() //Does the opposite of nextChar (reverses its effect)
 {
 	inf.seekg(inf.tellg());
-	currentline.pop_back();
+//	currentline.pop_back();
+	if (currentline.size() > 0)
+	{
+		currentline = currentline.substr(0,currentline.size()-1);
+	}
 }
 
 void scanner::nextChar()
@@ -37,7 +57,8 @@ void scanner::nextChar()
 
 void scanner::getsymbol( symbol& s, name & id, int & num)
 {
-	string str;
+	string str="";
+	num = 0;
 	
 	while(1)
 	{
@@ -47,20 +68,32 @@ void scanner::getsymbol( symbol& s, name & id, int & num)
 	
 		if (isblank(curch))
 		{}
+		else if (curch == '\n')
+		{}
 		else if (isalpha(curch))
 		{
-			str.push_back(curch);
+			//str.push_back(curch);
 			while (isalnum(curch) && eofile == false)
 			{
 				str.push_back(curch);
 				nextChar();
 			}
-			lookup(str);	
+			rewind();
+			s = namesym;
+			id = nametable->lookup(str);
+			return;
 			
 		}
 		else if (isdigit(curch))
 		{
-			
+			while (isdigit(curch) && eofile == false)
+			{
+				num = (num * 10) + atoi(&curch);
+				nextChar();
+			}
+			rewind();
+			s = numsym;
+			return;			
 		}
 		else
 		{
@@ -68,8 +101,12 @@ void scanner::getsymbol( symbol& s, name & id, int & num)
 				case '<': nextChar(); if (curch == '=') {s=consym; return;} s=badsym; /*cout << "expected = after <..." << endl;*/ return;
 				case '=': s = equals; return;
 				case ';': s = semicol; return;
+				case '{': s = opencurly; return;
+				case '}': s = closecurly; return;
+				case '(': s = openparen; return;
+				case ')': s = closeparen; return;
 				case '/': nextChar(); if (curch =='*') {doComments();return;} s=badsym; return;
-				default : s = badsym; return;
+				default : s = badsym; return;}
 		}
 	}
 }
@@ -79,20 +116,23 @@ void scanner::doComments()
 	//This method just skips through the code waiting for comments to end. It is called when the / * has already been read.
 	commentnest=1;
 	char prevchar;
+	nextChar();
 	while (commentnest > 0)
 	{
 		prevchar = curch;
 		nextChar();
 		
-		if (eofile) {cout << "Unexpected end of file, comments are not terminated...." << endl;
+		if (eofile) {cout << "Unexpected end of file, comments are not terminated...." << endl;}
 		
-		if (curch == '*' && prevchar = '/')
+		if (curch == '*' && prevchar == '/')
 		{
 			commentnest++;
+			nextChar();
 		}
-		else if (curch == '/' && prevchar = '*')
+		else if (curch == '/' && prevchar == '*')
 		{
 			commentnest--;
+			nextChar();
 		}
 	}
 }
@@ -100,10 +140,10 @@ void scanner::doComments()
 void scanner::printError(string errordesc)
 {
 	//For now:
-	cout << "Error. " << errordesc << " at line " << linenum << "at location (startat0) " << currentline.size-1 << endl;
+	cout << "Error. " << errordesc << " at line " << linenum << "at location (startat0) " << currentline.size()-1 << endl;
 	
 }
-
+/*
 void getname (ifstream *infp, char &curch, bool &eofile, namestring &str)
 {
 str.clear(); //Sets str to zero-length string.
@@ -119,13 +159,14 @@ if (str.length() > 0)
 if (str.length() <=8)
 {
 cout << "Name: " << str << endl ;
-lookup(str);
+nametable.lookup(str);
 }
 else
 {
 cout << "Warning: name \'" << str <<"\' was truncated." << endl;
 cout << "Name: " << str.substr(0,8) << endl; //Prints only first 8 chars of str.
-lookup(str.substr(0,8));
+nametable.lookup(str.substr(0,8));
 }
 }
 }
+*/
