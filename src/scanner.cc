@@ -109,7 +109,7 @@ void scanner::getsymbol( symbol& s, name & id, int & num)
 				default : s = badsym; return;}
 		}
 	}
-}
+} 
 
 void scanner::doComments()
 {
