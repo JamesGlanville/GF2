@@ -11,6 +11,11 @@ scanner::scanner(string filename)
 	}
 }
 
+void scanner::rewind()
+{
+ tellg/seekg	
+}
+
 void scanner::nextChar()
 {
 	eofile = (inf.get(curch)==0);
