@@ -11,7 +11,7 @@
 using namespace std;
 
 typedef enum {namesys, numsys, devsym, consym, monsym, endsym, comma, semicol, equals, badsym, eofsym} symbol;
-typedef string name;
+//typedef string name;
 /*
 scanner (names* names_mod, const char* defname);
 
