@@ -46,7 +46,7 @@ void names::writename (name id)
 		cout << "Error, index out of range." << endl;
 	}}
 	
-string names::writename (name id)
+string names::getname (name id)
 {
 	if (id < nametable.size())
 	{
