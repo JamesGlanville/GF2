@@ -98,34 +98,20 @@ monitorname = letter{letter|digit}
 The following set of semantic descriptions was created to describe the
 semantics.
 \begin{itemize}
-  \item A logic circuit is defined in a file that opens with ``\{'' and
-      closes with ``\}''.
-  \item Each file has four sections: ``\texttt{DEVICES}'',
-    ``\texttt{CONNECTIONS}'', ``\texttt{MONITORS}'' and
-    ``\texttt{INIT}''. Each section starts with the section name
-    followed by a ``\{'' and terminates with a ``\}''.
-  \item Within ``\texttt{DEVICES}'' there must be at least one
-    device.
  \item All names and keywords are case-insensitive,
    i.e. \texttt{GATE1.O} and \texttt{gate1.o} are the same, and must
    be unique. 
-  \item A device is defined by ``\texttt{devicename =
-      devicetype(N);}'', where the parentheses and parameter are only
-    required for certain device types.
-  \item A device name is alphanumeric and must begin with a letter.
   \item If the device has a variable number of inputs then the number
     required for the device must be specified in parentheses after the
     device type. The number of inputs specified must lie within the
-    allowable range for that device type.
+    allowable range for that device type. A device that does not have
+    a variable number of inputs should not have an argument in
+    parentheses.
   \item Within ``\texttt{CONNECTIONS}'' every input (of defined
     devices) must be connected to a single device output.
-  \item A connection is defined as ``\texttt{input <=
-      output;}''. Where input must correspond to a defined device
-    input and output to a defined device output.
-  \item An input is specified by
-    ``\texttt{devicename.inputidentifier}''.
-  \item An output is specified by
-    ``\texttt{devicename.outputidentifier}''.
+  \item When specifying a connection, the input and output must both
+    correspond to a defined device and a legal input/output symbol for
+    that device.
   \item The clock, switch and gate outputs are accessed with
     ``\texttt{.o}''.
   \item The gate inputs are accessed with ``\texttt{.n}'' where
@@ -139,21 +125,14 @@ semantics.
   \item The \texttt{DTYPE} outputs are accessed with ``\texttt{.o}''
     and ``\texttt{.no}'' for normal output (\texttt{Q}) and inverting
     output (\texttt{QBAR}).
-  \item Within ``\texttt{MONITORS}'' at least one monitor must be
-    defined.
-  \item A monitor is defined as ``\texttt{monitorname <= output}'',
-    where outputs are specified as above.
-  \item A monitorname is alphanumeric and must begin with a letter.
   \item Within ``\texttt{INIT}'' all defined switches and clocks must
-    have an initialisation.
+    have an initialisation and any initialised device must be
+    specified in \texttt{Devices}.
   \item Clocks are initialised with a period of \texttt{n} simulation
     cycles, where \texttt{n} is a positive integer.
   \item Switches are initialised with a state that is either 1 or 0,
     where 1 is a logic high state on the output and 0 is a logic low
     state.
-  \item Initialisation is done by ``\texttt{devicename = value;}'', where
-    devicename is an already defined device and value is legal for the
-    device type.
   \item Comments in the definition file are defined as any data
     between an opening ``\texttt{/*}'' and a closing ``\texttt{*/}''. Comments may be
     nested.
