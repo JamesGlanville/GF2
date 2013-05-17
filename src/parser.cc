@@ -40,8 +40,8 @@ void parser::errorhandling (error error_num)
   }
 }
 
-parser::parser (/*network* network_mod, devices* devices_mod,
-		monitor* monitor_mod, scanner* scanner_mod,*/ names* scanner_output)
+parser::parser (network* network_mod, devices* devices_mod,
+		monitor* monitor_mod, scanner* scanner_mod, names* scanner_output)
 {
   //netp = network_mod;  /* make internal copies of these class pointers */
   //dmp = devices_mod;   /* so we can call functions from these classes  */
