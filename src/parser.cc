@@ -12,23 +12,43 @@ bool parser::readin (void)
   symbol sym;
   name id;
   int num;
+  namestring current_name;
 
   // Check for opening {
-  smz->getsymbol(sym, id, num);
-  if (.compare(str2) != 0)
+  //smp->getsymbol(sym, id, num);
   
-	
+  id = 1;
+  current_name = name_listp->getname(id);
+  cout << current_name << endl;
+  if (current_name.compare("{") == 0)
+  {
+	// Error for no opening {
+    errorhandling(no_opening_brace);
+    return 0;
+  }
+  return 1;
 }
 
-parser::parser (network* network_mod, devices* devices_mod,
-		monitor* monitor_mod, scanner* scanner_mod, names* scanner_output)
+void parser::errorhandling (error error_num) 
 {
-  netz = network_mod;  /* make internal copies of these class pointers */
-  dmz = devices_mod;   /* so we can call functions from these classes  */
-  mmz = monitor_mod;   /* eg. to call makeconnection from the network  */
-  smz = scanner_mod;   /* class you say:                               */
+  switch(error_num) {
+	case 0:
+	  cout << "No opening brace.\n";
+	  break; 
+	default:
+	  cout << "Unknown error.\n"; 
+  }
+}
+
+parser::parser (/*network* network_mod, devices* devices_mod,
+		monitor* monitor_mod, scanner* scanner_mod,*/ names* scanner_output)
+{
+  //netp = network_mod;  /* make internal copies of these class pointers */
+  //dmp = devices_mod;   /* so we can call functions from these classes  */
+  //mmp = monitor_mod;   /* eg. to call makeconnection from the network  */
+  //smp = scanner_mod;   /* class you say:                               */
                        /* netz->makeconnection (i1, i2, o1, o2, ok);   */
-  name_listz = scanner_output;	
+  name_listp = scanner_output;	
   /* any other initialisation you want to do? */
 
 }
