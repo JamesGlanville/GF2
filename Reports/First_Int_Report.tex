@@ -73,12 +73,15 @@ integration and testing by 11.00am on Friday 31$^{\mathrm{st}}$ May.
 The syntax for the circuit definition files was defined and described
 using the following EBNF grammar:
 \begin{lstlisting}
-DEFINITION = `{' DEVICES CONNECTIONS MONITORS INIT `}'
+DEFINITION = `{' DEVICES INIT CONNECTIONS MONITORS `}'
 
 DEVICES =  `DEVICES' `{' device {device} `}'
 device = devicename `=' devicetype [ `(' digit {digit} `)' ] `;'
 devicename = letter {letter | digit}
 devicetype = `AND' | `NAND' | `OR' | `NOR' | `XOR' | `DTYPE' | `CLK' | `SW'
+
+INIT = `INIT' `{' {init} `}'
+init = devicename `=' digit{digit} `;'
 
 CONNECTIONS = `CONNECTIONS' `{' connection {connection} `}'
 connection = input `<=' output `;'
@@ -88,9 +91,6 @@ output = letter {letter|digit} [`.'letter|digit{letter|digit}]
 MONITORS = `MONITORS' `{' monitor {monitor} `}'
 monitor = monitorname `<=' output `;'
 monitorname = letter{letter|digit}
-
-INIT = `INIT' `{' {init} `}'
-init = devicename `=' digit{digit} `;'
 \end{lstlisting}
 
 \section{Semantics Specification}
@@ -196,8 +196,109 @@ denoting the end of the section is parsed.
 
 \section{Example Circuits and Definition Files}
 
+The following two examples show how to define logic circuits using our
+definition language. Both are common logic applications, the first is
+making a more complex logic device from the easiest to manufacture
+device, the NAND gate. The other shows how to define a common
+sequential logic, a 3 but Gray Code counter, implemented in D-type
+bistables.
+
 \subsection{XOR Circuit Composed of NAND Gates}
 
+The XOR circuit is shown in figure \ref{fig:xornand}. The
+specification file is shown below.
+
+\begin{figure}[!h]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{XORfromNAND.png}
+  \end{center}
+  \caption{XOR circuit composed of NAND gates.}
+  \label{fig:xornand}
+\end{figure}
+
+\begin{lstlisting}
+{
+  DEVICES
+  {
+    N1 = NAND(2);
+    N2 = NAND(2);
+    N3 = NAND(2);
+    N4 = NAND(2);
+    SWA = SW;
+    SWB = SW;
+  }
+
+   INIT
+   {
+     SWA.O=1;
+     SWB.O=0;
+   }
+
+   CONNECTIONS
+   {
+     N1.1 <= A.O;
+     N1.2 <= B.O;
+     N2.1 <= A.O;
+     N2.2 <= N1.O;
+     N3.1 <= N1.O;
+     N3.2 <= B.O;
+     N4.1 <= N2.O;
+     N4.2 <= N3.O;
+   }
+
+   MONITORS
+   {
+     OUT1 <= N4.O;
+   }
+ }
+
+\end{lstlisting}
+
 \subsection{3-bit Gray Code Counter}
+
+The 3-bit Gray code counter is shown in figure \ref{fig:3bitgray}, and
+specified below.
+
+\begin{figure}[!h]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{3bitGrayCounter.png}
+  \end{center}
+  \caption{3 bit Gray code counter from D-type bistables}
+  \label{fig:3bitgray}
+\end{figure}
+
+\begin{lstlisting}
+{
+  DEVICES
+  {
+    D1 = DTYPE;
+    D2 = DTYPE;
+    D3 = DTYPE;
+    CLK1 = CLK;
+  }
+
+  INIT
+  {
+    CLK1 = 1;
+  }
+  
+  CONNECTIONS
+  {
+    D1.C <= CLK1.O;
+    D2.C <= CLK1.O;
+    D3.C <= CLK1.O;
+    D1.D   <= D3.NO;
+    D2.D   <= D1.NO;
+    D3.D   <= D2.NO;
+  }
+  
+  MONITORS
+  {
+    OUT1 <= D1.O;
+    OUT2 <= D2.O;
+    OUT3 <= D3.O;
+  }
+}
+\end{lstlisting}
 
 \end{document}
