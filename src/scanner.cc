@@ -11,9 +11,10 @@ scanner::scanner(string filename)
 	}
 }
 
-void scanner::rewind()
+void scanner::rewind() //Does the opposite of nextChar (reverses its effect)
 {
- tellg/seekg	
+	inf.seekg(inf.tellg());
+	currentline.pop_back();
 }
 
 void scanner::nextChar()
