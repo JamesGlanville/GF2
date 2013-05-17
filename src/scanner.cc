@@ -29,7 +29,7 @@ scanner::scanner(names* name, const wxCharBuffer blah)
 
 void scanner::rewind() //Does the opposite of nextChar (reverses its effect)
 {
-	inf.seekg(inf.tellg());
+	inf.seekg((int)inf.tellg()-1);
 //	currentline.pop_back();
 	if (currentline.size() > 0)
 	{
@@ -40,7 +40,6 @@ void scanner::rewind() //Does the opposite of nextChar (reverses its effect)
 void scanner::nextChar()
 {
 	eofile = (inf.get(curch)==0);
-	
 	if (curch == '\n')
 	{
 		currentline.clear();
@@ -67,9 +66,9 @@ void scanner::getsymbol( symbol& s, name & id, int & num)
 		if (eofile) {s=eofsym;return;}
 	
 		if (isblank(curch))
-		{}
+		{/*cout <<curch;*/}
 		else if (curch == '\n')
-		{}
+		{/*cout <<curch;*/}
 		else if (isalpha(curch))
 		{
 			//str.push_back(curch);
