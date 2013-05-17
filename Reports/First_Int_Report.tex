@@ -161,6 +161,39 @@ semantics.
 
 \section{Error Handling}
 
+The scanner will pass symbols to the parser, one at a time. The
+symbols will also be stored in a private list in the scanner
+class. The parser will check that the syntax and semantic rules are
+followed as each symbol comes in from the scanner. If an error is
+found, the parser will pass an error message to the scanner. The
+scanner will know which symbol was last passed, and hence which
+generated the error. The line will then be printed with a carat
+(\verb+^+) pointing at the offending symbol, along with the error
+message that will give a brief description of what is wrong, such as
+``\texttt{expected `)' instead of `;'}'', so as to inform the user how
+to fix the definition file.
+
+When an error is found, the system will not continue to process the
+file beyond the end of that line, as one error is likely to cause
+further errors. This will allow just the first error to be shown,
+allowing easy debugging by the user, as they know exactly where the
+error has occurred without being distracted by other errors that
+resulted. The downside of this is that only one error will be shown at
+a time, so independent errors cannot be debugged at the same time. 
+
+The parser class is directly translated from the EBNF, and when the
+parsing routine encounters a symbol that does not correlate with the
+EBNF then an error will be reported. The EBNF specifies
+semi colons at the end of most lines, so parsing can stop as soon as
+it reaches the next semi colon.
+
+Some of the semantic errors will be checked on a line by line basis,
+such as ensuring that the parameters in the expression are legal and
+defined. Others will require waiting until the section is completed,
+such as ensuring that all device inputs have a specified
+connection. This will be checked when the closing brace (\verb+}+)
+denoting the end of the section is parsed.
+
 \section{Example Circuits and Definition Files}
 
 \subsection{XOR Circuit Composed of NAND Gates}
