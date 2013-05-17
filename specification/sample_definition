@@ -8,13 +8,18 @@ DEVICES
 	CLK1 = CLK;
 }
 
+INIT{
+        SW = 1;
+        CLK1 = 4;
+}
+
 CONNECTIONS
 {
 	A1.1 <= N1.O;
-	A1.2 <= I1.O; /*Comments can /* be nested.*/*/
+	A1.2 <= I1.O;
 	A2.1 <= I1.0;
 	A2.2 <= A1.O;
-	A2.3 <= N1.NO;
+	A2.3 <= N1.NO;  /*Comments can /* be nested.*/*/
 	N1.1 <= A2.O;
 	N1.2 <= A1.O;
 	I1   <= SW.O;
@@ -26,11 +31,4 @@ MONITORS
 	OUTPUT <= I1.O; 
 	CLK    <= A1.O;
 }
-
-INIT
-{
-	SW = 1;
-	CLK1 = 4;
-}
-
 }
