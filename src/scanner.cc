@@ -67,7 +67,31 @@ void scanner::getsymbol( symbol& s, name & id, int & num)
 				case '<': nextChar(); if (curch == '=') {s=consym; return;} s=badsym; /*cout << "expected = after <..." << endl;*/ return;
 				case '=': s = equals; return;
 				case ';': s = semicol; return;
+				case '/': nextChar(); if (curch =='*') {doComments();return;} s=badsym; return;
 				default : s = badsym; return;
+		}
+	}
+}
+
+void scanner::doComments()
+{
+	//This method just skips through the code waiting for comments to end. It is called when the / * has already been read.
+	commentnest=1;
+	char prevchar;
+	while (commentnest > 0)
+	{
+		prevchar = curch;
+		nextChar();
+		
+		if (eofile) {cout << "Unexpected end of file, comments are not terminated...." << endl;
+		
+		if (curch == '*' && prevchar = '/')
+		{
+			commentnest++;
+		}
+		else if (curch == '/' && prevchar = '*')
+		{
+			commentnest--;
 		}
 	}
 }

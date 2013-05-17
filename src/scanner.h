@@ -31,6 +31,7 @@ class scanner {
 	int linenum;
 	int commentnest; //This stores the number of opening /*'s - closing */'s.
 	void rewind();
+	void doComments();
 
 
 
