@@ -1,6 +1,6 @@
 #include "scanner.h"
 
-#define SCANNERTEST
+//#define SCANNERTEST
 
 using namespace std;
 

@@ -8,25 +8,31 @@ using namespace std;
 bool parser::readin (void)
 {
   // Stores scanner output
-  //symbol sym;
+  symbol sym;
   name id;
   int num;
   namestring current_name;
 
 
-  //smp->getsymbol(sym, id, num);
-  id = 1;
+  smp->getsymbol(sym, id, num);
+  //id = 1;
   
-  // Check for opening {
-  current_name = name_listp->getname(id);
-
-  if (current_name.compare("{") != 0)
-  {
+  if (sym != opencurly){
 	// Error for no opening {
     errorhandling(no_opening_brace);
     return 0;
   }
   
+  smp->getsymbol(sym,id,num);
+  
+  if (sym != DEV)
+  {
+	// Error for no devices
+    errorhandling(no_devices);
+    return 0;
+  }
+    
+  /*
   //DEVICES
   id = 1;
   current_name = name_listp->getname(id);
@@ -35,7 +41,7 @@ bool parser::readin (void)
 	// Error for no devices
     errorhandling(no_devices);
     return 0;
-  }  
+  }  */
   
   // Check for opening {
   id = 1;
@@ -68,10 +74,10 @@ void parser::errorhandling (error error_num)
 parser::parser (network* network_mod, devices* devices_mod,
 		monitor* monitor_mod, scanner* scanner_mod, names* scanner_output)
 {
-  //netp = network_mod;  /* make internal copies of these class pointers */
-  //dmp = devices_mod;   /* so we can call functions from these classes  */
-  //mmp = monitor_mod;   /* eg. to call makeconnection from the network  */
-  //smp = scanner_mod;   /* class you say:                               */
+  netp = network_mod;  /* make internal copies of these class pointers */
+  dmp = devices_mod;   /* so we can call functions from these classes  */
+  mmp = monitor_mod;   /* eg. to call makeconnection from the network  */
+  smp = scanner_mod;   /* class you say:                               */
                        /* netz->makeconnection (i1, i2, o1, o2, ok);   */
   name_listp = scanner_output;	
   /* any other initialisation you want to do? */
