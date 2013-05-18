@@ -28,8 +28,8 @@ class parser {
     /* corresponding internal representation via calls to the 'Network'    */
     /* module and the 'Devices' module.                                    */
 
-  parser (/*network* network_mod, devices* devices_mod,
-	  monitor* monitor_mod, scanner* scanner_mod,*/ names* scanner_output);
+  parser (network* network_mod, devices* devices_mod,
+	  monitor* monitor_mod, scanner* scanner_mod, names* scanner_output);
     /* the constructor takes pointers to various other classes as parameters */
 };
 
