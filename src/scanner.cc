@@ -1,5 +1,7 @@
 #include "scanner.h"
 
+#define SCANNERTEST
+
 using namespace std;
 
 scanner::scanner(names* name, const wxCharBuffer filename)
@@ -11,6 +13,7 @@ scanner::scanner(names* name, const wxCharBuffer filename)
 		exit(1);
 	}
 	
+#ifdef SCANNERTEST
 	symbol s;
 	int id;
 	int num;
@@ -21,6 +24,7 @@ scanner::scanner(names* name, const wxCharBuffer filename)
 		if (s==numsym){cout << " Num: " << num;}
 		cout << endl;
 	}
+#endif
 }
 
 scanner::~scanner()
@@ -28,11 +32,11 @@ scanner::~scanner()
 	inf.close();
 }
 
-void scanner::rewind() //Does the opposite of nextChar (reverses its effect)
-{
-	inf.seekg((int)inf.tellg()-1);
+void scanner::rewind()	//Does the opposite of nextChar (reverses its effect)
+{						//I suspect this is one of the more bug-prone methods.
+	inf.seekg((int)inf.tellg()-1); //Move file pointer back a place.
 
-	if (currentline.size() > 0)
+	if (currentline.size() > 0) //This is probably always the case, problems if not.
 	{
 		currentline = currentline.substr(0,currentline.size()-1);
 	}
@@ -54,7 +58,6 @@ void scanner::nextChar()
 	}
 	
 	curch = tolower(curch); //From here on, everything is lower case.
-
 }
 
 void scanner::getsymbol( symbol& s, name & id, int & num)
@@ -62,30 +65,29 @@ void scanner::getsymbol( symbol& s, name & id, int & num)
 	string str="";
 	num = 0;
 	
-	while(1)
+	while(1) //While loop exists so that blanks/newlines can be ignored.
 	{
 		nextChar();
 		
 		if (eofile) {s=eofsym;return;}
 	
 		if (isblank(curch))
-		{}
+		{} //Will loop round to nextChar();
 		else if (curch == '\n')
 		{}
 		else if (isalpha(curch))
 		{
-			//str.push_back(curch);
 			while (isalnum(curch) && eofile == false)
 			{
 				str.push_back(curch);
 				nextChar();
 			}
-			rewind();
+			rewind(); //gone too far, want to leave this char to be read again.
 
-			if (str=="devices") {s=DEV;return;}
-			if (str=="init")    {s=INIT;return;}
-			if (str=="connections"){s=CONN;return;}
-			if (str=="monitors"){s=MON;return;}
+			if (str=="devices") 	{s=DEV;return;} //Should this use nametable?
+			if (str=="init")    	{s=INIT;return;}
+			if (str=="connections")	{s=CONN;return;}
+			if (str=="monitors")	{s=MON;return;}
 			
 			id = nametable->lookup(str);
 			s = namesym;
@@ -149,5 +151,4 @@ void scanner::printError(string errordesc)
 {
 	//For now:
 	cout << "Error. " << errordesc << " at line " << linenum << "at location (startat0) " << currentline.size()-1 << endl;
-	
 }
