@@ -81,8 +81,14 @@ void scanner::getsymbol( symbol& s, name & id, int & num)
 				nextChar();
 			}
 			rewind();
-			s = namesym;
+
+			if (str=="devices") {s=DEV;return;}
+			if (str=="init")    {s=INIT;return;}
+			if (str=="connections"){s=CONN;return;}
+			if (str=="monitors"){s=MON;return;}
+			
 			id = nametable->lookup(str);
+			s = namesym;
 			return;
 			
 		}

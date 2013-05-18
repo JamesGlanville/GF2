@@ -13,8 +13,8 @@
 
 using namespace std;
 
-typedef enum {namesys, namesym, numsys, devsym, consym, monsym, endsym, numsym, semicol, equals, badsym, eofsym,openparen,closeparen,opencurly, closecurly} symbol;
-string lookuptable[]={"namesys","namesym","numsys","devsym","consym","monsym","endsym","numsym",";","=","badsym","EOF","(",")","{","}"};
+typedef enum {namesym, numsym, DEV, INIT, CONN, MON, consym, semicol, equals, badsym, eofsym, openparen, closeparen, opencurly, closecurly} symbol;
+string lookuptable[]={"namesym","numsym","DEV","INIT","CONN","MON","consym",";","=","badsym","EOF","(",")","{","}"};
 
 //^^^^^^^ THESE MUST BE CHANGED TOGETHER!!
 
