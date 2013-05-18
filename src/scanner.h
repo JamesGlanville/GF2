@@ -18,17 +18,6 @@ string lookuptable[]={"namesys","namesym","numsys","devsym","consym","monsym","e
 
 //^^^^^^^ THESE MUST BE CHANGED TOGETHER!!
 
-//typedef string name;
-/*
-scanner (names* names_mod, const char* defname);
-
-~scanner();
-*/
-
-
-
-
-
 class scanner {
 	char curch; //Current input character
 	string currentline;
@@ -44,6 +33,7 @@ class scanner {
 
  public:
 	scanner(names* nametable,const wxCharBuffer filename);
+	~scanner();
 	void getsymbol (symbol& s, name& id, int& num);
 	void printError (string errordesc);
 };

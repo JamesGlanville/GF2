@@ -23,6 +23,11 @@ scanner::scanner(names* name, const wxCharBuffer filename)
 	}
 }
 
+scanner::~scanner()
+{
+	inf.close();
+}
+
 void scanner::rewind() //Does the opposite of nextChar (reverses its effect)
 {
 	inf.seekg((int)inf.tellg()-1);
