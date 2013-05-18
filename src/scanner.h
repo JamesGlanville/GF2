@@ -14,7 +14,7 @@
 using namespace std;
 
 typedef enum {namesym, numsym, DEV, INIT, CONN, MON, consym, semicol, equals, badsym, eofsym, openparen, closeparen, opencurly, closecurly} symbol;
-string lookuptable[]={"namesym","numsym","DEV","INIT","CONN","MON","consym",";","=","badsym","EOF","(",")","{","}"};
+string lookuptable[]={"namesym","numsym","DEV","INIT","CONN","MON","<=",";","=","badsym","EOF","(",")","{","}"};
 //^^^^^^^ THESE MUST BE CHANGED TOGETHER!!
 
 class scanner {
