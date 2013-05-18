@@ -8,23 +8,46 @@ using namespace std;
 bool parser::readin (void)
 {
   // Stores scanner output
-  symbol sym;
+  //symbol sym;
   name id;
   int num;
   namestring current_name;
 
-  // Check for opening {
+
   //smp->getsymbol(sym, id, num);
-  
   id = 1;
+  
+  // Check for opening {
   current_name = name_listp->getname(id);
-  cout << current_name << endl;
-  if (current_name.compare("{") == 0)
+
+  if (current_name.compare("{") != 0)
   {
 	// Error for no opening {
     errorhandling(no_opening_brace);
     return 0;
   }
+  
+  //DEVICES
+  id = 1;
+  current_name = name_listp->getname(id);
+  if (current_name.compare("devices") != 0)
+  {
+	// Error for no devices
+    errorhandling(no_devices);
+    return 0;
+  }  
+  
+  // Check for opening {
+  id = 1;
+  current_name = name_listp->getname(id);
+
+  if (current_name.compare("{") != 0)
+  {
+	// Error for no opening {
+    errorhandling(no_opening_brace);
+    return 0;
+  }
+  
   return 1;
 }
 
@@ -34,13 +57,16 @@ void parser::errorhandling (error error_num)
 	case 0:
 	  cout << "No opening brace.\n";
 	  break; 
+	case 1:
+	  cout << "Expected \"devices\"\n";
+	  break;
 	default:
 	  cout << "Unknown error.\n"; 
   }
 }
 
-parser::parser (network* network_mod, devices* devices_mod,
-		monitor* monitor_mod, scanner* scanner_mod, names* scanner_output)
+parser::parser (/*network* network_mod, devices* devices_mod,
+		monitor* monitor_mod, scanner* scanner_mod,*/ names* scanner_output)
 {
   //netp = network_mod;  /* make internal copies of these class pointers */
   //dmp = devices_mod;   /* so we can call functions from these classes  */
