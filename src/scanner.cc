@@ -4,7 +4,7 @@
 
 using namespace std;
 
-scanner::scanner(names* name, const wxCharBuffer filename)
+scanner::scanner(names* name,  const char * filename)
 {
 	nametable = name;
 	inf.open(filename);
@@ -14,6 +14,8 @@ scanner::scanner(names* name, const wxCharBuffer filename)
 	}
 	
 #ifdef SCANNERTEST
+	string lookuptable[]={"namesym","numsym","DEV","INIT","CONN","MON","<=",";","=","badsym","EOF","(",")","{","}"};
+	//^^^^^ make sure this is updated along with the enum in scanner.h
 	symbol s;
 	int id;
 	int num;

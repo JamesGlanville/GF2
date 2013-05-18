@@ -2,11 +2,11 @@
 #define parser_h
 
 #include "names.h"
-#include "scanner.h"
 #include "network.h"
 #include "devices.h"
 #include "monitor.h"
-
+#include <iostream>
+#include "scanner.h"
 
 using namespace std;
 

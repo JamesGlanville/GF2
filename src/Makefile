@@ -41,4 +41,4 @@ devices.o: devices.h names.h network.h
 userint.o: userint.h names.h network.h devices.h monitor.h
 gui.o: gui.h names.h devices.h network.h monitor.h
 guitest.o: guitest.h names.h devices.h network.h monitor.h gui.h
-scanner.o: scanner.h parser.h network.h devices.h monitor.h names.h
+scanner.o: scanner.h network.h devices.h monitor.h names.h

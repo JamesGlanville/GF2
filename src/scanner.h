@@ -8,14 +8,11 @@
 #include <cstdlib>
 #include <cctype>
 #include "names.h"
-#include <wx/wx.h>
-
 
 using namespace std;
 
 typedef enum {namesym, numsym, DEV, INIT, CONN, MON, consym, semicol, equals, badsym, eofsym, openparen, closeparen, opencurly, closecurly} symbol;
-string lookuptable[]={"namesym","numsym","DEV","INIT","CONN","MON","<=",";","=","badsym","EOF","(",")","{","}"};
-//^^^^^^^ THESE MUST BE CHANGED TOGETHER!!
+//^^^ This must be changed simultaneously with the lookuptable in scanner.cc
 
 class scanner {
 	char curch; //Current input character
@@ -31,7 +28,7 @@ class scanner {
 	void doComments();	
 
  public:
-	scanner(names* nametable,const wxCharBuffer filename);
+	scanner(names* nametable, const char * filename);
 	~scanner();
 	void getsymbol (symbol& s, name& id, int& num);
 	void printError (string errordesc);
