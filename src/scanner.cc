@@ -2,35 +2,31 @@
 
 using namespace std;
 
-scanner::scanner(names* name, const wxCharBuffer blah)
+scanner::scanner(names* name, const wxCharBuffer filename)
 {
-	symbol s;
-	int id;
-	int num;
-	
 	nametable = name;
-	string filename = "/home/james/GF2/specification/sample_definition";
-	inf.open(filename.c_str());
+	inf.open(filename);
 	if (!inf) {
 		cout << "Error: cannot open file " << filename << " for reading " << endl;
 		exit(1);
 	}
 	
+	symbol s;
+	int id;
+	int num;
 	while(!eofile){
-	getsymbol( s,id,num);
-
-	cout << "Symbol: " << s ;
-	if (s==namesym){cout << " Id: " << nametable->getname(id); }
-	if (s==numsym){cout << " Num: " << num;}
-	cout << endl;
-}
-	
+		getsymbol( s,id,num);
+		cout << "Symbol: " << lookuptable[s] ;
+		if (s==namesym){cout << " Id: " << nametable->getname(id); }
+		if (s==numsym){cout << " Num: " << num;}
+		cout << endl;
+	}
 }
 
 void scanner::rewind() //Does the opposite of nextChar (reverses its effect)
 {
 	inf.seekg((int)inf.tellg()-1);
-//	currentline.pop_back();
+
 	if (currentline.size() > 0)
 	{
 		currentline = currentline.substr(0,currentline.size()-1);
@@ -40,10 +36,12 @@ void scanner::rewind() //Does the opposite of nextChar (reverses its effect)
 void scanner::nextChar()
 {
 	eofile = (inf.get(curch)==0);
-	if (curch == '\n')
+	if (curch == '\n') //Seems to happen twice in a row, CR+LF?
 	{
+//		cout << currentline << endl;
 		currentline.clear();
 		linenum++;
+//		cout << linenum;
 	}
 	else
 	{
@@ -66,9 +64,9 @@ void scanner::getsymbol( symbol& s, name & id, int & num)
 		if (eofile) {s=eofsym;return;}
 	
 		if (isblank(curch))
-		{/*cout <<curch;*/}
+		{}
 		else if (curch == '\n')
-		{/*cout <<curch;*/}
+		{}
 		else if (isalpha(curch))
 		{
 			//str.push_back(curch);
@@ -142,30 +140,3 @@ void scanner::printError(string errordesc)
 	cout << "Error. " << errordesc << " at line " << linenum << "at location (startat0) " << currentline.size()-1 << endl;
 	
 }
-/*
-void getname (ifstream *infp, char &curch, bool &eofile, namestring &str)
-{
-str.clear(); //Sets str to zero-length string.
-
-while (isalnum(curch) && eofile == false)
-{
-str.push_back(curch); //Appends curch to str.
-eofile = (infp->get(curch)==0);
-}
-
-if (str.length() > 0)
-{
-if (str.length() <=8)
-{
-cout << "Name: " << str << endl ;
-nametable.lookup(str);
-}
-else
-{
-cout << "Warning: name \'" << str <<"\' was truncated." << endl;
-cout << "Name: " << str.substr(0,8) << endl; //Prints only first 8 chars of str.
-nametable.lookup(str.substr(0,8));
-}
-}
-}
-*/
