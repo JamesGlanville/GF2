@@ -45,46 +45,46 @@ Symbol: }
 Symbol: CONN
 Symbol: {
 Symbol: namesym Id: a1.1
-Symbol: consym
+Symbol: <=
 Symbol: namesym Id: n1.o
 Symbol: ;
 Symbol: namesym Id: a1.2
-Symbol: consym
+Symbol: <=
 Symbol: namesym Id: i1.o
 Symbol: ;
 Symbol: namesym Id: a2.1
-Symbol: consym
+Symbol: <=
 Symbol: namesym Id: i1.0
 Symbol: ;
 Symbol: namesym Id: a2.2
-Symbol: consym
+Symbol: <=
 Symbol: namesym Id: a1.o
 Symbol: ;
 Symbol: namesym Id: a2.3
-Symbol: consym
+Symbol: <=
 Symbol: namesym Id: n1.no
 Symbol: ;
 Symbol: namesym Id: n1.1
-Symbol: consym
+Symbol: <=
 Symbol: namesym Id: a2.o
 Symbol: ;
 Symbol: namesym Id: n1.2
-Symbol: consym
+Symbol: <=
 Symbol: namesym Id: a1.o
 Symbol: ;
 Symbol: namesym Id: i1
-Symbol: consym
+Symbol: <=
 Symbol: namesym Id: sw.o
 Symbol: ;
 Symbol: }
 Symbol: MON
 Symbol: {
 Symbol: namesym Id: output
-Symbol: consym
+Symbol: <=
 Symbol: namesym Id: i1.o
 Symbol: ;
 Symbol: namesym Id: clk
-Symbol: consym
+Symbol: <=
 Symbol: namesym Id: a1.o
 Symbol: ;
 Symbol: }
