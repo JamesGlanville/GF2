@@ -163,9 +163,10 @@ void MyGLCanvas::OnMouse(wxMouseEvent& event)
 BEGIN_EVENT_TABLE(MyFrame, wxFrame)
   EVT_MENU(wxID_EXIT, MyFrame::OnExit)
   EVT_MENU(wxID_ABOUT, MyFrame::OnAbout)
-  EVT_BUTTON(MY_BUTTON_ID, MyFrame::OnButton)
+//  EVT_BUTTON(MY_BUTTON_ID, MyFrame::OnButton)
+  EVT_BUTTON(RUN_BUTTON_ID, MyFrame::OnRunButton)
   EVT_SPINCTRL(CYCLES_SPIN, MyFrame::OnSpin)
-  EVT_TEXT_ENTER(MY_TEXTCTRL_ID, MyFrame::OnText)
+//  EVT_TEXT_ENTER(MY_TEXTCTRL_ID, MyFrame::OnText)
 END_EVENT_TABLE()
   
 MyFrame::MyFrame(wxWindow *parent,
@@ -222,16 +223,17 @@ MyFrame::MyFrame(wxWindow *parent,
   wxBoxSizer *ctrlsizer = new wxBoxSizer(wxHORIZONTAL);
   ctrlsizer->Add(new wxStaticText(this, wxID_ANY, wxT("Cycles:")),
                  0,             /* make vertically unstrechable */
-                 wxAll,         /* border all around */
+                 wxALL | wxALIGN_CENTER_VERTICAL,         /* border all around */
                  10);           /* border size */ 
 
 
-  ctrlsizer->Add(new wxSpinCtrl(this, CYCLES_SPIN, wxString(wxT("10"))),
-                 0,
-                 wxAll,
-                 10);
-
-  topsizer->Add(ctrlsizer, 1, wxEXPAND | wxALL, 10);
+  spin_cycles = new wxSpinCtrl(this, CYCLES_SPIN, wxString(wxT("10")));
+  ctrlsizer->Add(spin_cycles, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
+  ctrlsizer->Add(new wxButton(this, RUN_BUTTON_ID, wxT("Run")),
+		 0,
+		 wxALL | wxALIGN_CENTER_VERTICAL,
+		 10);
+  topsizer->Add(ctrlsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
   
   SetSizeHints(400, 400);
   SetSizer(topsizer);
@@ -252,15 +254,20 @@ void MyFrame::OnAbout(wxCommandEvent &event)
   about.ShowModal();
 }
 
-void MyFrame::OnButton(wxCommandEvent &event)
-// Callback for the push button
-{
-  int n, ncycles;
+// void MyFrame::OnButton(wxCommandEvent &event)
+// // Callback for the push button
+// {
+//   int n, ncycles;
   
-  cyclescompleted = 0;
-  mmz->resetmonitor ();
-  runnetwork(spin->GetValue());
-  canvas->Render(wxT("Run button pressed"), cyclescompleted);
+//   cyclescompleted = 0;
+//   mmz->resetmonitor ();
+//   runnetwork(spin->GetValue());
+//   canvas->Render(wxT("Run button pressed"), cyclescompleted);
+// }
+
+void MyFrame::OnRunButton(wxCommandEvent &event)
+{
+  wxLogMessage(wxT("Run Button Pressed"));
 }
 
 void MyFrame::OnSpin(wxSpinEvent &event)
@@ -269,32 +276,32 @@ void MyFrame::OnSpin(wxSpinEvent &event)
   wxString text;
 
   text.Printf(wxT("New spinctrl value %d"), event.GetPosition());
-  canvas->Render(text);
+  //  canvas->Render(text);
 }
 
-void MyFrame::OnText(wxCommandEvent &event)
-  // Callback for the text entry field
-{
-  wxString text;
+// void MyFrame::OnText(wxCommandEvent &event)
+//   // Callback for the text entry field
+// {
+//   wxString text;
 
-  text.Printf(wxT("New text entered %s"), event.GetString().c_str());
-  canvas->Render(text);
-}
+//   text.Printf(wxT("New text entered %s"), event.GetString().c_str());
+//   canvas->Render(text);
+// }
 
-void MyFrame::runnetwork(int ncycles)
-  // Function to run the network, derived from corresponding function in userint.cc
-{
-  bool ok = true;
-  int n = ncycles;
+// void MyFrame::runnetwork(int ncycles)
+//   // Function to run the network, derived from corresponding function in userint.cc
+// {
+//   bool ok = true;
+//   int n = ncycles;
 
-  while ((n > 0) && ok) {
-    dmz->executedevices (ok);
-    if (ok) {
-      n--;
-      mmz->recordsignals ();
-    } else
-      cout << "Error: network is oscillating" << endl;
-  }
-  if (ok) cyclescompleted = cyclescompleted + ncycles;
-  else cyclescompleted = 0;
-}
+//   while ((n > 0) && ok) {
+//     dmz->executedevices (ok);
+//     if (ok) {
+//       n--;
+//       mmz->recordsignals ();
+//     } else
+//       cout << "Error: network is oscillating" << endl;
+//   }
+//   if (ok) cyclescompleted = cyclescompleted + ncycles;
+//   else cyclescompleted = 0;
+// }
