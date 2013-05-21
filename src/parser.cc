@@ -60,10 +60,10 @@ bool parser::readin (void)
 void parser::errorhandling (error error_num) 
 {
   switch(error_num) {
-	case 0:
+	case no_opening_brace:
 	  cout << "No opening brace.\n";
 	  break; 
-	case 1:
+	case no_devices:
 	  cout << "Expected \"devices\"\n";
 	  break;
 	default:
