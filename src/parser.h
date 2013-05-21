@@ -21,11 +21,13 @@ class parser {
   #endif
   scanner* smz;
   names* nmz;
-  enum error {unknown, no_opening_brace, no_devices, one_device_required, names_begin_letter};
+  enum error {unknown, no_opening_brace, no_devices, one_device_required, names_begin_letter, device_name_expected};
   
   /* put other stuff that the class uses internally here */
   /* also declare internal functions                     */
   void errorHandling(error error_num);
+  // Function to parse consym, semicol, equals, openparen, closeparen, opencurly and closecurly
+  bool parseToken(symbol token);
 
  public:
   bool readin();

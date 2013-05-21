@@ -60,7 +60,6 @@ void scanner::nextChar()
 
 void scanner::getsymbol( symbol& s, name & id, int & num)
 {
-	cout <<"a";
 	string str="";
 	num = 0;
 	

@@ -19,6 +19,8 @@ bool parser::readin (void)
     // Error for no opening {
     errorHandling(no_opening_brace);
     cout << "Symbol recieved is " << sym << endl;
+    smz->getsymbol(sym,id,num);
+    cout << "Symbol recieved is " << sym << endl;
     return PARSER_FAIL;
   }
   
@@ -41,6 +43,7 @@ bool parser::readin (void)
   }
   
   // Parsing defined devices
+  // Device name
   smz->getsymbol(sym,id,num);
   switch(sym) { 
     case namesym:
@@ -57,10 +60,13 @@ bool parser::readin (void)
       return PARSER_FAIL;
       break;
     default:
-      // Currently unknown error - consider a generic message later?
-      errorHandling(unknown);
+      // Generic expected a name here error
+      errorHandling(device_name_expected);
+      return PARSER_FAIL;
   }
   
+  // = 
+  smz->getsymbol(sym,id,num);
   
   return PARSER_PASS;
 }
@@ -69,23 +75,68 @@ void parser::errorHandling (error error_num)
 {
   switch(error_num) {
     case unknown:
-      smz->printError("Unknown error."); 
+      smz->printError("Unknown error"); 
       break;
     case no_opening_brace:
-      smz->printError("No opening brace.");
+      smz->printError("Expected opening brace");
       break; 
     case no_devices:
-      smz->printError("Expected \"devices\" section.");
+      smz->printError("Expected \"devices\" section");
       break;
     case one_device_required:
-      smz->printError("At least one device definition is required.");
+      smz->printError("At least one device definition is required");
       break;
     case names_begin_letter:
-      smz->printError("Names must begin with a letter.");
+      smz->printError("Names must begin with a letter");
+      break;
+    case device_name_expected:
+      smz->printError("Expected device name");
       break;
     default:
       cout << "You should never see this message\n";
   }
+}
+
+bool parser::parseToken (symbol token)
+{
+  symbol sym;
+  name id;
+  int num;
+  string error_token;
+  
+  smz->getsymbol(sym,id,num);
+  if (sym != token)
+  {
+    switch(token) 
+    {
+      case consym:
+        error_token = "connection operator (<=)";
+        break;
+      case semicol:
+        error_token = "semicolon (;)";
+        break;
+      case equals:
+        error_token = "equals sign (+)";
+        break;
+      case openparen:
+        error_token = "connection operator (=>)";
+        break;
+      case closeparen:
+        error_token = "connection operator (=>)";
+        break;
+      case opencurly:
+        error_token = "connection operator (=>)";
+        break;
+      case closecurly:
+        error_token = "connection operator (=>)";
+        break;
+      default:
+        error_token = "ERRRORR";
+    }
+    return PARSER_FAIL;
+  } 
+  
+  return PARSER_PASS;
 }
 
 parser::parser (
