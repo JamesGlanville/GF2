@@ -11,11 +11,11 @@
 using namespace std;
 
 class parser {
-  network* netp; // instantiations of various classes for parser to use.
-  devices* dmp; 
-  monitor* mmp;
-  scanner* smp;
-  names* name_listp;
+  network* netz; // instantiations of various classes for parser to use.
+  devices* dmz; 
+  monitor* mmz;
+  scanner* smz;
+  names* name_listz;
   enum error {no_opening_brace, no_devices};
   
   /* put other stuff that the class uses internally here */
