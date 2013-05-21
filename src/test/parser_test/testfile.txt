@@ -1,3 +1,5 @@
 {
 DEVICES
 {
+1d = AND(2);
+}

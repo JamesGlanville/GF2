@@ -3,10 +3,10 @@ all: parser_test
 parser_test: initial_test.o names.o parser.o scanner.o 
 	g++ initial_test.o names.o parser.o scanner.o  -o parser_test
 
-initial_test.o: initial_test.cc
+initial_test.o: initial_test.cc parser.o scanner.o names.o
 	g++ -c initial_test.cc
 
-names.o: ../../names.cc
+names.o: ../../names.cc 
 	g++ -c ../../names.cc
 
 parser.o: ../../parser.cc
@@ -17,3 +17,4 @@ scanner.o: ../../scanner.cc
 	
 clean:
 	rm -rf *o parser_test
+

@@ -21,7 +21,7 @@ class parser {
   #endif
   scanner* smz;
   names* nmz;
-  enum error {no_opening_brace, no_devices, one_device_required};
+  enum error {unknown, no_opening_brace, no_devices, one_device_required, names_begin_letter};
   
   /* put other stuff that the class uses internally here */
   /* also declare internal functions                     */

@@ -41,14 +41,23 @@ bool parser::readin (void)
   
   // Parsing defined devices
   smz->getsymbol(sym,id,num);
-  if (sym == namesym)
-  {
-    cout << "Device: \"" << nmz->getname(id) << "\" has been defined.\n";
-  }
-  else
-  {
-    // Error for at least one device must be defined
-    errorHandling(one_device_required);
+  switch(sym) { 
+    case namesym:
+      cout << "Device name \"" << nmz->getname(id) << "\" recognised.\n";
+      break;
+    case closecurly:
+      // Error for at least one device must be defined
+      errorHandling(one_device_required);
+      return PARSER_FAIL;
+      break;
+    case numsym:
+      // All names must begin with a letter
+      errorHandling(names_begin_letter);
+      return PARSER_FAIL;
+      break;
+    default:
+      // Currently unknown error - consider a generic message later?
+      errorHandling(unknown);
   }
   
   
@@ -58,17 +67,23 @@ bool parser::readin (void)
 void parser::errorHandling (error error_num) 
 {
   switch(error_num) {
-	case no_opening_brace:
-	  smz->printError("No opening brace.");
-	  break; 
-	case no_devices:
-	  smz->printError("Expected \"devices\" section.");
-	  break;
-  case one_device_required:
-    smz->printError("At least one device definition is required.");
-    break;
-	default:
-	  smz->printError("Unknown error.\n"); 
+    case unknown:
+      smz->printError("Unknown error."); 
+      break;
+    case no_opening_brace:
+      smz->printError("No opening brace.");
+      break; 
+    case no_devices:
+      smz->printError("Expected \"devices\" section.");
+      break;
+    case one_device_required:
+      smz->printError("At least one device definition is required.");
+      break;
+    case names_begin_letter:
+      smz->printError("Names must begin with a letter.");
+      break;
+    default:
+      cout << "You should never see this message\n";
   }
 }
 
