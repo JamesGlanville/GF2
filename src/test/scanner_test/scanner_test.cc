@@ -16,13 +16,12 @@ int main(int argc, char **argv)
 		cout << "Error: cannot open file " << argv[1] << " for reading " << endl;
 		exit(1);
 	}
-	names* test_nametable;
-	cout <<"here";
+	names* test_nametable=new names;
 	scanner* test_scanner = new scanner(test_nametable,inf);
 	
-	for (int i=0;i<80;i++){
-	cout <<test_scanner->curch;
-	test_scanner->nextChar();}
+	//for (int i=0;i<80;i++){
+	//cout <<test_scanner->curch;
+	//test_scanner->nextChar();}
 	//cout <<test_scanner->curch;}
 	
 
@@ -31,7 +30,29 @@ int main(int argc, char **argv)
 	symbol s;
 	name id;
 	int num;
-	while(!test_scanner->eofile){
+	test_scanner->getsymbol(s,id,num);
+	cout <<"a"<<endl;
+	test_scanner->getsymbol(s,id,num);
+	cout <<"b"<<endl;
+	test_scanner->getsymbol(s,id,num);
+	cout <<"c"<<endl;
+	test_scanner->getsymbol(s,id,num);
+	cout <<"d"<<endl;
+	test_scanner->getsymbol(s,id,num);
+	cout <<"e"<<endl;
+	test_scanner->getsymbol(s,id,num);
+	cout <<"f"<<endl;
+	test_scanner->getsymbol(s,id,num);
+	test_scanner->getsymbol(s,id,num);
+	test_scanner->getsymbol(s,id,num);
+	test_scanner->getsymbol(s,id,num);
+	test_scanner->getsymbol(s,id,num);
+	test_scanner->getsymbol(s,id,num);
+	test_scanner->getsymbol(s,id,num);
+	test_scanner->getsymbol(s,id,num);
+	test_scanner->getsymbol(s,id,num);
+	cout <<"done"<<endl;
+/*	while(!test_scanner->eofile){
 		cout <<"about to go"<<endl;
 		s=DEV;id=0;num=0;
 		test_scanner->getsymbol( s,id,num);
@@ -40,7 +61,7 @@ int main(int argc, char **argv)
 		if (s==numsym){cout << " Num: " << num;}
 		cout << "finished." <<endl;
 		cout << endl;
-	}
+	}*/
   
 	return 0;
 }
