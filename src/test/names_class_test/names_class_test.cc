@@ -74,28 +74,6 @@ int main()
 	return 0;
 }
 
-#ifdef goaway
-
-	
-
-int names::namelength (name id)
-{
-	if (id < nametable.size())
-	{
-		cout << nametable[id].length();
-	}
-	else
-	{
-		cout << "Error, index out of range." << endl;
-	}	}
-
-
-
-
-
-
-#endif
-
 
 
 
