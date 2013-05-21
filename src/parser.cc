@@ -18,6 +18,7 @@ bool parser::readin (void)
   if (sym != opencurly){
     // Error for no opening {
     errorHandling(no_opening_brace);
+    cout << "Symbol recieved is " << sym << endl;
     return PARSER_FAIL;
   }
   
