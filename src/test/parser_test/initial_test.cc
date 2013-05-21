@@ -1,7 +1,6 @@
+//#define PARSER_TEST
 #include <iostream>
 #include "../../parser.h"
-#include "../../monitor.h"
-#include "../../devices.h"
 #include "../../scanner.h"
 
 int main (int argc, char **argv) 
@@ -12,11 +11,8 @@ int main (int argc, char **argv)
   }
   
 	names* nmz = new names();
-  network* netz = new network(nmz);
-  devices* dmz = new devices(nmz, netz);
-  monitor* mmz = new monitor(nmz, netz);
   scanner* smz = new scanner(nmz, argv[1]);
-  parser* pmz = new parser(netz, dmz, mmz, smz, nmz);
+  parser* pmz = new parser(smz, nmz);
   
   cout << pmz->readin() << endl;
   

@@ -13,62 +13,82 @@ bool parser::readin (void)
   namestring current_name;
 
 
-  smz->getsymbol(sym, id, num);
-  //id = 1;
+  smz->getsymbol(sym,id,num);
   // {
   if (sym != opencurly){
-	// Error for no opening {
-    errorhandling(no_opening_brace);
-    return 0;
+    // Error for no opening {
+    errorHandling(no_opening_brace);
+    return PARSER_FAIL;
   }
   
   smz->getsymbol(sym,id,num);
   // devices
   if (sym != DEV)
   {
-	// Error for no devices
-    errorhandling(no_devices);
-    return 0;
+	  // Error for no devices
+    errorHandling(no_devices);
+    return PARSER_FAIL;
   }
-    
   
+  smz->getsymbol(sym,id,num);    
   // {
-  id = 1;
-  current_name = name_listz->getname(id);
-
-  if (current_name.compare("{") != 0)
+  if (sym != opencurly)
   {
-	// Error for no opening {
-    errorhandling(no_opening_brace);
-    return 0;
+    // Error for no opening {
+    errorHandling(no_opening_brace);
+    return PARSER_FAIL;
   }
   
-  return 1;
+  // Parsing defined devices
+  smz->getsymbol(sym,id,num);
+  if (sym == namesym)
+  {
+    cout << "Device: \"" << nmz->getname(id) << "\" has been defined.\n";
+  }
+  else
+  {
+    // Error for at least one device must be defined
+    errorHandling(one_device_required);
+  }
+  
+  
+  return PARSER_PASS;
 }
 
-void parser::errorhandling (error error_num) 
+void parser::errorHandling (error error_num) 
 {
   switch(error_num) {
 	case no_opening_brace:
-	  cout << "No opening brace.\n";
+	  smz->printError("No opening brace.");
 	  break; 
 	case no_devices:
-	  cout << "Expected \"devices\"\n";
+	  smz->printError("Expected \"devices\" section.");
 	  break;
+  case one_device_required:
+    smz->printError("At least one device definition is required.");
+    break;
 	default:
-	  cout << "Unknown error.\n"; 
+	  smz->printError("Unknown error.\n"); 
   }
 }
 
-parser::parser (network* network_mod, devices* devices_mod,
-		monitor* monitor_mod, scanner* scanner_mod, names* scanner_output)
+parser::parser (
+                #ifndef PARSER_TEST
+                network* network_mod, 
+                devices* devices_mod,
+                monitor* monitor_mod, 
+                #endif
+                scanner* scanner_mod, 
+                names* name_table)
 {
+  #ifndef PARSER_TEST
   netz = network_mod;  /* make internal copies of these class pointers */
   dmz = devices_mod;   /* so we can call functions from these classes  */
   mmz = monitor_mod;   /* eg. to call makeconnection from the network  */
+  #endif
   smz = scanner_mod;   /* class you say:                               */
                        /* netz->makeconnection (i1, i2, o1, o2, ok);   */
-  name_listz = scanner_output;	
+  nmz = name_table;	
   /* any other initialisation you want to do? */
 
 }
