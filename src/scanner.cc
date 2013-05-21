@@ -8,7 +8,9 @@ scanner::scanner(names* name, ifstream * file)
 {
 	nametable = name;
 	inf=file;
-
+	linenum=0;
+	currentline="";
+	
 #ifdef SCANNERTEST
 	string lookuptable[]={"namesym","numsym","DEV","INIT","CONN","MON","<=",";","=","badsym","EOF","(",")","{","}"};
 	//^^^^^ make sure this is updated along with the enum in scanner.h
@@ -147,5 +149,5 @@ void scanner::doComments()
 void scanner::printError(string errordesc)
 {
 	//For now:
-	cout << "Error. " << errordesc << " at line " << linenum << "at location (startat0) " << currentline.size()-1 << endl;
+	cout << "Error. " << errordesc << " at line " << linenum << "at location (startat0) " << max((int)currentline.size()-1,0) << endl;
 }
