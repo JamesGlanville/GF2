@@ -16,7 +16,7 @@ typedef enum {namesym, numsym, DEV, INIT, CONN, MON, consym, semicol, equals, ba
 
 class scanner {
 //#ifdef SCANNERMETHODSPUBLIC
-public:
+//public:
 //#endif
 	char curch; //Current input character
 	string currentline;

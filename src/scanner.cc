@@ -81,13 +81,12 @@ void scanner::getsymbol( symbol& s, name & id, int & num)
 				nextChar();
 			}
 			rewind(); //gone too far, want to leave this char to be read again.
-
 			if (str=="devices") 	{s=DEV;return;} //Should this use nametable?
 			if (str=="init")    	{s=INIT;return;}
 			if (str=="connections")	{s=CONN;return;}
 			if (str=="monitors")	{s=MON;return;}
-			
 			id = nametable->lookup(str);
+
 			s = namesym;
 			return;
 			
