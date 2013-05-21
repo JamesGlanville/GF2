@@ -22,12 +22,19 @@ class parser {
   scanner* smz;
   names* nmz;
   enum error {unknown, no_opening_brace, no_devices, one_device_required, names_begin_letter, device_name_expected};
+  enum device_type {AND, NAND, OR, NOR, XOR, DTYPE, CLK, SW};
   
   /* put other stuff that the class uses internally here */
   /* also declare internal functions                     */
   void errorHandling(error error_num);
   // Function to parse consym, semicol, equals, openparen, closeparen, opencurly and closecurly
   bool parseToken(symbol token);
+  // Function to parse DEV, INIT, CONN and MON
+  bool parseSectionHeader(symbol header);
+  // Function to parse device names
+  bool parseDeviceName(); 
+  // Detects device type and return in parameter
+  bool parseDeviceType(device_type &current_device_type);
 
  public:
   bool readin();

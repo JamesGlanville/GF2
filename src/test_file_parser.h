@@ -9,7 +9,7 @@ using namespace std;
 #define PARSER_PASS 0;
 #define PARSER_FAIL 1;
 
-/* Pre-parses test files that contain an ={ DESCRIPTION }= at the start */
+/* Pre-parses test files that contain an # DESCRIPTION # at the start */
 
 class test_file_parser {
   scanner* smz;

@@ -10,21 +10,14 @@ bool test_file_parser::testFileDefinition (void)
   bool error = 0;
   
   smz->getsymbol(sym,id,num);
-  if(sym != equals)
+  if(sym != badsym)
   {
     cout << sym << endl;
     error = 1;
   }
   
   smz->getsymbol(sym,id,num);
-  if(sym != opencurly)
-  {
-    cout << sym << endl;
-    error = 1;
-  }
-  
-  smz->getsymbol(sym,id,num);
-  while(sym != closecurly)
+  while(sym != badsym)
   {
     switch (sym)
     {
@@ -37,21 +30,23 @@ bool test_file_parser::testFileDefinition (void)
       case closeparen:
         cout << ")";
         break;
+      case consym:
+        cout << "<=";
+        break;
+      case semicol:
+        cout << ";";
+        break;
+      case equals:
+        cout << "=";
+        break;
+      case opencurly:
+        cout << "{";
+        break;
+      case closecurly:
+        cout << "}";
+        break;
     }
     smz->getsymbol(sym,id,num);
-  }
-  
-  if(sym != closecurly)
-  {
-    cout << sym << endl;
-    error = 1;
-  }
-  
-  smz->getsymbol(sym,id,num);
-  if(sym != equals) 
-  {
-    cout << sym << endl;
-    error = 1;
   }
   
   if(error) 

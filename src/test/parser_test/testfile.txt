@@ -1,6 +1,6 @@
-={ No errors so far :) }=
+# Expected { } #
 {
 DEVICES
 {
-D1 = AND(2);
+D1 = XOR(2);
 }

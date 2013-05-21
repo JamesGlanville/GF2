@@ -11,62 +11,32 @@ bool parser::readin (void)
   name id;
   int num;
   namestring current_name;
+  device_type current_device_type;
 
-
-  smz->getsymbol(sym,id,num);
   // {
-  if (sym != opencurly){
-    // Error for no opening {
-    errorHandling(no_opening_brace);
-    cout << "Symbol recieved is " << sym << endl;
-    smz->getsymbol(sym,id,num);
-    cout << "Symbol recieved is " << sym << endl;
-    return PARSER_FAIL;
-  }
+  if(parseToken(opencurly)) return PARSER_FAIL;
   
-  smz->getsymbol(sym,id,num);
   // devices
-  if (sym != DEV)
-  {
-	  // Error for no devices
-    errorHandling(no_devices);
-    return PARSER_FAIL;
-  }
-  
-  smz->getsymbol(sym,id,num);    
+  if(parseSectionHeader(DEV)) return PARSER_FAIL;
+
   // {
-  if (sym != opencurly)
-  {
-    // Error for no opening {
-    errorHandling(no_opening_brace);
-    return PARSER_FAIL;
-  }
-  
+  if(parseToken(opencurly)) return PARSER_FAIL;
+
   // Parsing defined devices
   // Device name
-  smz->getsymbol(sym,id,num);
-  switch(sym) { 
-    case namesym:
-      cout << "Device name \"" << nmz->getname(id) << "\" recognised.\n";
-      break;
-    case closecurly:
-      // Error for at least one device must be defined
-      errorHandling(one_device_required);
-      return PARSER_FAIL;
-      break;
-    case numsym:
-      // All names must begin with a letter
-      errorHandling(names_begin_letter);
-      return PARSER_FAIL;
-      break;
-    default:
-      // Generic expected a name here error
-      errorHandling(device_name_expected);
-      return PARSER_FAIL;
-  }
+  if(parseDeviceName()) return PARSER_FAIL;
   
   // = 
-  smz->getsymbol(sym,id,num);
+  if(parseToken(equals)) return PARSER_FAIL;
+  
+  // Device type
+  if(parseDeviceType(current_device_type)) return PARSER_FAIL;
+  switch(current_device_type)
+  {
+    case AND:
+      parseParams(param_value)
+  }  
+  // ;
   
   return PARSER_PASS;
 }
@@ -110,32 +80,145 @@ bool parser::parseToken (symbol token)
     switch(token) 
     {
       case consym:
-        error_token = "connection operator (<=)";
+        error_token = "'<='";
         break;
       case semicol:
-        error_token = "semicolon (;)";
+        error_token = "';'";
         break;
       case equals:
-        error_token = "equals sign (+)";
+        error_token = "'='";
         break;
       case openparen:
-        error_token = "connection operator (=>)";
+        error_token = "'('";
         break;
       case closeparen:
-        error_token = "connection operator (=>)";
+        error_token = "')'";
         break;
       case opencurly:
-        error_token = "connection operator (=>)";
+        error_token = "'{'";
         break;
       case closecurly:
-        error_token = "connection operator (=>)";
+        error_token = "'}'";
         break;
       default:
         error_token = "ERRRORR";
     }
+    smz->printError("Expected " + error_token);
     return PARSER_FAIL;
   } 
   
+  return PARSER_PASS;
+}
+
+bool parser::parseSectionHeader (symbol header)
+{
+  symbol sym;
+  name id;
+  int num;
+  string section_name;
+  
+  smz->getsymbol(sym,id,num);
+  if (sym != header)
+  {
+    switch(header) 
+    {
+      case DEV:
+        section_name = "\"DEVICES\"";
+        break;
+      case INIT:
+        section_name = "\"INIT\"";
+        break;
+      case CONN:
+        section_name = "\"CONNECTIONS\"";
+        break;
+      case MON:
+        section_name = "\"MONITORS\"";
+        break;      
+      default:
+        section_name = "ERRRORR";
+    }
+    smz->printError("Expected " + section_name + " section header");
+    return PARSER_FAIL;
+  } 
+  
+  return PARSER_PASS;
+}
+
+bool parser::parseDeviceName (void)
+{
+  symbol sym;
+  name id;
+  int num;
+  
+  smz->getsymbol(sym,id,num);
+  switch(sym) { 
+    case namesym:
+      // Here is where the device name should be stored somewhere useful
+      cout << "Device name \"" << nmz->getname(id) << "\" recognised.\n";
+      break;
+    case closecurly:
+      // Error for at least one device must be defined
+      errorHandling(one_device_required);
+      return PARSER_FAIL;
+      break;
+    case numsym:
+      // All names must begin with a letter
+      errorHandling(names_begin_letter);
+      return PARSER_FAIL;
+      break;
+    default:
+      // Generic expected a name here error
+      errorHandling(device_name_expected);
+      return PARSER_FAIL;
+  }
+  
+  return PARSER_PASS;
+}
+
+// Converts strings of device type into an enumerated type
+bool parser::parseDeviceType(device_type &current_device_type)
+{
+  symbol sym;
+  name id;
+  int num;
+  
+  smz->getsymbol(sym,id,num);
+  if(nmz->getname(id).compare("and") == 0)
+  {
+    current_device_type = AND;
+  } 
+  else if(nmz->getname(id).compare("nand") == 0)
+  {
+    current_device_type = NAND;    
+  }
+  else if(nmz->getname(id).compare("or") == 0)
+  {
+    current_device_type = OR;    
+  }
+  else if(nmz->getname(id).compare("nor") == 0)
+  {
+    current_device_type = NOR;  
+  }
+  else if(nmz->getname(id).compare("xor") == 0)
+  {
+    current_device_type = XOR;  
+  }
+  else if(nmz->getname(id).compare("dtype") == 0)
+  {
+    current_device_type = DTYPE;    
+  }
+  else if(nmz->getname(id).compare("clk") == 0)
+  {
+    current_device_type = CLK;    
+  }
+  else if(nmz->getname(id).compare("sw") == 0)
+  {
+    current_device_type = SW; 
+  }
+  else
+  {
+    return PARSER_FAIL;
+  }
   return PARSER_PASS;
 }
 
