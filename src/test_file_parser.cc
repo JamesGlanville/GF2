@@ -24,9 +24,20 @@ bool test_file_parser::testFileDefinition (void)
   }
   
   smz->getsymbol(sym,id,num);
-  while(sym == namesym)
+  while(sym != closecurly)
   {
-    cout << " " << nmz->getname(id) << " ";
+    switch (sym)
+    {
+      case namesym:
+        cout << nmz->getname(id) << " ";
+        break;
+      case openparen:
+        cout << "(";
+        break;
+      case closeparen:
+        cout << ")";
+        break;
+    }
     smz->getsymbol(sym,id,num);
   }
   
