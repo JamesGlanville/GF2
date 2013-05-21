@@ -14,12 +14,16 @@ typedef int name;
 typedef string namestring;
 
 class names{
+#ifndef NAMES_CLASS_TEST
 	vector<namestring> nametable;
-
+#endif
   /* put stuff that the class uses internally here */
 
 
 public:
+#ifdef NAMES_CLASS_TEST
+	vector<namestring> nametable;
+#endif
   name lookup (namestring str);
     /* Returns the internal representation of the name given in character  */
     /* form.  If the name is not already in the name table, it is          */
