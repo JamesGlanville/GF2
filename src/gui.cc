@@ -2,6 +2,7 @@
 #include <GL/glut.h>
 #include "wx_icon.xpm"
 #include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -238,9 +239,12 @@ MyFrame::MyFrame(wxWindow *parent,
   disp_scroll = new wxScrolledWindow(this, DISP_SCROLL);
 
   wxBoxSizer *toptracesizer = new wxBoxSizer(wxVERTICAL);
-  
+
+  wxString tracename = wxT("tracesizer");
+
+
   wxBoxSizer *tracesizer1 = new wxBoxSizer(wxHORIZONTAL);
-  tracesizer1->Add(new wxStaticText(disp_scroll, wxID_ANY, wxT("Some text!")),
+  tracesizer1->Add(new wxStaticText(disp_scroll, wxID_ANY, tracename),
    		   1,
    		   wxALL | wxEXPAND,
    		   10);
