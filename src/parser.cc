@@ -12,6 +12,7 @@ bool parser::readin (void)
   int num;
   namestring current_name;
   device_type current_device_type;
+  int param_value=0;
 
   // {
   if(parseToken(opencurly)) return PARSER_FAIL;
@@ -24,19 +25,53 @@ bool parser::readin (void)
 
   // Parsing defined devices
   // Device name
+  // This should probably return an name/id for the nametable
+  // Need to work out how this interfaces to the circuit creation functions and whether names are involved in that or we need a separate data structure to store them
   if(parseDeviceName()) return PARSER_FAIL;
   
   // = 
   if(parseToken(equals)) return PARSER_FAIL;
   
-  // Device type
+  // Device type 
   if(parseDeviceType(current_device_type)) return PARSER_FAIL;
+  // This should go in a separate function
   switch(current_device_type)
   {
     case AND:
-      parseParams(param_value)
-  }  
+      if(parseParam(param_value)) return PARSER_FAIL;
+      cout << "Created AND gate with " << param_value << " inputs\n";
+      break;
+    case NAND:
+      if(parseParam(param_value)) return PARSER_FAIL;
+      cout << "Created NAND gate with " << param_value << " inputs\n";
+      break;
+    case OR:
+      if(parseParam(param_value)) return PARSER_FAIL;
+      cout << "Created OR gate with " << param_value << " inputs\n";
+      break;
+    case NOR:
+      if(parseParam(param_value)) return PARSER_FAIL;
+      cout << "Created NOR gate with " << param_value << " inputs\n";
+      break;
+    case XOR:
+      if(parseParam(param_value)) return PARSER_FAIL;
+      cout << "Created XOR gate with " << param_value << " inputs\n";
+      break;
+    case DTYPE:
+      cout << "Created DTYPE\n";
+      break;
+    case CLK:
+      cout << "Created CLK\n";
+      break;
+    case SW:
+      cout << "Created SW\n";
+      break;
+    default:
+      cout << "Something has gone really wrong\n";
+  }
+  
   // ;
+  if(parseToken(semicol)) return PARSER_FAIL;
   
   return PARSER_PASS;
 }
@@ -62,6 +97,11 @@ void parser::errorHandling (error error_num)
     case device_name_expected:
       smz->printError("Expected device name");
       break;
+    case number_param_expected:
+      smz->printError("An integer parameter is required");
+      break;
+    case not_valid_device:
+      smz->printError("Not a valid device type");
     default:
       cout << "You should never see this message\n";
   }
@@ -160,12 +200,10 @@ bool parser::parseDeviceName (void)
       // Error for at least one device must be defined
       errorHandling(one_device_required);
       return PARSER_FAIL;
-      break;
     case numsym:
       // All names must begin with a letter
       errorHandling(names_begin_letter);
       return PARSER_FAIL;
-      break;
     default:
       // Generic expected a name here error
       errorHandling(device_name_expected);
@@ -217,8 +255,33 @@ bool parser::parseDeviceType(device_type &current_device_type)
   }
   else
   {
+    errorHandling(not_valid_device);
     return PARSER_FAIL;
   }
+  return PARSER_PASS;
+}
+
+bool parser::parseParam(int &param_value) 
+{
+  symbol sym;
+  name id;
+  int num;
+  
+  if(parseToken(openparen)) return PARSER_FAIL;
+  
+  smz->getsymbol(sym,id,num);
+  if(sym == numsym)
+  {
+    param_value = num;
+  }
+  else  
+  {
+    errorHandling(number_param_expected);
+    return PARSER_FAIL;
+  }
+  
+  if(parseToken(closeparen)) return PARSER_FAIL;
+  
   return PARSER_PASS;
 }
 

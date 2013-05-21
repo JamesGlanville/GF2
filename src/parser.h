@@ -21,7 +21,7 @@ class parser {
   #endif
   scanner* smz;
   names* nmz;
-  enum error {unknown, no_opening_brace, no_devices, one_device_required, names_begin_letter, device_name_expected};
+  enum error {unknown, no_opening_brace, no_devices, one_device_required, names_begin_letter, device_name_expected, number_param_expected, not_valid_device};
   enum device_type {AND, NAND, OR, NOR, XOR, DTYPE, CLK, SW};
   
   /* put other stuff that the class uses internally here */
@@ -35,6 +35,8 @@ class parser {
   bool parseDeviceName(); 
   // Detects device type and return in parameter
   bool parseDeviceType(device_type &current_device_type);
+  // Gives the value of the device definition parameter in the parameter
+  bool parseParam(int &param_value);
 
  public:
   bool readin();

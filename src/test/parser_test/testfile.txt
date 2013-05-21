@@ -2,5 +2,5 @@
 {
 DEVICES
 {
-D1 = XOR(2);
+D1 = dtype(;
 }

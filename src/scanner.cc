@@ -149,5 +149,5 @@ void scanner::doComments()
 void scanner::printError(string errordesc)
 {
 	//For now:
-	cout << "Error. " << errordesc << " at line " << linenum << "at location (startat0) " << max((int)currentline.size()-1,0) << endl;
+	cout << "Error: " << errordesc << " on line " << linenum << " at location (startat0) " << max((int)currentline.size()-1,0) << endl;
 }
