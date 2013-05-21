@@ -6,72 +6,73 @@ using namespace std;
 
 bool parser::readin (void)
 {
-  // Stores scanner output
-  symbol sym;
+  // Stores parsing function output
   name id;
   int num;
-  namestring current_name;
   device_type current_device_type;
-  int param_value=0;
+  bool endOfDevices = 0;
 
   // {
   if(parseToken(opencurly)) return PARSER_FAIL;
   
-  // devices
+  // DEVICES
   if(parseSectionHeader(DEV)) return PARSER_FAIL;
 
   // {
   if(parseToken(opencurly)) return PARSER_FAIL;
 
   // Parsing defined devices
-  // Device name
-  // This should probably return an name/id for the nametable
-  // Need to work out how this interfaces to the circuit creation functions and whether names are involved in that or we need a separate data structure to store them
-  if(parseDeviceName()) return PARSER_FAIL;
+  // First device name
+  if(parseFirstDeviceName(id)) return PARSER_FAIL;
   
   // = 
   if(parseToken(equals)) return PARSER_FAIL;
   
   // Device type 
   if(parseDeviceType(current_device_type)) return PARSER_FAIL;
-  // This should go in a separate function
-  switch(current_device_type)
-  {
-    case AND:
-      if(parseParam(param_value)) return PARSER_FAIL;
-      cout << "Created AND gate with " << param_value << " inputs\n";
-      break;
-    case NAND:
-      if(parseParam(param_value)) return PARSER_FAIL;
-      cout << "Created NAND gate with " << param_value << " inputs\n";
-      break;
-    case OR:
-      if(parseParam(param_value)) return PARSER_FAIL;
-      cout << "Created OR gate with " << param_value << " inputs\n";
-      break;
-    case NOR:
-      if(parseParam(param_value)) return PARSER_FAIL;
-      cout << "Created NOR gate with " << param_value << " inputs\n";
-      break;
-    case XOR:
-      if(parseParam(param_value)) return PARSER_FAIL;
-      cout << "Created XOR gate with " << param_value << " inputs\n";
-      break;
-    case DTYPE:
-      cout << "Created DTYPE\n";
-      break;
-    case CLK:
-      cout << "Created CLK\n";
-      break;
-    case SW:
-      cout << "Created SW\n";
-      break;
-    default:
-      cout << "Something has gone really wrong\n";
-  }
+
+  // Creates above device (apart from clock and switches, which get saved until INIT)
+  // CLK/SW names should be saved in separate nametables for re-use later
+  // Nametable shouldn't allow multiple of the same name
+  if(createDevice(current_device_type,id)) return PARSER_FAIL;
   
   // ;
   if(parseToken(semicol)) return PARSER_FAIL;
+  
+  // Subsequent device names
+  if(parseDeviceName(id,endOfDevices)) return PARSER_FAIL;
+  
+  while(!endOfDevices) 
+  {
+    if(parseToken(equals)) return PARSER_FAIL;
+    if(parseDeviceType(current_device_type)) return PARSER_FAIL;
+    if(createDevice(current_device_type,id)) return PARSER_FAIL;
+    if(parseToken(semicol)) return PARSER_FAIL;
+    // Goes at end of loop because it also detects the closing curly brace
+    if(parseDeviceName(id,endOfDevices)) return PARSER_FAIL;
+  }
+  
+  // INIT
+  if(parseSectionHeader(INIT)) return PARSER_FAIL;
+  
+  // {
+  if(parseToken(opencurly)) return PARSER_FAIL;
+  
+  // Reset end of section marker
+  endOfDevices = 0;
+  
+  // Parse initialisations
+  if(parseDeviceName(id,endOfDevices)) return PARSER_FAIL;
+  
+  while(!endOfDevices)
+  {
+    if(parseToken(equals)) return PARSER_FAIL;
+    if(parseNumber(num)) return PARSER_FAIL;
+    // Function which does something with num and id goes here
+    // Use id to retrieve name, check in clock and switch tables for match, initialise as appropriate
+    if(parseToken(semicol)) return PARSER_FAIL;
+    if(parseDeviceName(id,endOfDevices)) return PARSER_FAIL;
+  }
   
   return PARSER_PASS;
 }
@@ -98,10 +99,14 @@ void parser::errorHandling (error error_num)
       smz->printError("Expected device name");
       break;
     case number_param_expected:
-      smz->printError("An integer parameter is required");
+      smz->printError("Expected numeric parameter");
+      break;
+    case number_expected:
+      smz->printError("Expected number");
       break;
     case not_valid_device:
       smz->printError("Not a valid device type");
+      break;
     default:
       cout << "You should never see this message\n";
   }
@@ -184,17 +189,16 @@ bool parser::parseSectionHeader (symbol header)
   return PARSER_PASS;
 }
 
-bool parser::parseDeviceName (void)
+bool parser::parseFirstDeviceName (name &id)
 {
   symbol sym;
-  name id;
   int num;
   
   smz->getsymbol(sym,id,num);
   switch(sym) { 
     case namesym:
       // Here is where the device name should be stored somewhere useful
-      cout << "Device name \"" << nmz->getname(id) << "\" recognised.\n";
+      //cout << "Device name \"" << nmz->getname(id) << "\" recognised.\n";
       break;
     case closecurly:
       // Error for at least one device must be defined
@@ -213,12 +217,40 @@ bool parser::parseDeviceName (void)
   return PARSER_PASS;
 }
 
-// Converts strings of device type into an enumerated type
-bool parser::parseDeviceType(device_type &current_device_type)
+bool parser::parseDeviceName (name &id, bool &endOfDevices)
 {
   symbol sym;
-  name id;
   int num;
+  endOfDevices = 0;
+  
+  smz->getsymbol(sym,id,num);
+  switch(sym) { 
+    case namesym:
+      // Here is where the device name should be stored somewhere useful
+      //cout << "Device name \"" << nmz->getname(id) << "\" recognised.\n";
+      break;
+    case closecurly:
+      // Device section ended
+      endOfDevices = 1;
+      break;
+    case numsym:
+      // All names must begin with a letter
+      errorHandling(names_begin_letter);
+      return PARSER_FAIL;
+    default:
+      // Generic expected a name here error
+      errorHandling(device_name_expected);
+      return PARSER_FAIL;
+  }
+  return PARSER_PASS;
+}
+
+// Converts strings of device type into an enumerated type
+bool parser::parseDeviceType (device_type &current_device_type)
+{
+  symbol sym;
+  int num;
+  name id;
   
   smz->getsymbol(sym,id,num);
   if(nmz->getname(id).compare("and") == 0)
@@ -285,6 +317,61 @@ bool parser::parseParam(int &param_value)
   return PARSER_PASS;
 }
 
+// Parses parameter if necessary and then creates a device of give type and name
+bool parser::createDevice (device_type current_device_type, name id)
+{
+  int param_value;
+  switch(current_device_type)
+  {
+    case AND:
+      if(parseParam(param_value)) return PARSER_FAIL;
+      cout << "Created AND gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
+      break;
+    case NAND:
+      if(parseParam(param_value)) return PARSER_FAIL;
+      cout << "Created NAND gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
+      break;
+    case OR:
+      if(parseParam(param_value)) return PARSER_FAIL;
+      cout << "Created OR gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
+      break;
+    case NOR:
+      if(parseParam(param_value)) return PARSER_FAIL;
+      cout << "Created NOR gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
+      break;
+    case XOR:
+      if(parseParam(param_value)) return PARSER_FAIL;
+      cout << "Created XOR gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
+      break;
+    case DTYPE:
+      cout << "Created DTYPE, with name \"" << nmz->getname(id) << "\".\n";
+      break;
+    case CLK:
+      cout << "Created CLK, with name \"" << nmz->getname(id) << "\".\n";
+      break;
+    case SW:
+      cout << "Created SW, with name \"" << nmz->getname(id) << "\".\n";
+      break;
+    default:
+      cout << "Something has gone really wrong.\n";
+  }
+  return PARSER_PASS;
+}
+
+bool parser::parseNumber(int &num)
+{
+  symbol sym;
+  name id;
+  
+  smz->getsymbol(sym,id,num);
+  if(sym != numsym)
+  {
+    errorHandling(number_expected);
+    return PARSER_FAIL;
+  }
+  return PARSER_PASS;
+}
+
 parser::parser (
                 #ifndef PARSER_TEST
                 network* network_mod, 
@@ -303,7 +390,6 @@ parser::parser (
                        /* netz->makeconnection (i1, i2, o1, o2, ok);   */
   nmz = name_table;	
   /* any other initialisation you want to do? */
-
 }
 
 

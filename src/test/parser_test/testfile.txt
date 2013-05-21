@@ -2,5 +2,13 @@
 {
 DEVICES
 {
-D1 = dtype(;
+D1 = NAND(64);
+Dd = dtype;
+switchy = Sw;
+gate = NOR(23);
+or = OR(9);
 }
+INIT {
+dd = 7;
+j= 4
+;}

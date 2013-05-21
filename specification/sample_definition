@@ -8,9 +8,10 @@ DEVICES
 	CLK1 = CLK;
 }
 
-INIT{
-        SW = 1;
-        CLK1 = 4;
+INIT
+{
+  SW = 1;
+  CLK1 = 4;
 }
 
 CONNECTIONS
