@@ -4,15 +4,11 @@
 
 using namespace std;
 
-scanner::scanner(names* name,  const char * filename)
+scanner::scanner(names* name, ifstream * file)
 {
 	nametable = name;
-	inf.open(filename);
-	if (!inf) {
-		cout << "Error: cannot open file " << filename << " for reading " << endl;
-		exit(1);
-	}
-	
+	inf=file;
+
 #ifdef SCANNERTEST
 	string lookuptable[]={"namesym","numsym","DEV","INIT","CONN","MON","<=",";","=","badsym","EOF","(",")","{","}"};
 	//^^^^^ make sure this is updated along with the enum in scanner.h
@@ -31,12 +27,12 @@ scanner::scanner(names* name,  const char * filename)
 
 scanner::~scanner()
 {
-	inf.close();
+	inf->close();
 }
 
 void scanner::rewind()	//Does the opposite of nextChar (reverses its effect)
 {						//I suspect this is one of the more bug-prone methods.
-	inf.seekg((int)inf.tellg()-1); //Move file pointer back a place.
+	inf->seekg((int)inf->tellg()-1); //Move file pointer back a place.
 
 	if (currentline.size() > 0) //This is probably always the case, problems if not.
 	{
@@ -46,7 +42,7 @@ void scanner::rewind()	//Does the opposite of nextChar (reverses its effect)
 
 void scanner::nextChar()
 {
-	eofile = (inf.get(curch)==0);
+	eofile = (inf->get(curch)==0);
 	if (curch == '\n') //Seems to happen twice in a row, CR+LF?
 	{
 //		cout << currentline << endl;
@@ -64,6 +60,7 @@ void scanner::nextChar()
 
 void scanner::getsymbol( symbol& s, name & id, int & num)
 {
+	cout <<"a";
 	string str="";
 	num = 0;
 	
