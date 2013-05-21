@@ -5,7 +5,7 @@
 
 using namespace std;
 
-// MyGLCanvas ////////////////////////////////////////////////////////////////////////////////////
+// MyGLCanvas //////////////////////////////////////////////////////////////////
 
 BEGIN_EVENT_TABLE(MyGLCanvas, wxGLCanvas)
   EVT_SIZE(MyGLCanvas::OnSize)
@@ -13,10 +13,19 @@ BEGIN_EVENT_TABLE(MyGLCanvas, wxGLCanvas)
   EVT_MOUSE_EVENTS(MyGLCanvas::OnMouse)
 END_EVENT_TABLE()
   
-int wxglcanvas_attrib_list[5] = {WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0};
+int wxglcanvas_attrib_list[5] = {WX_GL_RGBA,
+                                 WX_GL_DOUBLEBUFFER,
+                                 WX_GL_DEPTH_SIZE,
+                                 16, 0};
 
-MyGLCanvas::MyGLCanvas(wxWindow *parent, wxWindowID id, monitor* monitor_mod, names* names_mod,
-		       const wxPoint& pos, const wxSize& size, long style, const wxString& name):
+MyGLCanvas::MyGLCanvas(wxWindow *parent,
+                       wxWindowID id,
+                       monitor* monitor_mod,
+                       names* names_mod,
+                       const wxPoint& pos,
+                       const wxSize& size,
+                       long style,
+                       const wxString& name):
     wxGLCanvas(parent, id, pos, size, style, name, wxglcanvas_attrib_list)
   // Constructor - initialises private variables
 {
@@ -27,10 +36,11 @@ MyGLCanvas::MyGLCanvas(wxWindow *parent, wxWindowID id, monitor* monitor_mod, na
 }
 
 void MyGLCanvas::Render(wxString example_text, int cycles)
-  // Draws canvas contents - the following example writes the string "example text" onto the canvas
-  // and draws a signal trace. The trace is artificial if the simulator has not yet been run.
-  // When the simulator is run, the number of cycles is passed as a parameter and the first monitor
-  // trace is displayed.
+  // Draws canvas contents - the following example writes the string
+  // "example text" onto the canvas and draws a signal trace.
+  // The trace is artificial if the simulator has not yet been
+  // run. When the simulator is run, the number of cycles is passed as
+  // a parameter and the first monitor trace is displayed.
 {
   float y;
   unsigned int i;
@@ -45,16 +55,16 @@ void MyGLCanvas::Render(wxString example_text, int cycles)
   }
   glClear(GL_COLOR_BUFFER_BIT);
 
-  if ((cyclesdisplayed >= 0) && (mmz->moncount() > 0)) { // draw the first monitor signal, get trace from monitor class
-
+  if ((cyclesdisplayed >= 0) && (mmz->moncount() > 0)) {
+    // draw the first monitor signal, get trace from monitor class
     glColor3f(1.0, 0.0, 0.0);
     glBegin(GL_LINE_STRIP);
     for (i=0; i<cyclesdisplayed; i++) {
       if (mmz->getsignaltrace(0, i, s)) {
-	if (s==low) y = 10.0;
-	if (s==high) y = 30.0;
-	glVertex2f(20*i+10.0, y); 
-	glVertex2f(20*i+30.0, y);
+        if (s==low) y = 10.0;
+        if (s==high) y = 30.0;
+        glVertex2f(20*i+10.0, y); 
+        glVertex2f(20*i+30.0, y);
       }
     }
     glEnd();
@@ -76,8 +86,10 @@ void MyGLCanvas::Render(wxString example_text, int cycles)
   // Example of how to use GLUT to draw text on the canvas
   glColor3f(0.0, 0.0, 1.0);
   glRasterPos2f(10, 100);
-  for (i = 0; i < example_text.Len(); i++) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, example_text[i]);
-
+  for (i = 0; i < example_text.Len(); i++)
+    {
+      glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, example_text[i]);
+    }
   // We've been drawing to the back buffer, flush the graphics pipeline and swap the back buffer to the front
   glFlush();
   SwapBuffers();
@@ -128,30 +140,45 @@ void MyGLCanvas::OnMouse(wxMouseEvent& event)
   int w, h;;
 
   GetClientSize(&w, &h);
-  if (event.ButtonDown()) text.Printf(wxT("Mouse button %d pressed at %d %d"), event.GetButton(), event.m_x, h-event.m_y);
-  if (event.ButtonUp()) text.Printf(wxT("Mouse button %d released at %d %d"), event.GetButton(), event.m_x, h-event.m_y);
-  if (event.Dragging()) text.Printf(wxT("Mouse dragged to %d %d"), event.m_x, h-event.m_y);
-  if (event.Leaving()) text.Printf(wxT("Mouse left window at %d %d"), event.m_x, h-event.m_y);
+  if (event.ButtonDown())
+    text.Printf(wxT("Mouse button %d pressed at %d %d"),
+                event.GetButton(), event.m_x, h-event.m_y);
+  if (event.ButtonUp())
+    text.Printf(wxT("Mouse button %d released at %d %d"),
+                event.GetButton(), event.m_x, h-event.m_y);
+  if (event.Dragging())
+    text.Printf(wxT("Mouse dragged to %d %d"),
+                event.m_x, h-event.m_y);
+  if (event.Leaving())
+    text.Printf(wxT("Mouse left window at %d %d"),
+                event.m_x, h-event.m_y);
 
-  if (event.ButtonDown() || event.ButtonUp() || event.Dragging() || event.Leaving()) Render(text);
+  if (event.ButtonDown() || event.ButtonUp() || event.Dragging() || event.Leaving())
+    Render(text);
 }
 
-// MyFrame ///////////////////////////////////////////////////////////////////////////////////////
+// MyFrame /////////////////////////////////////////////////////////////////////
 
 
 BEGIN_EVENT_TABLE(MyFrame, wxFrame)
   EVT_MENU(wxID_EXIT, MyFrame::OnExit)
   EVT_MENU(wxID_ABOUT, MyFrame::OnAbout)
   EVT_BUTTON(MY_BUTTON_ID, MyFrame::OnButton)
-  EVT_SPINCTRL(MY_SPINCNTRL_ID, MyFrame::OnSpin)
+  EVT_SPINCTRL(CYCLES_SPIN, MyFrame::OnSpin)
   EVT_TEXT_ENTER(MY_TEXTCTRL_ID, MyFrame::OnText)
 END_EVENT_TABLE()
   
-MyFrame::MyFrame(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size,
-		 names *names_mod, devices *devices_mod, monitor *monitor_mod, long style):
+MyFrame::MyFrame(wxWindow *parent,
+                 const wxString& title,
+                 const wxPoint& pos,
+                 const wxSize& size,
+                 names *names_mod,
+                 devices *devices_mod,
+                 monitor *monitor_mod,
+                 long style):
   wxFrame(parent, wxID_ANY, title, pos, size, style)
-  // Constructor - initialises pointers to names, devices and monitor classes, lays out widgets
-  // using sizers
+  // Constructor - initialises pointers to names, devices and monitor
+  // classes, lays out widgets using sizers
 {
   SetIcon(wxIcon(wx_icon));
 
@@ -193,9 +220,21 @@ MyFrame::MyFrame(wxWindow *parent, const wxString& title, const wxPoint& pos, co
   wxBoxSizer *topsizer = new wxBoxSizer(wxVERTICAL);
   
   wxBoxSizer *ctrlsizer = new wxBoxSizer(wxHORIZONTAL);
-  ctrlsizer->Add()
-  
+  ctrlsizer->Add(new wxStaticText(this, wxID_ANY, wxT("Cycles:")),
+                 0,             /* make vertically unstrechable */
+                 wxAll,         /* border all around */
+                 10);           /* border size */ 
 
+
+  ctrlsizer->Add(new wxSpinCtrl(this, CYCLES_SPIN, wxString(wxT("10"))),
+                 0,
+                 wxAll,
+                 10);
+
+  topsizer->Add(ctrlsizer, 1, wxEXPAND | wxALL, 10);
+  
+  SetSizeHints(400, 400);
+  SetSizer(topsizer);
 
 }
 
@@ -208,16 +247,16 @@ void MyFrame::OnAbout(wxCommandEvent &event)
 {
   wxMessageDialog about(this, wxT("LogicSim\n\
     By James Glanville, George Ayris and Andy Holt"),
-			wxT("About LogicSim"),
-			wxICON_INFORMATION | wxOK);
+                        wxT("About LogicSim"),
+                        wxICON_INFORMATION | wxOK);
   about.ShowModal();
 }
 
 void MyFrame::OnButton(wxCommandEvent &event)
-  // Callback for the push button
+// Callback for the push button
 {
   int n, ncycles;
-
+  
   cyclescompleted = 0;
   mmz->resetmonitor ();
   runnetwork(spin->GetValue());

@@ -10,7 +10,8 @@
 #include "monitor.h"
 
 enum { 
-  MY_SPINCNTRL_ID = wxID_HIGHEST + 1,
+  //MY_SPINCNTRL_ID = wxID_HIGHEST + 1,
+  CYCLES_SPIN = wxID_HIGHEST + 1,
   MY_TEXTCTRL_ID,
   MY_BUTTON_ID,
 }; // widget identifiers
