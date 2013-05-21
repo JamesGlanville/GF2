@@ -2,5 +2,5 @@
 {
 DEVICES
 {
-1d = AND(2);
+D1 = AND(2);
 }

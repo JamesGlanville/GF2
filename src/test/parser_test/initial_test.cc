@@ -11,8 +11,16 @@ int main (int argc, char **argv)
     exit(1);
   }
   
+  ifstream * inf = new ifstream;
+  inf->open(argv[1]);
+  
+	if (!inf) {
+		cout << "Error: cannot open file " << argv[1] << " for reading " << endl;
+		exit(1);
+	}
+  
   names* comment_nmz = new names();
-  scanner* comment_smz = new scanner(comment_nmz, argv[1]);
+  scanner* comment_smz = new scanner(comment_nmz, inf);
   test_file_parser* comment_pmz = new test_file_parser(comment_smz, comment_nmz);
   
   if(comment_pmz->testFileDefinition())
@@ -21,7 +29,7 @@ int main (int argc, char **argv)
   }
     
 	names* nmz = new names();
-  scanner* smz = new scanner(nmz, argv[1]);
+  scanner* smz = new scanner(nmz, inf);
   parser* pmz = new parser(smz, nmz);
   
   cout << pmz->readin() << endl;
