@@ -5,14 +5,20 @@
 
 int main(int argc, char **argv)
 {
+	ifstream * inf=new ifstream;
+	
 	if (argc != 2) { // check we have one command line argument
 		wcout << "Usage:      " << argv[0] << " [filename]" << endl;
 		exit(1);
 	}
-	
+	inf->open(argv[1]);
+	if (!inf) {
+		cout << "Error: cannot open file " << argv[1] << " for reading " << endl;
+		exit(1);
+	}
 	names* test_nametable;
-	
-	scanner* test_scanner = new scanner(test_nametable,argv[1]);
+	cout <<"here";
+	scanner* test_scanner = new scanner(test_nametable,inf);
 	
 	for (int i=0;i<80;i++){
 	cout <<test_scanner->curch;

@@ -10,8 +10,7 @@ IMPLEMENT_APP(MyApp)
 bool MyApp::OnInit()
   // This function is automatically called when the application starts
 {
-	cout<<"argh";
-	ifstream * inf;
+	ifstream * inf=new ifstream;
 	
 	if (argc != 2) { // check we have one command line argument
 		wcout << "Usage:      " << argv[0] << " [filename]" << endl;
