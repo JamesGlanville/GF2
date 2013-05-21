@@ -164,12 +164,15 @@ MyFrame::MyFrame(wxWindow *parent, const wxString& title, const wxPoint& pos, co
   }
 
   wxMenu *fileMenu = new wxMenu;
-  fileMenu->Append(wxID_ABOUT, wxT("&About"));
-  fileMenu->Append(wxID_EXIT, wxT("&Quit"));
+  fileMenu->Append(wxID_EXIT, wxT("&Quit\tCtrl-Q"));
+  wxMenu *helpMenu = new wxMenu;
+  helpMenu->Append(wxID_ABOUT, wxT("&About"));
   wxMenuBar *menuBar = new wxMenuBar;
   menuBar->Append(fileMenu, wxT("&File"));
+  menuBar->Append(helpMenu, wxT("&Help"));
   SetMenuBar(menuBar);
 
+  /*
   wxBoxSizer *topsizer = new wxBoxSizer(wxHORIZONTAL);
   canvas = new MyGLCanvas(this, wxID_ANY, monitor_mod, names_mod);
   topsizer->Add(canvas, 1, wxEXPAND | wxALL, 10);
@@ -185,18 +188,28 @@ MyFrame::MyFrame(wxWindow *parent, const wxString& title, const wxPoint& pos, co
 
   SetSizeHints(400, 400);
   SetSizer(topsizer);
+  */
+
+  wxBoxSizer *topsizer = new wxBoxSizer(wxVERTICAL);
+  
+  wxBoxSizer *ctrlsizer = new wxBoxSizer(wxHORIZONTAL);
+  ctrlsizer->Add()
+  
+
+
 }
 
 void MyFrame::OnExit(wxCommandEvent &event)
-  // Callback for the exit menu item
 {
   Close(true);
 }
 
 void MyFrame::OnAbout(wxCommandEvent &event)
-  // Callback for the about menu item
 {
-  wxMessageDialog about(this, wxT("Example wxWidgets GUI\nAndrew Gee\nFebruary 2011"), wxT("About Logsim"), wxICON_INFORMATION | wxOK);
+  wxMessageDialog about(this, wxT("LogicSim\n\
+    By James Glanville, George Ayris and Andy Holt"),
+			wxT("About LogicSim"),
+			wxICON_INFORMATION | wxOK);
   about.ShowModal();
 }
 

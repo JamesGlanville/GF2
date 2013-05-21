@@ -183,4 +183,3 @@ void MyFrame::OnAbout(wxCommandEvent &event)
 			wxICON_INFORMATION | wxOK);
   about.ShowModal();
 }
-
