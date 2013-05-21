@@ -231,10 +231,60 @@ MyFrame::MyFrame(wxWindow *parent,
   ctrlsizer->Add(spin_cycles, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
   ctrlsizer->Add(new wxButton(this, RUN_BUTTON_ID, wxT("Run")),
 		 0,
-		 wxALL | wxALIGN_CENTER_VERTICAL,
+		 wxALL | wxEXPAND,
 		 10);
   topsizer->Add(ctrlsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
+
+  disp_scroll = new wxScrolledWindow(this, DISP_SCROLL);
+
+  wxBoxSizer *toptracesizer = new wxBoxSizer(wxVERTICAL);
   
+  wxBoxSizer *tracesizer1 = new wxBoxSizer(wxHORIZONTAL);
+  tracesizer1->Add(new wxStaticText(disp_scroll, wxID_ANY, wxT("Some text!")),
+   		   1,
+   		   wxALL | wxEXPAND,
+   		   10);
+  toptracesizer->Add(tracesizer1, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
+
+  wxBoxSizer *tracesizer2 = new wxBoxSizer(wxHORIZONTAL);
+  tracesizer2->Add(new wxStaticText(disp_scroll, wxID_ANY, wxT("Some more text!")),
+		   1,
+		   wxALL | wxEXPAND,
+		   10);
+  toptracesizer->Add(tracesizer2, 1, wxALIGN_LEFT | wxALL, 10);
+
+  wxBoxSizer *tracesizer3 = new wxBoxSizer(wxHORIZONTAL);  
+  tracesizer3->Add(new wxStaticText(disp_scroll, wxID_ANY, wxT("Even more text!")),
+  		   1,
+  		   wxALL | wxEXPAND,
+  		   10);
+  toptracesizer->Add(tracesizer3, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
+  
+  wxBoxSizer *tracesizer4 = new wxBoxSizer(wxHORIZONTAL);
+  tracesizer4->Add(new wxStaticText(disp_scroll, wxID_ANY, wxT("The quick brown fox")),
+  		   1,
+  		   wxALL | wxEXPAND,
+  		   10);
+  toptracesizer->Add(tracesizer4, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
+  
+  wxBoxSizer *tracesizer5 = new wxBoxSizer(wxHORIZONTAL);
+  tracesizer5->Add(new wxStaticText(disp_scroll, wxID_ANY, wxT("jumped over")),
+  		   1,
+  		   wxALL | wxEXPAND,
+  		   10);
+  toptracesizer->Add(tracesizer5, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
+  
+  wxBoxSizer *tracesizer6 = new wxBoxSizer(wxHORIZONTAL);
+  tracesizer6->Add(new wxStaticText(disp_scroll, wxID_ANY, wxT("the lazy dogs.")),
+  		   1,
+  		   wxALL | wxEXPAND,
+  		   10);
+  toptracesizer->Add(tracesizer6, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
+  
+  disp_scroll->SetSizer(toptracesizer);
+
+  topsizer->Add(disp_scroll, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
+
   SetSizeHints(400, 400);
   SetSizer(topsizer);
 

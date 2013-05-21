@@ -15,6 +15,7 @@ enum {
   //  MY_TEXTCTRL_ID,
   //  MY_BUTTON_ID,
   RUN_BUTTON_ID,
+  DISP_SCROLL,
 }; // widget identifiers
 
 class MyGLCanvas;
@@ -30,6 +31,7 @@ class MyFrame: public wxFrame
   //  wxSpinCtrl *spin;                       // control widget to select
 					  // the number of cycles
   wxSpinCtrl *spin_cycles;
+  wxScrolledWindow *disp_scroll;
   names *nmz;                             // pointer to names class
   devices *dmz;                           // pointer to devices class
   monitor *mmz;                           // pointer to monitor class
