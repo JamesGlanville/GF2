@@ -55,6 +55,7 @@ string names::getname (name id)
 	else
 	{
 		cout << "Error, index out of range." << endl;
+		return "";
 	}
 }
 	
