@@ -15,6 +15,9 @@ typedef enum {namesym, numsym, DEV, INIT, CONN, MON, consym, semicol, equals, ba
 //^^^ This must be changed simultaneously with the lookuptable in scanner.cc
 
 class scanner {
+#ifdef SCANNERMETHODSPUBLIC
+public:
+#endif
 	char curch; //Current input character
 	string currentline;
 	ifstream inf;
@@ -27,7 +30,9 @@ class scanner {
 	void rewind();
 	void doComments();	
 
+#ifndef SCANNERMETHODSPUBLIC
  public:
+#endif
 	scanner(names* nametable, const char * filename);
 	~scanner();
 	void getsymbol (symbol& s, name& id, int& num);
