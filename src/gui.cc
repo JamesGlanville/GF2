@@ -240,20 +240,11 @@ MyFrame::MyFrame(wxWindow *parent,
 
   wxBoxSizer *toptracesizer = new wxBoxSizer(wxVERTICAL);
 
-  wxString tracesizer = wxT("tracesizer");
-  wxString tracename;
-
-  int num = 1;
-
-  //  tracename << num;
-
-  //  tracename << num;
-
-  //  wxString tracename = tracesizer << num;
-
   /* attempting to generate sizers and content automatically */
 
   vector<wxBoxSizer> vtracesizers;
+  wxString tracesizer = wxT("tracesizer");
+  wxString tracename;
 
   for(int i = 1; i<= 10; i++)
     {
