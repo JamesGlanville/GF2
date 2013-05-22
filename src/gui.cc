@@ -231,9 +231,9 @@ MyFrame::MyFrame(wxWindow *parent,
   spin_cycles = new wxSpinCtrl(this, CYCLES_SPIN, wxString(wxT("10")));
   ctrlsizer->Add(spin_cycles, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
   ctrlsizer->Add(new wxButton(this, RUN_BUTTON_ID, wxT("Run")),
-		 0,
-		 wxALL | wxEXPAND,
-		 10);
+                 0,
+                 wxALL | wxEXPAND,
+                 10);
   topsizer->Add(ctrlsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
 
   disp_scroll = new wxScrolledWindow(this, DISP_SCROLL);
@@ -242,63 +242,62 @@ MyFrame::MyFrame(wxWindow *parent,
 
   /* attempting to generate sizers and content automatically */
 
-  vector<wxBoxSizer> vtracesizers;
+  vector<wxBoxSizer*> vtracesizers;
   wxString tracesizer = wxT("tracesizer");
   wxString tracename;
 
   for(int i = 1; i<= 10; i++)
     {
-      vtracesizers.push_back(wxBoxSizer(wxHORIZONTAL));
+      vtracesizers.push_back(new wxBoxSizer(wxHORIZONTAL));
       tracename = tracesizer << i;
       vtracesizers[i]->Add(new wxStaticText(disp_scroll, wxID_ANY, tracename),
-			   1,
-			   wxALL | wxEXPAND,
-			   10);
+                           1,
+                           wxALL | wxEXPAND,
+                           10);
       toptracesizer->Add(vtracesizers[i], 1, wxALIGN_LEFT | wxALL, 10);
     }
-
   
   
   //  wxBoxSizer *tracesizer1 = new wxBoxSizer(wxHORIZONTAL);
   //  tracesizer1->Add(new wxStaticText(disp_scroll, wxID_ANY, tracename),
-  //   		   1,
-  //   		   wxALL | wxEXPAND,
-  //   		   10);
+  //               1,
+  //               wxALL | wxEXPAND,
+  //               10);
   //  toptracesizer->Add(tracesizer1, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
   //
   //  wxBoxSizer *tracesizer2 = new wxBoxSizer(wxHORIZONTAL);
   //  tracesizer2->Add(new wxStaticText(disp_scroll, wxID_ANY, wxT("Some more text!")),
-  //		   1,
-  //		   wxALL | wxEXPAND,
-  //		   10);
+  //               1,
+  //               wxALL | wxEXPAND,
+  //               10);
   //  toptracesizer->Add(tracesizer2, 1, wxALIGN_LEFT | wxALL, 10);
   //
   //  wxBoxSizer *tracesizer3 = new wxBoxSizer(wxHORIZONTAL);  
   //  tracesizer3->Add(new wxStaticText(disp_scroll, wxID_ANY, wxT("Even more text!")),
-  //  		   1,
-  //  		   wxALL | wxEXPAND,
-  //  		   10);
+  //               1,
+  //               wxALL | wxEXPAND,
+  //               10);
   //  toptracesizer->Add(tracesizer3, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
   //  
   //  wxBoxSizer *tracesizer4 = new wxBoxSizer(wxHORIZONTAL);
   //  tracesizer4->Add(new wxStaticText(disp_scroll, wxID_ANY, wxT("The quick brown fox")),
-  //  		   1,
-  //  		   wxALL | wxEXPAND,
-  //  		   10);
+  //               1,
+  //               wxALL | wxEXPAND,
+  //               10);
   //  toptracesizer->Add(tracesizer4, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
   //  
   //  wxBoxSizer *tracesizer5 = new wxBoxSizer(wxHORIZONTAL);
   //  tracesizer5->Add(new wxStaticText(disp_scroll, wxID_ANY, wxT("jumped over")),
-  //  		   1,
-  //  		   wxALL | wxEXPAND,
-  //  		   10);
+  //               1,
+  //               wxALL | wxEXPAND,
+  //               10);
   //  toptracesizer->Add(tracesizer5, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
   //  
   //  wxBoxSizer *tracesizer6 = new wxBoxSizer(wxHORIZONTAL);
   //  tracesizer6->Add(new wxStaticText(disp_scroll, wxID_ANY, wxT("the lazy dogs.")),
-  //  		   1,
-  //  		   wxALL | wxEXPAND,
-  //  		   10);
+  //               1,
+  //               wxALL | wxEXPAND,
+  //               10);
   //  toptracesizer->Add(tracesizer6, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
   
   disp_scroll->SetSizer(toptracesizer);
