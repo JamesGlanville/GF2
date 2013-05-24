@@ -22,7 +22,7 @@ class devicetable{
 	vector <devicestruct> device_table;
 
 public:
-  name lookup (namestring str, device_type type);
+  name lookup (namestring str, device_type type,numinputs numinput);
     /* Returns the internal representation of the name given in character  */
     /* form.  If the name is not already in the name table, it is          */
     /* automatically inserted.                                             */
