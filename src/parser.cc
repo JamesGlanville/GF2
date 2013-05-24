@@ -346,47 +346,67 @@ bool parser::createDevice (device_type current_device_type, name id)
       if(parseParam(param_value)) return PARSER_FAIL;
       devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type);
       cout << "Created AND gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
+      dmz->makedevice (andgate, id, param_value, ok); 
+      if (!ok){cout <<"error creating and gate"<<endl;}
       break;
+      
     case NAND:
       if(parseParam(param_value)) return PARSER_FAIL;
       devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type);
       cout << "Created NAND gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
+      dmz->makedevice (nandgate, id, param_value, ok); 
+      if (!ok){cout <<"error creating nand gate"<<endl;}
       break;
+      
     case OR:
       if(parseParam(param_value)) return PARSER_FAIL;
       devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type);
       cout << "Created OR gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
+      dmz->makedevice (orgate, id, param_value, ok); 
+      if (!ok){cout <<"error creating or gate"<<endl;}
       break;
+   
     case NOR:
       if(parseParam(param_value)) return PARSER_FAIL;
       devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type);
       cout << "Created NOR gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
+      dmz->makedevice (norgate, id, param_value, ok); 
+      if (!ok){cout <<"error creating nor gate"<<endl;}
       break;
+      
     case XOR:
       if(parseParam(param_value)) return PARSER_FAIL;
       devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type);
       cout << "Created XOR gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
+      dmz->makedevice (xorgate, id, param_value, ok);
+      if (!ok){cout <<"error creating xor gate"<<endl;}
       break;
+      
     case DTYPE:
       devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type);
       cout << "Created DTYPE, with name \"" << nm_devicez->getname(id) << "\".\n";
+      dmz->makedevice (dtype, id, 0, ok); 
+      if (!ok){cout <<"error creating dtype"<<endl;}
       break;
+      
     case CLK:
       if(parseParam(param_value)) return PARSER_FAIL;
       devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type);
       cout << "Created CLK with period of " << param_value << " and name \"" << nm_devicez->getname(id) << "\".\n";
+      dmz->makedevice (aclock, id, param_value, ok); //THIS IS PROBABLY INCORRECT. SECOND VALUE SHOULD BE FREQUENCY, NOT PERIOD.
+      if (!ok){cout <<"error creating clock"<<endl;}
       break;
+      
     case SW:
       if(parseParam(param_value)) return PARSER_FAIL;
       devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type);
       cout << "Created SW with initial state " << param_value << " and name \"" << nm_devicez->getname(id) << "\".\n";
-
       signal = low;
       if (param_value){signal=high;}
- 
       dmz->setswitch (id, signal, ok);
       if (!ok) {cout << "Switch not found"<<endl;}
       break;
+
     default:
       cout << "Something has gone really wrong.\n";
   }
