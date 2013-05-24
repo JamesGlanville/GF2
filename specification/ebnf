@@ -1,12 +1,9 @@
-DEFINITION = '{' DEVICES INIT CONNECTIONS MONITORS '}'
+DEFINITION = '{' DEVICES CONNECTIONS MONITORS '}'
 
 DEVICES =  'DEVICES' '{' device {device} '}'
 device = devicename '=' devicetype [ '(' digit {digit} ')' ] ';'
 devicename = letter {letter | digit}
 devicetype = 'AND' | 'NAND' | 'OR' | 'NOR' | 'XOR' | 'DTYPE' | 'CLK' | 'SW'
-
-INIT = 'INIT' '{' {init} '}'
-init = devicename '=' digit{digit} ';'
 
 CONNECTIONS = 'CONNECTIONS' '{' connection {connection} '}'
 connection = input '<=' output ';'

@@ -42,7 +42,7 @@ void scanner::rewind()	//Does the opposite of nextChar (reverses its effect)
 	}
 }
 
-void scanner::nextChar()
+bool scanner::nextChar()
 {
 	eofile = (inf->get(curch)==0);
 	if (curch == '\n') //Seems to happen twice in a row, CR+LF?
@@ -52,12 +52,18 @@ void scanner::nextChar()
 		linenum++;
 //		cout << linenum;
 	}
+	else if (curch == '\t')
+	{
+		currentline.push_back(' ');
+	}
 	else
 	{
 		currentline.push_back(curch);
 	}
 	
 	curch = tolower(curch); //From here on, everything is lower case.
+	if (curch == '\n'){return true;}
+	return false;
 }
 
 void scanner::getsymbol( symbol& s, name & id, int & num)
@@ -114,7 +120,7 @@ void scanner::getsymbol( symbol& s, name & id, int & num)
 				case '}': s = closecurly; return;
 				case '(': s = openparen; return;
 				case ')': s = closeparen; return;
-				case '/': nextChar(); if (curch =='*') {doComments();break;} else{s=badsym; return;}
+				case '/': nextChar(); if (curch =='*') {doComments();break;} if (curch == '/'){while(!nextChar());break;}else{s=badsym; return;}
 				default : s = badsym; return;}
 		}
 	}
@@ -149,5 +155,17 @@ void scanner::doComments()
 void scanner::printError(string errordesc)
 {
 	//For now:
-	cout << "Error: " << errordesc << " on line " << linenum << " at location (startat0) " << max((int)currentline.size()-1,0) << endl;
+	cout << "Error: " << errordesc << " on line " << linenum << " at location (startat0) " << max((int)currentline.size()-1,0) << ":" << endl;
+	if (currentline.size()<=80)
+	{
+		cout << currentline<<endl;
+		for (int i=0;i<currentline.size()-1;i++){cout << " ";}
+		cout << "^" << endl;
+	}
+	else
+	{
+		cout << currentline.substr(currentline.size()-81,currentline.size()-1);
+		for (int i=0;i<80-1;i++){cout << " ";}
+		cout << "^" <<endl;
+	}
 }
