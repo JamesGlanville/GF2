@@ -14,22 +14,36 @@ using namespace std;
   /* over to you */
 //}
 
-name devicetable::lookup (namestring str,device_type type)
+name devicetable::lookup (namestring str,device_type type,numinputs numinput)
 {
+	devicestruct ds;
+	ds.ns=str;
+	ds.ni=numinput;
+	ds.dt= type;
+	
   for(int i = 0; i < device_table.size(); i++) {
-    if (device_table[i].first == str) {
+    if (device_table[i].ns == str) {
       return i;
     }
   }
-  device_table.push_back(std::make_pair(str,type));
+  device_table.push_back(ds);
   return device_table.size() - 1;
 }
 
 device_type devicetable::gettype(namestring str)
 {
  for(int i = 0; i < device_table.size(); i++) {
-    if (device_table[i].first == str) {
-      return device_table[i].second;
+    if (device_table[i].ns == str) {
+      return device_table[i].dt;
+    }}
+ 	return UNDEFINED;
+}
+
+numinputs devicetable::getinputs(namestring str)
+{
+ for(int i = 0; i < device_table.size(); i++) {
+    if (device_table[i].ns == str) {
+      return device_table[i].ni;
     }}
  	return UNDEFINED;
 }

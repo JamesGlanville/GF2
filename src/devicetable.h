@@ -11,9 +11,15 @@ using namespace std;
 
 typedef int name;
 typedef string namestring;
+typedef int numinputs;
+
+struct devicestruct{
+	namestring ns;
+	device_type dt;
+	numinputs ni;};
 
 class devicetable{
-	vector<pair<namestring,device_type> > device_table;
+	vector <devicestruct> device_table;
 
 public:
   name lookup (namestring str, device_type type);
@@ -22,7 +28,7 @@ public:
     /* automatically inserted.                                             */
     
 	device_type gettype(namestring str);
-
+	numinputs getinputs(namestring str);
 
 #ifdef GOAWAY 
  name cvtname (namestring str);
