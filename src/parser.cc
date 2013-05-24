@@ -43,7 +43,7 @@ bool parser::readin (void)
   // ;
   if(parseToken(semicol)) return PARSER_FAIL;
   
-  // Subsequent device names + checks for closin curly
+  // Subsequent device names + checks for closing curly
   if(parseDeviceName(id,endOfSection)) return PARSER_FAIL;
   
   while(!endOfSection) 
@@ -66,16 +66,16 @@ bool parser::readin (void)
   endOfSection = 0;
   
   // Parse connections
-  if(parseConnInputName(devid,inpid,endOfSection)) return PARSER_FAIL;
+  if(parseConnInputName(dev1id,inid,endOfSection)) return PARSER_FAIL;
   
-  while(!endOfDevices)
+  while(!endOfSection)
   {
     if(parseToken(equals)) return PARSER_FAIL;
     //if(parseConnOutputName(id)) return PARSER_FAIL;
     // Function which does something with num and id goes here
     // Use id to retrieve name, check in clock and switch tables for match, initialise as appropriate
     if(parseToken(semicol)) return PARSER_FAIL;
-    if(parseDeviceName(id,endOfDevices)) return PARSER_FAIL;
+    if(parseDeviceName(id,endOfSection)) return PARSER_FAIL;
   }
   
   return PARSER_PASS;
@@ -134,6 +134,7 @@ bool parser::parseToken (symbol token)
         error_token = "'<='";
         break;
       case semicol:
+      	cout << sym << endl;
         error_token = "';'";
         break;
       case equals:
@@ -205,10 +206,8 @@ bool parser::parseDeviceName (name &id)
   smz->getsymbol(sym,symid,num);
   switch(sym) { 
     case namesym:
-      cout << "Namesym\n";
       // Here is where the device name should be stored somewhere useful
       id = nm_devicez->lookup(nmz->getname(symid));
-      cout << "Device name \"" << nmz->getname(symid) << "\" recognised.\n";
       break;
     case closecurly:
       // Error for at least one device must be defined

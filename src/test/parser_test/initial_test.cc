@@ -28,9 +28,15 @@ int main (int argc, char **argv)
     return 1;  
   }
     
-	names* nmz = new names();
+	
+  names* nmz = new names();
+  network* netz = new network(nmz);
+  monitor* mmz = new monitor(nmz, netz);
+  devices* dmz = new devices(nmz, netz);
   scanner* smz = new scanner(nmz, inf);
-  parser* pmz = new parser(smz, nmz);
+  parser* pmz = new parser(netz, dmz, mmz,smz, nmz);
+  
+  
   
   cout << pmz->readin() << endl;
   

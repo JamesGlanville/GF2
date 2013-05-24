@@ -22,7 +22,7 @@ class parser {
   #endif
   scanner* smz;
   names* nmz;
-  names* devicez;
+  names* nm_devicez;
   devicetable* dtz;
   enum error {unknown, no_opening_brace, no_devices, one_device_required, 
               names_begin_letter, device_name_expected, number_param_expected, 
