@@ -13,6 +13,8 @@ using namespace std;
 #define PARSER_PASS 0;
 #define PARSER_FAIL 1;
 
+enum device_type {NONE=-1,AND, NAND, OR, NOR, XOR, DTYPE, CLK, SW,UNDEFINED};
+
 class parser {
   #ifndef PARSER_TEST
   network* netz; // instantiations of various classes for parser to use.
@@ -25,7 +27,6 @@ class parser {
   enum error {unknown, no_opening_brace, no_devices, one_device_required, 
               names_begin_letter, device_name_expected, number_param_expected, 
               not_valid_device, number_expected};
-  enum device_type {AND, NAND, OR, NOR, XOR, DTYPE, CLK, SW};
   
   /* put other stuff that the class uses internally here */
   /* also declare internal functions                     */
