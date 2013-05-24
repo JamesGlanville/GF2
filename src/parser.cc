@@ -735,6 +735,13 @@ bool parser::parseConnOutputName(name &devid, name &outid)
   return PARSER_PASS;  
 }
 
+// Should just be a simple function call hopefully
+bool parser::createConn(name dev1id,name dev2id,name inid,name outid)
+{
+  cout << "Connect " << nmz->getname(dev1id) << ", input " << nmz->getname(inid) << ", to " << nmz->getname(dev2id) << ", output " << nmz->getname(outid) << endl;
+  return PARSER_PASS;
+}
+
 parser::parser (
                 #ifndef PARSER_TEST
                 network* network_mod, 
