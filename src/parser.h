@@ -14,8 +14,6 @@ using namespace std;
 #define PARSER_PASS 0;
 #define PARSER_FAIL 1;
 
-enum device_type {NONE=-1,AND, NAND, OR, NOR, XOR, DTYPE, CLK, SW,UNDEFINED};
-
 class parser {
   #ifndef PARSER_TEST
   network* netz; // instantiations of various classes for parser to use.

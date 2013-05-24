@@ -2,9 +2,10 @@
 #define devicetable_h
 
 #include <string>
-#include "parser.h"
+//#include "parser.h"
 #include <vector>
 #include <utility>
+enum device_type {NONE=-1,AND, NAND, OR, NOR, XOR, DTYPE, CLK, SW,UNDEFINED};
 
 using namespace std;
 
