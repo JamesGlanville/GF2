@@ -10,7 +10,7 @@ bool parser::readin (void)
   name id;
   int num;
   device_type current_device_type;
-  bool endOfDevices = 0;
+  bool endOfSection = 0;
 
   // {
   if(parseToken(opencurly)) return PARSER_FAIL;
@@ -23,7 +23,7 @@ bool parser::readin (void)
 
   // Parsing defined devices
   // First device name
-  if(parseFirstDeviceName(id)) return PARSER_FAIL;
+  if(parseDeviceName(id)) return PARSER_FAIL;
   
   // = 
   if(parseToken(equals)) return PARSER_FAIL;
@@ -39,40 +39,40 @@ bool parser::readin (void)
   // ;
   if(parseToken(semicol)) return PARSER_FAIL;
   
-  // Subsequent device names
-  if(parseDeviceName(id,endOfDevices)) return PARSER_FAIL;
+  // Subsequent device names + checks for closin curly
+  if(parseDeviceName(id,endOfSection)) return PARSER_FAIL;
   
-  while(!endOfDevices) 
+  while(!endOfSection) 
   {
     if(parseToken(equals)) return PARSER_FAIL;
     if(parseDeviceType(current_device_type)) return PARSER_FAIL;
     if(createDevice(current_device_type,id)) return PARSER_FAIL;
     if(parseToken(semicol)) return PARSER_FAIL;
     // Goes at end of loop because it also detects the closing curly brace
-    if(parseDeviceName(id,endOfDevices)) return PARSER_FAIL;
+    if(parseDeviceName(id,endOfSection)) return PARSER_FAIL;
   }
   
-  // INIT
-  if(parseSectionHeader(INIT)) return PARSER_FAIL;
+  // CONNECTIONS
+  if(parseSectionHeader(CONN)) return PARSER_FAIL;
   
   // {
   if(parseToken(opencurly)) return PARSER_FAIL;
   
   // Reset end of section marker
-  endOfDevices = 0;
+  endOfSection = 0;
   
-  // Parse initialisations
-  if(parseDeviceName(id,endOfDevices)) return PARSER_FAIL;
+  // Parse connections
+  /*if(parseConnInputName(id,endOfSection)) return PARSER_FAIL;
   
   while(!endOfDevices)
   {
     if(parseToken(equals)) return PARSER_FAIL;
-    if(parseNumber(num)) return PARSER_FAIL;
+    if(parseConnOutputName(id)) return PARSER_FAIL;
     // Function which does something with num and id goes here
     // Use id to retrieve name, check in clock and switch tables for match, initialise as appropriate
     if(parseToken(semicol)) return PARSER_FAIL;
     if(parseDeviceName(id,endOfDevices)) return PARSER_FAIL;
-  }
+  }*/
   
   return PARSER_PASS;
 }
@@ -190,7 +190,7 @@ bool parser::parseSectionHeader (symbol header)
 }
 
 // Gives back (in id) the name location in the devices nametable
-bool parser::parseFirstDeviceName (name &id)
+bool parser::parseDeviceName (name &id)
 {
   symbol sym;
   int num;
@@ -326,42 +326,53 @@ bool parser::parseParam(int &param_value)
 }
 
 // Parses parameter if necessary and then creates a device of give type and name
+// Semantic checking of parameters should occur here
 bool parser::createDevice (device_type current_device_type, name id)
 {
   int param_value;
   bool ok;
   asignal signal;
+  name devicet_id;
+
   switch(current_device_type)
   {
     case AND:
       if(parseParam(param_value)) return PARSER_FAIL;
+      devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type);
       cout << "Created AND gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
       break;
     case NAND:
       if(parseParam(param_value)) return PARSER_FAIL;
+      devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type);
       cout << "Created NAND gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
       break;
     case OR:
       if(parseParam(param_value)) return PARSER_FAIL;
+      devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type);
       cout << "Created OR gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
       break;
     case NOR:
       if(parseParam(param_value)) return PARSER_FAIL;
+      devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type);
       cout << "Created NOR gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
       break;
     case XOR:
       if(parseParam(param_value)) return PARSER_FAIL;
+      devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type);
       cout << "Created XOR gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
       break;
     case DTYPE:
+      devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type);
       cout << "Created DTYPE, with name \"" << nm_devicez->getname(id) << "\".\n";
       break;
     case CLK:
       if(parseParam(param_value)) return PARSER_FAIL;
+      devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type);
       cout << "Created CLK with period of " << param_value << " and name \"" << nm_devicez->getname(id) << "\".\n";
       break;
     case SW:
       if(parseParam(param_value)) return PARSER_FAIL;
+      devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type);
       cout << "Created SW with initial state " << param_value << " and name \"" << nm_devicez->getname(id) << "\".\n";
 
       signal = low;
@@ -409,6 +420,7 @@ parser::parser (
   nmz = name_table;	
   /* any other initialisation you want to do? */
   nm_devicez = new names();
+  dtz = new devicetable();
 }
 
 

@@ -2,6 +2,7 @@
 #define parser_h
 
 #include "names.h"
+#include "devicetable.h"
 #include "network.h"
 #include "devices.h"
 #include "monitor.h"
@@ -23,7 +24,8 @@ class parser {
   #endif
   scanner* smz;
   names* nmz;
-  names* nm_devicez;
+  names* devicez;
+  devicetable* dtz;
   enum error {unknown, no_opening_brace, no_devices, one_device_required, 
               names_begin_letter, device_name_expected, number_param_expected, 
               not_valid_device, number_expected};
@@ -35,9 +37,9 @@ class parser {
   bool parseToken(symbol token);
   // Function to parse DEV, INIT, CONN and MON
   bool parseSectionHeader(symbol header);
-  // Function to parse first device name and add device name to device nametable
-  bool parseFirstDeviceName(name &id); 
-  // Parse subsequent device names
+  // Function to parse a device name and add device name to device nametable
+  bool parseDeviceName(name &id); 
+  // Overloaded function to also check for the closing curly brace that indicates end of section
   bool parseDeviceName(name &id, bool &endOfDevices);
   // Detects device type and return in parameter
   bool parseDeviceType(device_type &current_device_type);
@@ -46,8 +48,9 @@ class parser {
   // Parses parameter if necessary and then creates a device of give type and name
   // For CLK and SW it stores the names
   bool createDevice(device_type current_device_type, name id);
-  // Parses a number (keeps everything neat)
+  // Parses a number (keeps everything neat) - POSSIBLY NOT REQUIRED CHECK AT END
   bool parseNumber(int &num);
+  // Parses the connection input 
   
 
  public:
