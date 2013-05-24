@@ -42,7 +42,7 @@ void scanner::rewind()	//Does the opposite of nextChar (reverses its effect)
 	}
 }
 
-void scanner::nextChar()
+bool scanner::nextChar()
 {
 	eofile = (inf->get(curch)==0);
 	if (curch == '\n') //Seems to happen twice in a row, CR+LF?
@@ -58,6 +58,8 @@ void scanner::nextChar()
 	}
 	
 	curch = tolower(curch); //From here on, everything is lower case.
+	if (curch == '\n'){return true;}
+	return false;
 }
 
 void scanner::getsymbol( symbol& s, name & id, int & num)
@@ -114,7 +116,7 @@ void scanner::getsymbol( symbol& s, name & id, int & num)
 				case '}': s = closecurly; return;
 				case '(': s = openparen; return;
 				case ')': s = closeparen; return;
-				case '/': nextChar(); if (curch =='*') {doComments();break;} else{s=badsym; return;}
+				case '/': nextChar(); if (curch =='*') {doComments();break;} if (curch == '/'){while(!nextChar());break;}else{s=badsym; return;}
 				default : s = badsym; return;}
 		}
 	}

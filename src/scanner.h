@@ -26,7 +26,7 @@ class scanner {
 	int commentnest; //This stores the number of opening /*'s minus closing */'s.
 	names* nametable;
 	
-	void nextChar();
+	bool nextChar();
 	void rewind();
 	void doComments();	
 
