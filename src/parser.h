@@ -2,6 +2,7 @@
 #define parser_h
 
 #include "names.h"
+#include "devicetable.h"
 #include "network.h"
 #include "devices.h"
 #include "monitor.h"
@@ -23,7 +24,8 @@ class parser {
   #endif
   scanner* smz;
   names* nmz;
-  names* nm_devicez;
+  names* devicez;
+  devicetable* dtz;
   enum error {unknown, no_opening_brace, no_devices, one_device_required, 
               names_begin_letter, device_name_expected, number_param_expected, 
               not_valid_device, number_expected};
