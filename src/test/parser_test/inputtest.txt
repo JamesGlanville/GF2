@@ -8,7 +8,9 @@ switchy = Sw(2);
 gate = NOR(23);
 or = OR(9);
 }
-INIT {
-dd = 7;
-j= 4
-;}
+CONNECTIONS
+{
+Dd.data <= switchy;
+gate.i6 <= or;
+D1.i5 <= Dd.Q;
+}

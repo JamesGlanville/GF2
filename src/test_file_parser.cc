@@ -10,6 +10,7 @@ bool test_file_parser::testFileDefinition (void)
   bool error = 0;
   
   smz->getsymbol(sym,id,num);
+
   if(sym != badsym)
   {
     cout << sym << endl;

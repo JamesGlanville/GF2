@@ -36,8 +36,6 @@ int main (int argc, char **argv)
   scanner* smz = new scanner(nmz, inf);
   parser* pmz = new parser(netz, dmz, mmz,smz, nmz);
   
-  
-  
   cout << pmz->readin() << endl;
   
   return 0;
