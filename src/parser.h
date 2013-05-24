@@ -53,6 +53,8 @@ class parser {
   bool parseConnInputName(name &devid, name &inpid, bool &endOfSection); 
   // Parse the connection output
   bool parseConnOutputName(name &devid, name &outid);
+  // Create the connection
+  bool createConn(name dev1id,name dev2id,name inid,name outid);
 
  public:
   bool readin();

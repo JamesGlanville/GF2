@@ -10,7 +10,7 @@ using namespace std;
 
 names::names(void)  /* the constructor */
 {
-	nametable.push_back("blankname");
+	nametable.push_back("");
   /* over to you */
 }
 
