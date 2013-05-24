@@ -21,8 +21,7 @@ class parser {
   #endif
   scanner* smz;
   names* nmz;
-  names* switchz;
-  names* clockz;
+  names* nm_devicez;
   enum error {unknown, no_opening_brace, no_devices, one_device_required, 
               names_begin_letter, device_name_expected, number_param_expected, 
               not_valid_device, number_expected};
@@ -35,7 +34,7 @@ class parser {
   bool parseToken(symbol token);
   // Function to parse DEV, INIT, CONN and MON
   bool parseSectionHeader(symbol header);
-  // Function to parse first device name
+  // Function to parse first device name and add device name to device nametable
   bool parseFirstDeviceName(name &id); 
   // Parse subsequent device names
   bool parseDeviceName(name &id, bool &endOfDevices);

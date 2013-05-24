@@ -189,16 +189,20 @@ bool parser::parseSectionHeader (symbol header)
   return PARSER_PASS;
 }
 
+// Gives back (in id) the name location in the devices nametable
 bool parser::parseFirstDeviceName (name &id)
 {
   symbol sym;
   int num;
+  name symid;
   
-  smz->getsymbol(sym,id,num);
+  smz->getsymbol(sym,symid,num);
   switch(sym) { 
     case namesym:
+      cout << "Namesym\n";
       // Here is where the device name should be stored somewhere useful
-      //cout << "Device name \"" << nmz->getname(id) << "\" recognised.\n";
+      id = nm_devicez->lookup(nmz->getname(symid));
+      cout << "Device name \"" << nmz->getname(symid) << "\" recognised.\n";
       break;
     case closecurly:
       // Error for at least one device must be defined
@@ -217,16 +221,20 @@ bool parser::parseFirstDeviceName (name &id)
   return PARSER_PASS;
 }
 
+// Gives back (in id) the name location in the devices nametable - should semantic error check for repeated names
 bool parser::parseDeviceName (name &id, bool &endOfDevices)
 {
   symbol sym;
   int num;
+  name symid;
   endOfDevices = 0;
   
-  smz->getsymbol(sym,id,num);
+  smz->getsymbol(sym,symid,num);
   switch(sym) { 
     case namesym:
       // Here is where the device name should be stored somewhere useful
+      // SEMANTIC CHECKING TO OCCUR here
+      id = nm_devicez->lookup(nmz->getname(symid));      
       //cout << "Device name \"" << nmz->getname(id) << "\" recognised.\n";
       break;
     case closecurly:
@@ -325,32 +333,34 @@ bool parser::createDevice (device_type current_device_type, name id)
   {
     case AND:
       if(parseParam(param_value)) return PARSER_FAIL;
-      cout << "Created AND gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
+      cout << "Created AND gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
       break;
     case NAND:
       if(parseParam(param_value)) return PARSER_FAIL;
-      cout << "Created NAND gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
+      cout << "Created NAND gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
       break;
     case OR:
       if(parseParam(param_value)) return PARSER_FAIL;
-      cout << "Created OR gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
+      cout << "Created OR gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
       break;
     case NOR:
       if(parseParam(param_value)) return PARSER_FAIL;
-      cout << "Created NOR gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
+      cout << "Created NOR gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
       break;
     case XOR:
       if(parseParam(param_value)) return PARSER_FAIL;
-      cout << "Created XOR gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
+      cout << "Created XOR gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
       break;
     case DTYPE:
-      cout << "Created DTYPE, with name \"" << nmz->getname(id) << "\".\n";
+      cout << "Created DTYPE, with name \"" << nm_devicez->getname(id) << "\".\n";
       break;
     case CLK:
-      cout << "Created CLK, with name \"" << nmz->getname(id) << "\".\n";
+      if(parseParam(param_value)) return PARSER_FAIL;
+      cout << "Created CLK with period of " << param_value << " and name \"" << nm_devicez->getname(id) << "\".\n";
       break;
     case SW:
-      cout << "Created SW, with name \"" << nmz->getname(id) << "\".\n";
+      if(parseParam(param_value)) return PARSER_FAIL;
+      cout << "Created SW with initial state " << param_value << " and name \"" << nm_devicez->getname(id) << "\".\n";
       break;
     default:
       cout << "Something has gone really wrong.\n";
@@ -390,6 +400,7 @@ parser::parser (
                        /* netz->makeconnection (i1, i2, o1, o2, ok);   */
   nmz = name_table;	
   /* any other initialisation you want to do? */
+  nm_devicez = new names();
 }
 
 
