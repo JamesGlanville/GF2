@@ -42,7 +42,7 @@ void scanner::rewind()	//Does the opposite of nextChar (reverses its effect)
 	}
 }
 
-bool scanner::nextChar()
+bool scanner::nextChar() //returns true if new line happens.
 {
 	eofile = (inf->get(curch)==0);
 	if (curch == '\n') //Seems to happen twice in a row, CR+LF?
@@ -156,13 +156,13 @@ void scanner::printError(string errordesc)
 {
 	//For now:
 	cout << "Error: " << errordesc << " on line " << linenum << " at location (startat0) " << max((int)currentline.size()-1,0) << ":" << endl;
-	if (currentline.size()<=80)
+	if (currentline.size()>0&&currentline.size()<=80)
 	{
 		cout << currentline<<endl;
 		for (int i=0;i<currentline.size()-1;i++){cout << " ";}
 		cout << "^" << endl;
 	}
-	else
+	else if (currentline.size()>80)
 	{
 		cout << currentline.substr(currentline.size()-81,currentline.size()-1);
 		for (int i=0;i<80-1;i++){cout << " ";}
