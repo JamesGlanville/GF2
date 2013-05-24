@@ -52,6 +52,10 @@ bool scanner::nextChar()
 		linenum++;
 //		cout << linenum;
 	}
+	else if (curch == '\t')
+	{
+		currentline.push_back(' ');
+	}
 	else
 	{
 		currentline.push_back(curch);
