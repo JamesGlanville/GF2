@@ -29,7 +29,12 @@ bool MyApp::OnInit()
   dmz = new devices(nmz, netz);
   mmz = new monitor(nmz, netz);
   smz = new scanner(nmz, inf);
+#ifdef PARSER_TEST  
   pmz = new parser(smz, nmz);
+#endif
+#ifndef PARSER_TEST
+  pmz = new parser(netz,dmz,mmz,smz,nmz);
+#endif
 
   if (pmz->readin ()) { // check the logic file parsed correctly
 #ifdef USE_GUI
