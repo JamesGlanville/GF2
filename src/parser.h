@@ -28,7 +28,7 @@ class parser {
   devicetable* dtz;
   enum error {unknown, no_opening_brace, no_devices, one_device_required, 
               names_begin_letter, device_name_expected, number_param_expected, 
-              not_valid_device, number_expected};
+              not_valid_device, number_expected, device_not_defined};
   
   /* put other stuff that the class uses internally here */
   /* also declare internal functions                     */
@@ -51,7 +51,7 @@ class parser {
   // Parses a number (keeps everything neat) - POSSIBLY NOT REQUIRED CHECK AT END
   bool parseNumber(int &num);
   // Parses the connection input 
-  
+  bool parseConnInputName(name &devid, name &inpid, bool &endOfSection); 
 
  public:
   bool readin();

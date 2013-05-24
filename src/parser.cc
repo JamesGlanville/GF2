@@ -8,6 +8,10 @@ bool parser::readin (void)
 {
   // Stores parsing function output
   name id;
+  name dev1id;
+  name inid;
+  name dev2id;
+  name outid;
   int num;
   device_type current_device_type;
   bool endOfSection = 0;
@@ -62,17 +66,17 @@ bool parser::readin (void)
   endOfSection = 0;
   
   // Parse connections
-  /*if(parseConnInputName(id,endOfSection)) return PARSER_FAIL;
+  if(parseConnInputName(devid,inpid,endOfSection)) return PARSER_FAIL;
   
   while(!endOfDevices)
   {
     if(parseToken(equals)) return PARSER_FAIL;
-    if(parseConnOutputName(id)) return PARSER_FAIL;
+    //if(parseConnOutputName(id)) return PARSER_FAIL;
     // Function which does something with num and id goes here
     // Use id to retrieve name, check in clock and switch tables for match, initialise as appropriate
     if(parseToken(semicol)) return PARSER_FAIL;
     if(parseDeviceName(id,endOfDevices)) return PARSER_FAIL;
-  }*/
+  }
   
   return PARSER_PASS;
 }
@@ -107,6 +111,8 @@ void parser::errorHandling (error error_num)
     case not_valid_device:
       smz->printError("Not a valid device type");
       break;
+    case device_not_defined:
+      smz->printError("Device not defined");
     default:
       cout << "You should never see this message\n";
   }
@@ -375,6 +381,24 @@ bool parser::createDevice (device_type current_device_type, name id)
     default:
       cout << "Something has gone really wrong.\n";
   }
+  return PARSER_PASS;
+}
+
+bool parser::parseConnInputName(name &devid, name &inpid, bool &endOfSection)
+{
+  symbol sym;
+  int num;
+  
+  // Retrieve device name
+  smz->getsymbol(sym, devid, num);
+  // Check against device table
+  switch(dtz->gettype(nmz->getname(devid)))
+  {
+    case unknown:
+      errorHandling(device_not_defined);
+      break;
+  }
+  
   return PARSER_PASS;
 }
 
