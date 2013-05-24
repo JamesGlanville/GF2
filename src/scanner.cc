@@ -83,7 +83,7 @@ void scanner::getsymbol( symbol& s, name & id, int & num)
 		{}
 		else if (isalpha(curch))
 		{
-			while ((isalnum(curch) || curch=='.')&& eofile == false)
+			while ((isalnum(curch))&& eofile == false)
 			{
 				str.push_back(curch);
 				nextChar();
@@ -120,6 +120,7 @@ void scanner::getsymbol( symbol& s, name & id, int & num)
 				case '}': s = closecurly; return;
 				case '(': s = openparen; return;
 				case ')': s = closeparen; return;
+				case '.': s = fullstop; return;
 				case '/': nextChar(); if (curch =='*') {doComments();break;} if (curch == '/'){while(!nextChar());break;}else{s=badsym; return;}
 				default : s = badsym; return;}
 		}
