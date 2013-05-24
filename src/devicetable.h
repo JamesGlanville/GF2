@@ -23,7 +23,7 @@ public:
 	device_type gettype(namestring str);
 
 
-  name cvtname (namestring str);
+#ifdef GOAWAY  name cvtname (namestring str);
     /* Returns the internal representation of the name given in character  */
     /* form.  If the name is not in the name table then 'blankname' is     */
     /* returned.                                                           */
@@ -41,6 +41,7 @@ public:
     /* names initialises the name table.  This procedure is called at      */
     /* system initialisation before any of the above procedures/functions  */
     /* are used.                                                           */
+#endif
 };
 
 #endif /* names_h */
