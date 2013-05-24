@@ -6,7 +6,7 @@
 #include "network.h"
 #include "devices.h"
 #include "monitor.h"
-#define PARSER_TEST
+//#define PARSER_TEST
 #include <iostream>
 #include "scanner.h"
 using namespace std;

@@ -336,7 +336,10 @@ bool parser::parseParam(int &param_value)
 bool parser::createDevice (device_type current_device_type, name id)
 {
   int param_value;
+  bool ok;
+  asignal signal;
   name devicet_id;
+
   switch(current_device_type)
   {
     case AND:
@@ -377,6 +380,12 @@ bool parser::createDevice (device_type current_device_type, name id)
       if(parseParam(param_value)) return PARSER_FAIL;
       devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type);
       cout << "Created SW with initial state " << param_value << " and name \"" << nm_devicez->getname(id) << "\".\n";
+
+      signal = low;
+      if (param_value){signal=high;}
+ 
+      dmz->setswitch (id, signal, ok);
+      if (!ok) {cout << "Switch not found"<<endl;}
       break;
     default:
       cout << "Something has gone really wrong.\n";

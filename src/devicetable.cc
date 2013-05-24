@@ -8,11 +8,11 @@ using namespace std;
 
 /* Name storage and retrieval routines */
 
-devicetable::devicetable(void)  /* the constructor */
-{
+//devicetable::devicetable()  /* the constructor */
+//{
 //	nametable.push_back(std::make_pair("blankname",NONE);
   /* over to you */
-}
+//}
 
 name devicetable::lookup (namestring str,device_type type)
 {

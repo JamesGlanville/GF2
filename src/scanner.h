@@ -11,7 +11,7 @@
 
 using namespace std;
 
-typedef enum {namesym, numsym, DEV, INIT, CONN, MON, consym, semicol, equals, badsym, eofsym, openparen, closeparen, opencurly, closecurly} symbol;
+typedef enum {namesym, numsym, DEV, INIT, CONN, MON, consym, semicol, equals, badsym, eofsym, openparen, closeparen, opencurly, closecurly,fullstop} symbol;
 //^^^ This must be changed simultaneously with the lookuptable in scanner.cc
 
 class scanner {
