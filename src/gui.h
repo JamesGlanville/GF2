@@ -31,7 +31,7 @@ class MyFrame: public wxFrame
   //  wxSpinCtrl *spin;                       // control widget to select
 					  // the number of cycles
   wxSpinCtrl *spin_cycles;
-  wxScrolledWindow *disp_scroll;
+  wxWindow *disp_scroll;
   names *nmz;                             // pointer to names class
   devices *dmz;                           // pointer to devices class
   monitor *mmz;                           // pointer to monitor class
@@ -42,7 +42,9 @@ class MyFrame: public wxFrame
   //  void OnButton(wxCommandEvent& event);   // callback for push button
   void OnRunButton(wxCommandEvent &event);
   void OnSpin(wxSpinEvent& event);        // callback for spin control
-  //  void OnText(wxCommandEvent& event);     // callback for text entry field
+  //  void OnText(wxCommandEvent& event);     // callback for text
+  //  entry field
+  void OnScroll(wxScrollWinEvent& event);
   DECLARE_EVENT_TABLE()
 };
     
