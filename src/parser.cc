@@ -1,6 +1,10 @@
 /*
 TODO:
 ensure monitor names are unique
+connections created
+monitors created
+all inputs are connected
+(look in lab handout for what has been missed)
 */
 #include "parser.h"
 
