@@ -1,3 +1,7 @@
+/*
+TODO:
+ensure monitor names are unique
+*/
 #include "parser.h"
 
 using namespace std;
