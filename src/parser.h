@@ -23,11 +23,13 @@ class parser {
   scanner* smz;
   names* nmz;
   names* nm_devicez;
+  names* nm_monitorz;
   devicetable* dtz;
   enum error {unknown, no_opening_brace, no_devices, one_device_required, 
               names_begin_letter, device_name_expected, number_param_expected, 
               not_valid_device, number_expected, device_not_defined, invalid_input,
-              no_inputs, more_inputs_than_defined, invalid_output};
+              no_inputs, more_inputs_than_defined, invalid_output, one_monitor_required,
+			  monitor_name_expected, inputs_two_to_sixteen, clk_param, switch_param};
   
   /* put other stuff that the class uses internally here */
   /* also declare internal functions                     */
@@ -55,6 +57,13 @@ class parser {
   bool parseConnOutputName(name &devid, name &outid);
   // Create the connection
   bool createConn(name dev1id,name dev2id,name inid,name outid);
+  // Parses monitor name
+  bool parseMonitorName(name &id);
+  // Parses monitor name and checks for closing curly
+  bool parseMonitorName(name &id, bool &endOfSection);
+  // Creates monitor
+  bool createMonitor(name monitorName, name dev2id, name outid); 
+
 
  public:
   bool readin();
