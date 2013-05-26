@@ -75,6 +75,8 @@ bool parser::readin (void)
     if(parseConnInputName(dev1id,inid,endOfSection)) return PARSER_FAIL;
   }
   
+  // Should check that all inputs are connected at this point
+
   // MONITORS 
   if(parseSectionHeader(MON)) return PARSER_FAIL;
 
@@ -166,6 +168,12 @@ void parser::errorHandling (error error_num)
 	case switch_param:
 	  smz->printError("Switch can only be set to 1 or 0");
 	  break;
+	case device_not_unique:
+		smz->printError("Device names must be unique");
+		break;
+	case monitor_not_unique:
+		smz->printError("Monitor names must be unique");
+		break;
     default:
       cout << "You should never see this message\n";
   }
@@ -290,10 +298,14 @@ bool parser::parseDeviceName (name &id, bool &endOfDevices)
   smz->getsymbol(sym,symid,num);
   switch(sym) { 
     case namesym:
-      // Here is where the device name should be stored somewhere useful
-      // SEMANTIC CHECKING TO OCCUR here
+	  // Check that device name is not already used - will return non-zero is already in use
+	  if(nm_devicez->cvtname(nmz->getname(symid))) 
+	  {
+		errorHandling(device_not_unique);
+		return PARSER_FAIL;
+	  }
+	  // Save in device nametable
       id = nm_devicez->lookup(nmz->getname(symid));      
-      //cout << "Device name \"" << nmz->getname(id) << "\" recognised.\n";
       break;
     case closecurly:
       // Device section ended
@@ -526,13 +538,9 @@ bool parser::parseConnInputName(name &devid, name &inpid, bool &endOfSection)
       // Device section ended
       endOfSection = 1;
       return PARSER_PASS;
-    case numsym:
-      // All names must begin with a letter
-      errorHandling(names_begin_letter);
-      return PARSER_FAIL;
     default:
-      // Generic expected a name here error
-      errorHandling(device_name_expected);
+      // Generic device not defined error
+      errorHandling(device_not_defined);
       return PARSER_FAIL;
   }
   
@@ -762,13 +770,9 @@ bool parser::parseConnOutputName(name &devid, name &outid)
     case namesym:
       dt = dtz->gettype(nmz->getname(devid));    
       break;
-    case numsym:
-      // All names must begin with a letter
-      errorHandling(names_begin_letter);
-      return PARSER_FAIL;
     default:
-      // Generic expected a name here error
-      errorHandling(device_name_expected);
+      // Generic device not defined error
+      errorHandling(device_not_defined);
       return PARSER_FAIL;
   }
   

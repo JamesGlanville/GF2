@@ -31,8 +31,8 @@ public:
 
   name cvtname (namestring str);
     /* Returns the internal representation of the name given in character  */
-    /* form.  If the name is not in the name table then 'blankname' is     */
-    /* returned.                                                           */
+    /* form.  If the name is not in the name table then '' is     */
+    /* returned. i.e. 0 is returned by function.                                                          */
 
   void writename (name id);
     /* Prints out the given name on the console                            */
