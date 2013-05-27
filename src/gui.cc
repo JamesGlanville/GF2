@@ -236,6 +236,18 @@ MyFrame::MyFrame(wxWindow *parent,
   wxString tracesizer = wxT("tracesizer");
   wxString tracename;
 
+  vtracesizers.push_back(new wxBoxSizer(wxHORIZONTAL));
+  canvas = new MyGLCanvas(disp_scroll, wxID_ANY, monitor_mod, names_mod);
+  toptracesizer->Add(canvas, 1, wxEXPAND | wxALL, 10);
+
+  vtracesizers.push_back(new wxBoxSizer(wxHORIZONTAL));
+  canvas = new MyGLCanvas(disp_scroll, wxID_ANY, monitor_mod, names_mod);
+  toptracesizer->Add(canvas, 1, wxEXPAND | wxALL, 10);
+
+  vtracesizers.push_back(new wxBoxSizer(wxHORIZONTAL));
+  canvas = new MyGLCanvas(disp_scroll, wxID_ANY, monitor_mod, names_mod);
+  toptracesizer->Add(canvas, 1, wxEXPAND | wxALL, 10);
+  /*
   for(int i = 0; i<10; i++)
     {
       vtracesizers.push_back(new wxBoxSizer(wxHORIZONTAL));
@@ -247,7 +259,7 @@ MyFrame::MyFrame(wxWindow *parent,
                            10);
       toptracesizer->Add(vtracesizers[i], 1, wxALIGN_LEFT | wxALL, 10);
     } 
-
+  */
 
   topsizer->Add(disp_scroll, 1, wxEXPAND | wxALL, 10);
 
