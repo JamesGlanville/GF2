@@ -24,16 +24,36 @@ bool parser::readin (void)
   int num;
   device_type current_device_type;
   bool endOfSection = 0;
+  vector <symbol> stop_syms;
+  symbol stopped_at = none;
+  int num_skipped;
+  int error_count = 0;
 
   // {
-  if(parseToken(opencurly)) return PARSER_FAIL;
+  if(parseToken(opencurly)) 
+  {
+    stop_syms.push_back(DEV);
+    stop_syms.push_back(CONN);
+    stop_syms.push_back(MON);
+    stop_syms.push_back(opencurly);
+    stop_syms.push_back(closecurly);
+    stopped_at = stoppingSym(stop_syms, num_skipped);
+    stop_syms.clear(); 
+  }
   
   // DEVICES
-  if(parseSectionHeader(DEV)) return PARSER_FAIL;
-
+  if(stopped_at == none) 
+  {
+    if(parseSectionHeader(DEV)) return PARSER_FAIL;
+  }
+  
   // {
-  if(parseToken(opencurly)) return PARSER_FAIL;
-
+  if(stopped_at == none || stopped_at == DEV)
+  {
+    stopped_at = none;
+    if(parseToken(opencurly)) return PARSER_FAIL;
+  }
+  
   // Parsing defined devices
   // First device name
   if(parseDeviceName(id)) return PARSER_FAIL;
@@ -115,6 +135,30 @@ bool parser::readin (void)
   if(parseToken(closecurly)) return PARSER_FAIL;
 
   return PARSER_PASS;
+}
+
+symbol parser::stoppingSym (vector <symbol> stopping_syms, int &num_skipped)
+{
+  int num;
+  name id;
+  symbol sym;
+  int num_syms = stopping_syms.size();
+  num_skipped = 0;
+  
+  smz->getsymbol(sym,id,num);
+  while(sym != eofsym)
+  {
+    for (int i=0;i<num_syms;i++)
+    {
+      if (sym == stopping_syms[i])
+      {
+        return stopping_syms[i];
+      }
+    }
+    num_skipped++;
+    smz->getsymbol(sym,id,num);
+  }
+  return eofsym;
 }
 
 void parser::errorHandling (error error_num) 
@@ -715,7 +759,7 @@ bool parser::parseConnOutputName(name &devid, name &outid)
       }
     default:
       // For all other devices the output name is blank
-      outid = -1;
+      outid = 0;
   }
   return PARSER_PASS;  
 }
@@ -729,15 +773,7 @@ bool parser::createConn(name dev1id,name dev2id,name inid,name outid)
   if(!ok)
   {
     cout << "ERROR: Couldn't make connection\n";
-    
-    for (int i=0;i<100;i++)
-    {
-		cout << i << "   " <<nmz->getname(i) << endl;
-	}
     return PARSER_FAIL;
-    
-    
-    
   }
   return PARSER_PASS;
 }
