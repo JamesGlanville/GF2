@@ -27,6 +27,7 @@ devlink network::finddevice (name id)
   found = false;
   d = devs;
   while ((d != NULL) && (! found)) {
+	 cout <<"d->id is: " << d->id << endl;
     found = (d->id == id);
     if (! found)
       d = d->next;
@@ -87,6 +88,7 @@ void network::adddevice (devicekind dkind, name did, devlink& dev)
 {
   dev = new devicerec;
   dev->id = did;
+  cout << "Device id just created was: " << dev->id << endl;
   dev->kind = dkind;
   dev->ilist = NULL;
   dev->olist = NULL;
@@ -152,8 +154,13 @@ void network::makeconnection (name idev, name inp, name odev, name outp, bool& o
   devlink din, dout;
   outplink o;
   inplink i;
+  cout << "idev: " << idev << endl;
+  cout << "odev: " << odev << endl;
+
   din = finddevice (idev);
+  cout << "din: " << din << endl;
   dout = finddevice (odev);
+  cout << "dout: " << din << endl;
   ok = ((din != NULL) && (dout != NULL));
   if (ok) {
     o = findoutput (dout, outp);
