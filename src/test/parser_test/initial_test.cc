@@ -19,14 +19,14 @@ int main (int argc, char **argv)
 		exit(1);
 	}
   
-  names* comment_nmz = new names();
+  /*names* comment_nmz = new names();
   scanner* comment_smz = new scanner(comment_nmz, inf);
   test_file_parser* comment_pmz = new test_file_parser(comment_smz, comment_nmz);
   
   if(comment_pmz->testFileDefinition())
   {
     return 1;  
-  }
+  }*/
     
 	
   names* nmz = new names();
