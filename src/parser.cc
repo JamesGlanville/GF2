@@ -463,7 +463,7 @@ bool parser::createDevice (device_type current_device_type, name id)
     case NOR:
       if(parseParam(param_value)) return PARSER_FAIL;
 	  // Semantic check on parameter values
-	  if(param_value < 2 || param_value >16) 
+  if(param_value < 2 || param_value >16) 
 	  {
 		errorHandling(inputs_two_to_sixteen);
 		return PARSER_FAIL;
@@ -506,7 +506,7 @@ bool parser::createDevice (device_type current_device_type, name id)
       
     case SW:
       if(parseParam(param_value)) return PARSER_FAIL;
-	  if(param_value != 0 || param_value != 1)
+	  if(!(param_value == 0 || param_value == 1))
 	  {
 		errorHandling(switch_param);
 		return PARSER_FAIL;
