@@ -162,7 +162,7 @@ void scanner::printError(string errordesc)
 	{
 		cout << currentline;
 		currentline.clear();
-		while (!nextChar()){cout <<currentline;}cout <<endl;
+		while (!nextChar()){cout <<currentline;currentline.clear();}cout <<endl;
 		for (int i=0;i<errorloc;i++){cout << " ";}
 		cout << "^" << endl;
 	}
@@ -170,7 +170,7 @@ void scanner::printError(string errordesc)
 	{
 		cout << currentline.substr(currentline.size()-81,currentline.size()-1);
 		currentline.clear();
-	while (!nextChar()){cout <<currentline;}
+	while (!nextChar()){cout <<currentline;currentline.clear();}
 
 		for (int i=0;i<80-1;i++){cout << " ";}
 		cout << "^" <<endl;
