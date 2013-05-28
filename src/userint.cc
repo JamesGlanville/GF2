@@ -145,6 +145,21 @@ void userint::rdname (name& n)
   }
 }
 
+/***********************************************************************
+ *
+ * Read a custom monitorname from the input text string.
+ *
+ */
+void userint::rdmonname (name& n)
+{
+  namestring ns;
+  rdstring (ns);
+  if (cmdok) {
+	nmz->lookup(ns);
+    n = nmz->cvtname (ns);
+  }
+}
+
 
 /***********************************************************************
  *
@@ -265,9 +280,10 @@ void userint::continuecmd (void)
  */
 void userint::setmoncmd (void)
 {
-  name dev, outp;
+  name dev, outp, mname;
   rdqualname (dev, outp);
-  mmz->makemonitor (dev, outp, cmdok, 0); //NEED TO BE ABLE TO ADD CUSTOM MONITOR NAME.
+  rdmonname(mname);
+  mmz->makemonitor (dev, outp, cmdok, mname);
   if (cmdok)
     cyclescompleted = 0;
   else
@@ -327,7 +343,7 @@ void userint::helpcmd (void)
   cout << "r N       - run the simulation for N cycles" << endl;
   cout << "c N       - continue simulation for N cycles" << endl;
   cout << "s X N     - set switch X to N (0 or 1)" << endl;
-  cout << "m X       - set a monitor on signal X" << endl;
+  cout << "m X mname - set a monitor \"mname\" on signal X" << endl;
   cout << "z X       - zap the monitor on signal X" << endl;
   cout << "d N       - set debugging on (N=1) or off (N=0)" << endl;
   cout << "h         - help (this command)" << endl;

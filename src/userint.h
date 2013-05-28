@@ -34,6 +34,7 @@ class userint {
   void rdcmd (char& cmd, charset valid);
   void rdnumber (int& n, int lo, int hi);
   void rdstring (namestring& n);
+  void rdmonname (name& n);
   void rdname (name& n);
   void rdqualname (name& prefix, name& suffix);
   void setswcmd (void);
