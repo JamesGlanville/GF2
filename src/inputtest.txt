@@ -1,0 +1,14 @@
+# Expected { } #
+{
+DEVICES
+{
+D1 = NAND(8);
+Dd = dtype;
+switchy = Sw(2);
+gate = NOR(23);
+or = OR(9);
+}
+INIT {
+dd = 7;
+j= 4
+;}

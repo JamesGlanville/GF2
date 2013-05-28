@@ -4,14 +4,12 @@
 
 using namespace std;
 
-scanner::scanner(names* name,  const char * filename)
+scanner::scanner(names* name, ifstream * file)
 {
 	nametable = name;
-	inf.open(filename);
-	if (!inf) {
-		cout << "Error: cannot open file " << filename << " for reading " << endl;
-		exit(1);
-	}
+	inf=file;
+	linenum=0;
+	currentline="";
 	
 #ifdef SCANNERTEST
 	string lookuptable[]={"namesym","numsym","DEV","INIT","CONN","MON","<=",";","=","badsym","EOF","(",")","{","}"};
@@ -31,12 +29,12 @@ scanner::scanner(names* name,  const char * filename)
 
 scanner::~scanner()
 {
-	inf.close();
+	inf->close();
 }
 
 void scanner::rewind()	//Does the opposite of nextChar (reverses its effect)
 {						//I suspect this is one of the more bug-prone methods.
-	inf.seekg((int)inf.tellg()-1); //Move file pointer back a place.
+	inf->seekg((int)inf->tellg()-1); //Move file pointer back a place.
 
 	if (currentline.size() > 0) //This is probably always the case, problems if not.
 	{
@@ -44,9 +42,9 @@ void scanner::rewind()	//Does the opposite of nextChar (reverses its effect)
 	}
 }
 
-void scanner::nextChar()
+bool scanner::nextChar() //returns true if new line happens.
 {
-	eofile = (inf.get(curch)==0);
+	eofile = (inf->get(curch)==0);
 	if (curch == '\n') //Seems to happen twice in a row, CR+LF?
 	{
 //		cout << currentline << endl;
@@ -54,12 +52,18 @@ void scanner::nextChar()
 		linenum++;
 //		cout << linenum;
 	}
+	else if (curch == '\t')
+	{
+		currentline.push_back(' ');
+	}
 	else
 	{
 		currentline.push_back(curch);
 	}
 	
 	curch = tolower(curch); //From here on, everything is lower case.
+	if (curch == '\n'){return true;}
+	return false;
 }
 
 void scanner::getsymbol( symbol& s, name & id, int & num)
@@ -79,19 +83,18 @@ void scanner::getsymbol( symbol& s, name & id, int & num)
 		{}
 		else if (isalpha(curch))
 		{
-			while ((isalnum(curch) || curch=='.')&& eofile == false)
+			while ((isalnum(curch))&& eofile == false)
 			{
 				str.push_back(curch);
 				nextChar();
 			}
 			rewind(); //gone too far, want to leave this char to be read again.
-
 			if (str=="devices") 	{s=DEV;return;} //Should this use nametable?
 			if (str=="init")    	{s=INIT;return;}
 			if (str=="connections")	{s=CONN;return;}
 			if (str=="monitors")	{s=MON;return;}
-			
 			id = nametable->lookup(str);
+
 			s = namesym;
 			return;
 			
@@ -117,7 +120,8 @@ void scanner::getsymbol( symbol& s, name & id, int & num)
 				case '}': s = closecurly; return;
 				case '(': s = openparen; return;
 				case ')': s = closeparen; return;
-				case '/': nextChar(); if (curch =='*') {doComments();break;} else{s=badsym; return;}
+				case '.': s = fullstop; return;
+				case '/': nextChar(); if (curch =='*') {doComments();break;} if (curch == '/'){while(!nextChar());break;}else{s=badsym; return;}
 				default : s = badsym; return;}
 		}
 	}
@@ -151,6 +155,22 @@ void scanner::doComments()
 
 void scanner::printError(string errordesc)
 {
+	int errorloc=currentline.size()-1;
 	//For now:
-	cout << "Error. " << errordesc << " at line " << linenum << "at location (startat0) " << currentline.size()-1 << endl;
+	cout << "Error: " << errordesc << " on line " << linenum << " at location (startat0) " << max((int)currentline.size()-1,0) << ":" << endl;
+	if (currentline.size()>0&&currentline.size()<=80)
+	{
+		cout << currentline;
+		while (!nextChar()){cout <<curch;}cout <<endl;
+		for (int i=0;i<errorloc;i++){cout << " ";}
+		cout << "^" << endl;
+	}
+	else if (currentline.size()>80)
+	{
+		cout << currentline.substr(currentline.size()-81,currentline.size()-1);
+	while (!nextChar()){cout <<curch;}
+
+		for (int i=0;i<80-1;i++){cout << " ";}
+		cout << "^" <<endl;
+	}
 }

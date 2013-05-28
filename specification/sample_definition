@@ -1,16 +1,11 @@
 {
 DEVICES
 {
-	A1 = AND(2);
+	A1 = AND(2);//THIS is a comment.
 	A2 = AND(3);
 	N1 = NAND(2);
-	SW = SW;
-	CLK1 = CLK;
-}
-
-INIT{
-        SW = 1;
-        CLK1 = 4;
+	SW = SW(1);
+	CLK1 = CLK(4);
 }
 
 CONNECTIONS

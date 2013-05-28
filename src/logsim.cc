@@ -10,18 +10,31 @@ IMPLEMENT_APP(MyApp)
 bool MyApp::OnInit()
   // This function is automatically called when the application starts
 {
-  if (argc != 2) { // check we have one command line argument
-    wcout << "Usage:      " << argv[0] << " [filename]" << endl;
-    exit(1);
-  }
-
+	ifstream * inf=new ifstream;
+	
+	if (argc != 2) { // check we have one command line argument
+		wcout << "Usage:      " << argv[0] << " [filename]" << endl;
+	exit(1);
+	}
+  
+	inf->open(wxString(argv[1]).fn_str());
+	if (!inf) {
+		cout << "Error: cannot open file " << wxString(argv[1]).fn_str() << " for reading " << endl;
+		exit(1);
+	}
+	
   // Construct the six classes required by the innards of the logic simulator
   nmz = new names();
   netz = new network(nmz);
   dmz = new devices(nmz, netz);
   mmz = new monitor(nmz, netz);
-  smz = new scanner(nmz, wxString(argv[1]).fn_str());
-  pmz = new parser(netz, dmz, mmz, smz, nmz);
+  smz = new scanner(nmz, inf);
+#ifdef PARSER_TEST  
+  pmz = new parser(smz, nmz);
+#endif
+#ifndef PARSER_TEST
+  pmz = new parser(netz,dmz,mmz,smz,nmz);
+#endif
 
   if (pmz->readin ()) { // check the logic file parsed correctly
 #ifdef USE_GUI

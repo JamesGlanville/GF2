@@ -10,7 +10,7 @@ using namespace std;
 
 names::names(void)  /* the constructor */
 {
-	nametable.push_back("blankname");
+	nametable.push_back("");
   /* over to you */
 }
 
@@ -55,6 +55,7 @@ string names::getname (name id)
 	else
 	{
 		cout << "Error, index out of range." << endl;
+		return "";
 	}
 }
 	

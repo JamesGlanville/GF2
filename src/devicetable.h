@@ -1,35 +1,37 @@
-#ifndef names_h
-#define names_h
+#ifndef devicetable_h
+#define devicetable_h
 
 #include <string>
+//#include "parser.h"
 #include <vector>
+#include <utility>
+enum device_type {NONE=-1,AND, NAND, OR, NOR, XOR, DTYPE, CLK, SW,UNDEFINED};
 
 using namespace std;
 
-const int maxnames  = 200;  /* max number of distinct names */
-const int maxlength = 8;    /* max chars in a name string   */
-const int blankname = -1;   /* special name                 */
-
 typedef int name;
 typedef string namestring;
+typedef int numinputs;
 
-class names{
-#ifndef NAMES_CLASS_TEST
-	vector<namestring> nametable;
-#endif
-  /* put stuff that the class uses internally here */
+struct devicestruct{
+	namestring ns;
+	device_type dt;
+	numinputs ni;};
 
+class devicetable{
+	vector <devicestruct> device_table;
 
 public:
-#ifdef NAMES_CLASS_TEST
-	vector<namestring> nametable;
-#endif
-  name lookup (namestring str);
+  name lookup (namestring str, device_type type,numinputs numinput);
     /* Returns the internal representation of the name given in character  */
     /* form.  If the name is not already in the name table, it is          */
     /* automatically inserted.                                             */
+    
+	device_type gettype(namestring str);
+	numinputs getinputs(namestring str);
 
-  name cvtname (namestring str);
+#ifdef GOAWAY 
+ name cvtname (namestring str);
     /* Returns the internal representation of the name given in character  */
     /* form.  If the name is not in the name table then 'blankname' is     */
     /* returned.                                                           */
@@ -43,10 +45,11 @@ public:
   int namelength (name id);
     /* Returns length ie number of characters in given name                */
 
-  names (void);
+ // devicetable ();
     /* names initialises the name table.  This procedure is called at      */
     /* system initialisation before any of the above procedures/functions  */
     /* are used.                                                           */
+#endif
 };
 
 #endif /* names_h */

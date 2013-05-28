@@ -18,6 +18,7 @@ void userint::readline (void)
   do {
     cout << "# " << flush;
     cin.getline (cmdline, maxline);
+    if (cin.eof()){curch='q';cmdline[0]='q';}
     cmdlen = cin.gcount() - 1;
   } while (cmdlen == 0);
   cmdpos = 0;

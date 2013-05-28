@@ -1,0 +1,54 @@
+{
+DEVICES
+{
+	A = SW(0);
+	B = SW(1);
+	C = SW(0);
+	D = SW(1);
+	NAND1 = NAND(2);
+	NAND2 = NAND(2);
+	NAND3 = NAND(2);
+	OR    = OR(2);
+	X1    = XOR;
+	NOR1  = NOR(2);
+	NOR2  = NOR(2);
+	NOR3  = NOR(2);
+	AND   = AND(2);
+	X2    = XOR;
+}
+
+CONNECTIONS
+{
+	OR.I1 <= A;
+	OR.I2 <= B;
+	NAND1.I1 <= A;
+	NAND1.I2 <= A;
+	NAND2.I1 <= B;
+	NAND2.I2 <= B;
+	NAND3.I1 <= NAND1;
+	NAND3.I2 <= NAND2;
+	X1.I1 <= OR;
+	X1.I2 <= NAND3;
+
+        AND.I1 <= C;
+        AND.I2 <= D;
+        NOR1.I1 <= C;
+        NOR1.I2 <= C;
+        NOR2.I1 <= D;
+        NOR2.I2 <= D;
+        NOR3.I1 <= NOR1;
+        NOR3.I2 <= NOR2;
+        X2.I1 <= AND;
+        X2.I2 <= NOR3;
+}
+
+MONITORS
+{
+	ERROR1  <= X1;
+	ERROR2  <= X2;
+	ANDOUT	<= AND;
+	NOROUT  <= NOR3;
+	NANDOUT	<= NAND3;
+	OROUT	<= OR;
+}
+}
