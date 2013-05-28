@@ -267,7 +267,7 @@ void userint::setmoncmd (void)
 {
   name dev, outp;
   rdqualname (dev, outp);
-  mmz->makemonitor (dev, outp, cmdok);
+  mmz->makemonitor (dev, outp, cmdok, 0); //NEED TO BE ABLE TO ADD CUSTOM MONITOR NAME.
   if (cmdok)
     cyclescompleted = 0;
   else
