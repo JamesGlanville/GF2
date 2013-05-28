@@ -1,10 +1,5 @@
 /*
 TODO:
-connections created
-monitors created
-(look in lab handout for what has been missed)
-continuing to read errors after one is found
-total error 
 */
 #include "parser.h"
 
@@ -414,11 +409,16 @@ bool parser::readin (void)
   }
   
   //Check that all inputs are connected.
-  netz->checknetwork(networkOK);
-  if (!networkOK) error_count++;
+  networkOK = 1;
+  if (error_count == 0) netz->checknetwork(networkOK);
+  if (!networkOK) 
+  {
+    error_count++;
+    errorHandling(unconnected_inputs);
+  }
   
   if(error_count) {
-    cout << "Error count is " << error_count << endl; 
+    cout << "\nError count is " << error_count << endl; 
     return PARSER_FAIL;
   }
   
@@ -497,24 +497,27 @@ void parser::errorHandling (error error_num)
     case invalid_output:
       smz->printError("Not a valid device output");
       break;
-	case one_monitor_required:
-	  smz->printError("At least one monitor definition is required");
-	  break;
-	case inputs_two_to_sixteen:
-	  smz->printError("Gate requires between 2 and 16 inputs");
+    case one_monitor_required:
+      smz->printError("At least one monitor definition is required");
       break;
-	case clk_param:
-	  smz->printError("Clock requires a positive, integer period");
-	  break;
-	case switch_param:
-	  smz->printError("Switch can only be set to 1 or 0");
-	  break;
-	case device_not_unique:
-		smz->printError("Device names must be unique");
-		break;
-	case monitor_not_unique:
-		smz->printError("Monitor names must be unique");
-		break;
+    case inputs_two_to_sixteen:
+      smz->printError("Gate requires between 2 and 16 inputs");
+        break;
+    case clk_param:
+      smz->printError("Clock requires a positive, integer period");
+      break;
+    case switch_param:
+      smz->printError("Switch can only be set to 1 or 0");
+      break;
+    case device_not_unique:
+      smz->printError("Device names must be unique");
+      break;
+    case monitor_not_unique:
+      smz->printError("Monitor names must be unique");
+      break;
+    case unconnected_inputs:
+      cout << "Not all inputs are connected. \n";
+      break;
     default:
       cout << "You should never see this message\n";
   }
@@ -1021,7 +1024,7 @@ bool parser::parseConnOutputName(name &devid, name &outid)
       break;
     default:
       // Generic device not defined error
-      errorHandling(device_not_defined);
+      errorHandling(device_name_expected);
       return PARSER_FAIL;
   }
   
