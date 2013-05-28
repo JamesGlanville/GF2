@@ -5,6 +5,7 @@ connections created
 monitors created
 all inputs are connected
 (look in lab handout for what has been missed)
+skip symbols
 */
 #include "parser.h"
 

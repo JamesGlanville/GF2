@@ -4,7 +4,7 @@ DEVICES
 {
 D1 = NAND(8);
 Dd = dtype;
-switchy = Sw(2);
+switchy = Sw(1;
 gate = NOR(23);
 or = OR(9);
 }
