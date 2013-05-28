@@ -21,7 +21,6 @@ bool parser::readin (void)
   bool networkOK;
   vector <symbol> stop_syms;
   symbol stopped_at = none;
-  //int num_skipped;
   error_count = 0;
 
   // {
@@ -33,7 +32,7 @@ bool parser::readin (void)
     stop_syms.push_back(opencurly);
     stop_syms.push_back(closecurly);
     stop_syms.push_back(semicol);
-    stopped_at = stoppingSym(stop_syms/*, num_skipped*/);
+    stopped_at = stoppingSym(stop_syms);
     if(stopped_at == closecurly) endOfSection = 1;
     stop_syms.clear(); 
     error_count++;

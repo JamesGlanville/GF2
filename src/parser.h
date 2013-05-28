@@ -67,7 +67,7 @@ class parser {
   // Creates monitor
   bool createMonitor(name monitorName, name dev2id, name outid); 
   // Keeps reading symbols until one of the stopping symbols are reached
-  symbol stoppingSym (vector <symbol> stopping_syms/*, int &num_skipped*/);
+  symbol stoppingSym (vector <symbol> stopping_syms);
 
  public:
   bool readin();
