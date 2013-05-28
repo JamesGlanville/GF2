@@ -12,7 +12,12 @@
 enum { 
   CYCLES_SPIN = wxID_HIGHEST + 1,
   RUN_BUTTON_ID,
+  CONT_BUTTON_ID,
   DISP_SCROLL,
+  SWITCH_LIST,
+  SWITCH_OPTION,
+  MONITOR_ADD,
+  MONITOR_REM,
 }; // widget identifiers
 
 class MyGLCanvas;
@@ -36,6 +41,10 @@ class MyFrame: public wxFrame
   wxString tracename;
 
   wxSpinCtrl *spin_cycles;
+  wxComboBox *switch_list;
+  wxComboBox *switch_option;
+  wxComboBox *add_monitor;
+  wxComboBox *rem_monitor;
   wxWindow *disp_scroll;
   names *nmz;                             // pointer to names class
   devices *dmz;                           // pointer to devices class
@@ -46,10 +55,14 @@ class MyFrame: public wxFrame
   void OnAbout(wxCommandEvent& event);    // callback for about menu item
   //  void OnButton(wxCommandEvent& event);   // callback for push button
   void OnRunButton(wxCommandEvent &event);
+  void OnContButton(wxCommandEvent &event);
   void OnSpin(wxSpinEvent& event);        // callback for spin control
   //  void OnText(wxCommandEvent& event);     // callback for text
   //  entry field
   void OnScroll(wxScrollWinEvent& event);
+  void OnSwitch_option(wxCommandEvent& event);
+  void OnAddMonitor(wxCommandEvent& event);
+  void OnRemMonitor(wxCommandEvent& event);
   DECLARE_EVENT_TABLE()
 };
     

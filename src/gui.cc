@@ -3,6 +3,7 @@
 #include "wx_icon.xpm"
 #include <iostream>
 #include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -167,8 +168,12 @@ BEGIN_EVENT_TABLE(MyFrame, wxFrame)
   EVT_MENU(wxID_EXIT,       MyFrame::OnExit)
   EVT_MENU(wxID_ABOUT,      MyFrame::OnAbout)
   EVT_BUTTON(RUN_BUTTON_ID, MyFrame::OnRunButton)
+  EVT_BUTTON(CONT_BUTTON_ID, MyFrame::OnContButton)
   EVT_SPINCTRL(CYCLES_SPIN, MyFrame::OnSpin)
   EVT_SCROLLWIN(MyFrame::OnScroll)
+  EVT_COMBOBOX(SWITCH_OPTION, MyFrame::OnSwitch_option)
+  EVT_COMBOBOX(MONITOR_ADD, MyFrame::OnAddMonitor)
+  EVT_COMBOBOX(MONITOR_REM, MyFrame::OnRemMonitor)
 END_EVENT_TABLE()
   
 MyFrame::MyFrame(wxWindow *parent,
@@ -209,15 +214,57 @@ MyFrame::MyFrame(wxWindow *parent,
                  0,             /* make vertically unstrechable */
                  wxALL | wxALIGN_CENTER_VERTICAL,         /* border all around */
                  10);           /* border size */ 
-
-
+  
   spin_cycles = new wxSpinCtrl(this, CYCLES_SPIN, wxString(wxT("10")));
   ctrlsizer->Add(spin_cycles, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
   ctrlsizer->Add(new wxButton(this, RUN_BUTTON_ID, wxT("Run")),
                  0,
                  wxALL | wxEXPAND,
                  10);
+  ctrlsizer->Add(new wxButton(this, CONT_BUTTON_ID, wxT("Continue")),
+		 0,
+		 wxALL | wxEXPAND,
+		 10);
   topsizer->Add(ctrlsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
+
+  wxBoxSizer *switchsizer = new wxBoxSizer(wxHORIZONTAL);
+  switchsizer->Add(new wxStaticText(this, wxID_ANY, wxT("Switches:")),
+		   0,
+		   wxALL | wxALIGN_CENTER_VERTICAL,
+		   10);
+
+  switch_list = new wxComboBox(this, SWITCH_LIST, wxEmptyString);
+  switch_list->Append(wxT("option1"));
+  switch_list->Append(wxT("option2"));
+  switch_list->Append(wxT("option3"));
+  switch_list->Append(wxT("option4"));
+  switchsizer->Add(switch_list, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
+
+  switch_option = new wxComboBox(this, SWITCH_OPTION, wxEmptyString);
+  switch_option->Append(wxT("HIGH"));
+  switch_option->Append(wxT("LOW"));
+  switchsizer->Add(switch_option, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
+
+  topsizer->Add(switchsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
+
+  wxBoxSizer *monitorsizer = new wxBoxSizer(wxHORIZONTAL);
+  monitorsizer->Add(new wxStaticText(this, wxID_ANY, wxT("Add Monitor:")),
+		    0,
+		    wxALL | wxALIGN_CENTER_VERTICAL,
+		    10);
+
+  add_monitor = new wxComboBox(this, MONITOR_ADD, wxEmptyString);
+  add_monitor->Append(wxT("an unused monitor"));
+  add_monitor->Append(wxT("another unused monitor"));
+  monitorsizer->Add(add_monitor, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
+  
+  rem_monitor = new wxComboBox(this, MONITOR_REM, wxEmptyString);
+  rem_monitor->Append(wxT("a used monitor"));
+  rem_monitor->Append(wxT("another used monitor"));
+  monitorsizer->Add(rem_monitor, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
+  
+  topsizer->Add(monitorsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
+
 
   wxScrolledWindow* disp_scroll = new wxScrolledWindow(this,
 						       -1,
@@ -287,6 +334,11 @@ void MyFrame::OnRunButton(wxCommandEvent &event)
   wxLogMessage(wxT("Run Button Pressed"));
 }
 
+void MyFrame::OnContButton(wxCommandEvent &event)
+{
+  wxLogMessage(wxT("Continue Button Pressed"));
+}
+
 void MyFrame::OnSpin(wxSpinEvent &event)
   // Callback for the spin control
 {
@@ -326,4 +378,19 @@ void MyFrame::OnSpin(wxSpinEvent &event)
 void MyFrame::OnScroll(wxScrollWinEvent& event)
 {
   cout << "position = " << event.GetPosition() << endl;
+}
+
+void MyFrame::OnSwitch_option(wxCommandEvent& event)
+{
+
+}
+
+void MyFrame::OnAddMonitor(wxCommandEvent& event)
+{
+
+}
+
+void MyFrame::OnRemMonitor(wxCommandEvent& event)
+{
+
 }
