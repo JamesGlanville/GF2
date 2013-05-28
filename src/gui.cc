@@ -141,8 +141,7 @@ void MyGLCanvas::OnMouse(wxMouseEvent& event)
   // Callback function for mouse events inside the GL canvas
 {
   wxString text;
-  int w, h;;
-
+  int w, h;
   GetClientSize(&w, &h);
   if (event.ButtonDown())
     text.Printf(wxT("Mouse button %d pressed at %d %d"),
@@ -165,8 +164,8 @@ void MyGLCanvas::OnMouse(wxMouseEvent& event)
 
 
 BEGIN_EVENT_TABLE(MyFrame, wxFrame)
-  EVT_MENU(wxID_EXIT, MyFrame::OnExit)
-  EVT_MENU(wxID_ABOUT, MyFrame::OnAbout)
+  EVT_MENU(wxID_EXIT,       MyFrame::OnExit)
+  EVT_MENU(wxID_ABOUT,      MyFrame::OnAbout)
   EVT_BUTTON(RUN_BUTTON_ID, MyFrame::OnRunButton)
   EVT_SPINCTRL(CYCLES_SPIN, MyFrame::OnSpin)
   EVT_SCROLLWIN(MyFrame::OnScroll)
@@ -228,18 +227,9 @@ MyFrame::MyFrame(wxWindow *parent,
 
   wxBoxSizer *toptracesizer = new wxBoxSizer(wxVERTICAL);
 
-
   disp_scroll->SetSizer(toptracesizer);
   disp_scroll->SetScrollRate(10, 10);
   disp_scroll->SetAutoLayout(true);
-
-
-  /* attempting to generate sizers and content automatically */
-
-  vector<wxBoxSizer*> vtracesizers;
-  vector<MyGLCanvas*> canvases;
-  wxString tracesizer = wxT("tracesizer");
-  wxString tracename;
 
   for(int i = 0; i<10; i++)
     {
@@ -250,24 +240,15 @@ MyFrame::MyFrame(wxWindow *parent,
 					names_mod,
 					wxPoint(-1,-1),
 					wxSize(-1,40)));
+      tracesizer = wxT("m");
+      tracename = tracesizer << i;
+      vtracesizers[i]->Add(new wxStaticText(disp_scroll, wxID_ANY, tracename),
+      			   0,
+      			   wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
+      			   10);
       vtracesizers[i]->Add(canvases[i], 1, wxALL | wxEXPAND, 10);
       toptracesizer->Add(vtracesizers[i], 0, wxEXPAND | wxALL, 10);
     }
-
-
-  /*
-  for(int i = 0; i<10; i++)
-    {
-      vtracesizers.push_back(new wxBoxSizer(wxHORIZONTAL));
-      tracesizer = wxT("tracesizer");
-      tracename = tracesizer << i;
-      vtracesizers[i]->Add(new wxStaticText(disp_scroll, wxID_ANY, tracename),
-                           1,
-                           wxALL | wxEXPAND,
-                           10);
-      toptracesizer->Add(vtracesizers[i], 1, wxALIGN_LEFT | wxALL, 10);
-    } 
-  */
 
   topsizer->Add(disp_scroll, 1, wxEXPAND | wxALL, 10);
 

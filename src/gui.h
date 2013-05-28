@@ -10,10 +10,7 @@
 #include "monitor.h"
 
 enum { 
-  //MY_SPINCNTRL_ID = wxID_HIGHEST + 1,
   CYCLES_SPIN = wxID_HIGHEST + 1,
-  //  MY_TEXTCTRL_ID,
-  //  MY_BUTTON_ID,
   RUN_BUTTON_ID,
   DISP_SCROLL,
 }; // widget identifiers
@@ -23,17 +20,21 @@ class MyGLCanvas;
 class MyFrame: public wxFrame
 {
  public:
-  MyFrame(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size, 
-	  names *names_mod = NULL, devices *devices_mod = NULL, monitor *monitor_mod = NULL, 
+  MyFrame(wxWindow *parent,
+	  const wxString& title,
+	  const wxPoint& pos,
+	  const wxSize& size, 
+	  names *names_mod = NULL,
+	  devices *devices_mod = NULL,
+	  monitor *monitor_mod = NULL, 
 	  long style = wxDEFAULT_FRAME_STYLE); // constructor
  private:
-  MyGLCanvas *canvas;                     // GL drawing area widget to
-					  // draw traces
-  MyGLCanvas *canvas0;
-  MyGLCanvas *canvas1;
-  MyGLCanvas *canvas2;
-  //  wxSpinCtrl *spin;                       // control widget to select
-					  // the number of cycles
+  vector<wxBoxSizer*> vtracesizers;       /* Vector to hold sizers for traces */
+  vector<MyGLCanvas*> canvases;	          /* vector to hold canvases */
+
+  wxString tracesizer;
+  wxString tracename;
+
   wxSpinCtrl *spin_cycles;
   wxWindow *disp_scroll;
   names *nmz;                             // pointer to names class
