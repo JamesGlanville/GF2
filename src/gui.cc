@@ -374,20 +374,26 @@ void MyFrame::runnetwork(int ncycles)
 
 void MyFrame::OnSwitchOption(wxCommandEvent& event)
 {
-  // cout << "switch: " << switch_list->GetValue() << " set to " <<
-  // switch_option->GetValue();
-  cout << "got to OnSwitchOption callback" << endl;
-  cout << "switch value: " << switch_option->GetValue().ToAscii() << endl;
-  // TODO STUFF HERE!
+  cout << "switch: " << switch_list->GetValue().ToAscii() << " set to " << switch_option->GetValue().ToAscii() << endl;
+  //  cout << "got to OnSwitchOption callback" << endl;
+  //  cout << "switch selected: " << switch_list->GetValue().ToAscii() << endl;
+  //  cout << "switch value: " << switch_option->GetValue().ToAscii() << endl;
+
 
 }
 
 void MyFrame::OnAddMonitor(wxCommandEvent& event)
 {
-
+  rem_monitor->Append(add_monitor->GetValue());
+  add_monitor->Delete(add_monitor->FindString(add_monitor->GetValue()));
+  add_monitor->SetValue(wxT(""));
+  //cout << "Add trace at monitor point: " << add_monitor->GetValue().ToAscii() << endl;
 }
 
 void MyFrame::OnRemMonitor(wxCommandEvent& event)
 {
-
+  add_monitor->Append(rem_monitor->GetValue());
+  rem_monitor->Delete(rem_monitor->FindString(rem_monitor->GetValue()));
+  rem_monitor->SetValue(wxT(""));
+  //cout << "Remove trace at monitor point: " << rem_monitor->GetValue().ToAscii() << endl;
 }
