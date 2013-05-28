@@ -2,7 +2,6 @@
 TODO:
 connections created
 monitors created
-all inputs are connected
 (look in lab handout for what has been missed)
 continuing to read errors after one is found
 total error 
@@ -24,6 +23,7 @@ bool parser::readin (void)
   int num;
   device_type current_device_type;
   bool endOfSection = 0;
+  bool networkOK;
   vector <symbol> stop_syms;
   symbol stopped_at = none;
   //int num_skipped;
@@ -290,8 +290,6 @@ bool parser::readin (void)
     }
   }
   
-  // Should check that all inputs are connected at this point
-
   // MONITORS 
   if(stopped_at == none || stopped_at == closecurly) 
   {
@@ -414,7 +412,11 @@ bool parser::readin (void)
       error_count++;
     }
   }
-
+  
+  //Check that all inputs are connected.
+  netz->checknetwork(networkOK);
+  if (!networkOK) error_count++;
+  
   if(error_count) {
     cout << "Error count is " << error_count << endl; 
     return PARSER_FAIL;
@@ -1159,7 +1161,7 @@ bool parser::createMonitor(name monitorName, name dev2id, name outid)
 {
   bool ok;
 	cout << "Create monitor " << nmz->getname(monitorName) << " monitoring " << nmz->getname(dev2id) << ", output " << nmz->getname(outid) << endl;
-  mmz->makemonitor (dev2id,outid,ok);
+  mmz->makemonitor (dev2id,outid,ok,monitorName);
   if(!ok)
   {
     cout << "ERROR: monitor not made\n";

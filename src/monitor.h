@@ -11,6 +11,7 @@ const int maxcycles = 50;        /* max number of cycles per run */
 struct moninfo {
   name devid;
   outplink op;
+  name username;
 };
 struct monitortable {
   int used;
@@ -27,7 +28,10 @@ class monitor {
   signaltrace disp[maxmonitors]; 
 
  public:
-  void makemonitor (name dev, name outp, bool& ok);
+  string getmonprettyname (int n);
+
+ 
+  void makemonitor (name dev, name outp, bool& ok, name usrname);
     /* Sets a monitor on the 'outp' output of device 'dev' by placing an   */
     /* entry in the monitor table. 'ok' is set true if operation succeeds. */
  

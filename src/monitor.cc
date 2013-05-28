@@ -9,7 +9,7 @@ using namespace std;
  * entry in the monitor table. 'ok' is set true if operation succeeds. 
  *
  */
-void monitor::makemonitor (name dev, name outp, bool& ok)
+void monitor::makemonitor (name dev, name outp, bool& ok, name usrname)
 {
   devlink d;
   outplink o;
@@ -23,6 +23,7 @@ void monitor::makemonitor (name dev, name outp, bool& ok)
       if (ok) {
 	mtab.sigs[mtab.used].devid = dev;
 	mtab.sigs[mtab.used].op = o;
+	mtab.sigs[mtab.used].username = usrname;
 	(mtab.used)++;
       }
     }
@@ -89,6 +90,16 @@ void monitor::getmonname (int n, name& dev, name& outp)
   outp = mtab.sigs[n].op->id;
 }
 
+/***********************************************************************
+ *
+ * Returns pretty name of n'th monitor. 
+ *
+ */
+string monitor::getmonprettyname (int n)
+{
+  return nmz->getname(mtab.sigs[n].username);
+}
+
 
 /***********************************************************************
  *
@@ -141,15 +152,19 @@ void monitor::displaysignals (void)
   int n, i;
   name dev, outp;
   int namesize;
+  string tempname;
   for (n = 0; n < moncount (); n++) {
-    getmonname (n, dev, outp);
-    namesize = nmz->namelength (dev);
-    nmz->writename (dev);
-    if (outp != blankname) {
-      cout << ".";
-      nmz->writename (outp);
-      namesize = namesize + nmz->namelength (outp) + 1;
-    }
+	  tempname = getmonprettyname(n);
+	  cout <<tempname;
+	  namesize = tempname.size();
+//    getmonname (n, dev, outp);
+//    namesize = nmz->namelength (dev);
+//    nmz->writename (dev);
+//    if (outp != blankname) {
+//      cout << ".";
+//      nmz->writename (outp);
+//      namesize = namesize + nmz->namelength (outp) + 1;
+//    }
     if ((margin - namesize) > 0) {
       for (i = 0; i < (margin - namesize - 1); i++)
 	cout << " ";

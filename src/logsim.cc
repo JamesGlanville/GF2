@@ -36,7 +36,7 @@ bool MyApp::OnInit()
   pmz = new parser(netz,dmz,mmz,smz,nmz);
 #endif
 
-  if (pmz->readin ()) { // check the logic file parsed correctly
+  if (!pmz->readin ()) { // check the logic file parsed correctly
 #ifdef USE_GUI
     // glutInit cannot cope with Unicode command line arguments, so we pass
     // it some fake ASCII ones instead

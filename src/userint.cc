@@ -18,6 +18,12 @@ void userint::readline (void)
   do {
     cout << "# " << flush;
     cin.getline (cmdline, maxline);
+    
+    for (int i=0;i<maxline;i++)
+	{
+		cmdline[i]=tolower(cmdline[i]);
+	}    
+    
     if (cin.eof()){curch='q';cmdline[0]='q';}
     cmdlen = cin.gcount() - 1;
   } while (cmdlen == 0);
@@ -261,7 +267,7 @@ void userint::setmoncmd (void)
 {
   name dev, outp;
   rdqualname (dev, outp);
-  mmz->makemonitor (dev, outp, cmdok);
+  mmz->makemonitor (dev, outp, cmdok, 0); //NEED TO BE ABLE TO ADD CUSTOM MONITOR NAME.
   if (cmdok)
     cyclescompleted = 0;
   else
