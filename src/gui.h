@@ -10,9 +10,14 @@
 #include "monitor.h"
 
 enum { 
-  MY_SPINCNTRL_ID = wxID_HIGHEST + 1,
-  MY_TEXTCTRL_ID,
-  MY_BUTTON_ID,
+  CYCLES_SPIN = wxID_HIGHEST + 1,
+  RUN_BUTTON_ID,
+  CONT_BUTTON_ID,
+  DISP_SCROLL,
+  SWITCH_LIST,
+  SWITCH_OPTION,
+  MONITOR_ADD,
+  MONITOR_REM,
 }; // widget identifiers
 
 class MyGLCanvas;
@@ -20,22 +25,44 @@ class MyGLCanvas;
 class MyFrame: public wxFrame
 {
  public:
-  MyFrame(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size, 
-	  names *names_mod = NULL, devices *devices_mod = NULL, monitor *monitor_mod = NULL, 
+  MyFrame(wxWindow *parent,
+	  const wxString& title,
+	  const wxPoint& pos,
+	  const wxSize& size, 
+	  names *names_mod = NULL,
+	  devices *devices_mod = NULL,
+	  monitor *monitor_mod = NULL, 
 	  long style = wxDEFAULT_FRAME_STYLE); // constructor
  private:
-  MyGLCanvas *canvas;                     // GL drawing area widget to draw traces
-  wxSpinCtrl *spin;                       // control widget to select the number of cycles
+  vector<wxBoxSizer*> vtracesizers;       /* Vector to hold sizers for traces */
+  vector<MyGLCanvas*> canvases;	          /* vector to hold canvases */
+
+  wxString tracesizer;
+  wxString tracename;
+
+  wxSpinCtrl *spin_cycles;
+  wxComboBox *switch_list;
+  wxComboBox *switch_option;
+  wxComboBox *add_monitor;
+  wxComboBox *rem_monitor;
+  wxWindow *disp_scroll;
   names *nmz;                             // pointer to names class
   devices *dmz;                           // pointer to devices class
   monitor *mmz;                           // pointer to monitor class
   int cyclescompleted;                    // how many simulation cycles have been completed
-  void runnetwork(int ncycles);           // function to run the logic network
+  //  void runnetwork(int ncycles);           // function to run the logic network
   void OnExit(wxCommandEvent& event);     // callback for exit menu item
   void OnAbout(wxCommandEvent& event);    // callback for about menu item
-  void OnButton(wxCommandEvent& event);   // callback for push button
+  //  void OnButton(wxCommandEvent& event);   // callback for push button
+  void OnRunButton(wxCommandEvent &event);
+  void OnContButton(wxCommandEvent &event);
   void OnSpin(wxSpinEvent& event);        // callback for spin control
-  void OnText(wxCommandEvent& event);     // callback for text entry field
+  //  void OnText(wxCommandEvent& event);     // callback for text
+  //  entry field
+  void OnScroll(wxScrollWinEvent& event);
+  void OnSwitch_option(wxCommandEvent& event);
+  void OnAddMonitor(wxCommandEvent& event);
+  void OnRemMonitor(wxCommandEvent& event);
   DECLARE_EVENT_TABLE()
 };
     

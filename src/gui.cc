@@ -2,10 +2,12 @@
 #include <GL/glut.h>
 #include "wx_icon.xpm"
 #include <iostream>
+#include <string>
+#include <sstream>
 
 using namespace std;
 
-// MyGLCanvas ////////////////////////////////////////////////////////////////////////////////////
+// MyGLCanvas //////////////////////////////////////////////////////////////////
 
 BEGIN_EVENT_TABLE(MyGLCanvas, wxGLCanvas)
   EVT_SIZE(MyGLCanvas::OnSize)
@@ -13,10 +15,19 @@ BEGIN_EVENT_TABLE(MyGLCanvas, wxGLCanvas)
   EVT_MOUSE_EVENTS(MyGLCanvas::OnMouse)
 END_EVENT_TABLE()
   
-int wxglcanvas_attrib_list[5] = {WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0};
+int wxglcanvas_attrib_list[5] = {WX_GL_RGBA,
+                                 WX_GL_DOUBLEBUFFER,
+                                 WX_GL_DEPTH_SIZE,
+                                 16, 0};
 
-MyGLCanvas::MyGLCanvas(wxWindow *parent, wxWindowID id, monitor* monitor_mod, names* names_mod,
-		       const wxPoint& pos, const wxSize& size, long style, const wxString& name):
+MyGLCanvas::MyGLCanvas(wxWindow *parent,
+                       wxWindowID id,
+                       monitor* monitor_mod,
+                       names* names_mod,
+                       const wxPoint& pos,
+                       const wxSize& size,
+                       long style,
+                       const wxString& name):
     wxGLCanvas(parent, id, pos, size, style, name, wxglcanvas_attrib_list)
   // Constructor - initialises private variables
 {
@@ -27,10 +38,11 @@ MyGLCanvas::MyGLCanvas(wxWindow *parent, wxWindowID id, monitor* monitor_mod, na
 }
 
 void MyGLCanvas::Render(wxString example_text, int cycles)
-  // Draws canvas contents - the following example writes the string "example text" onto the canvas
-  // and draws a signal trace. The trace is artificial if the simulator has not yet been run.
-  // When the simulator is run, the number of cycles is passed as a parameter and the first monitor
-  // trace is displayed.
+  // Draws canvas contents - the following example writes the string
+  // "example text" onto the canvas and draws a signal trace.
+  // The trace is artificial if the simulator has not yet been
+  // run. When the simulator is run, the number of cycles is passed as
+  // a parameter and the first monitor trace is displayed.
 {
   float y;
   unsigned int i;
@@ -45,16 +57,16 @@ void MyGLCanvas::Render(wxString example_text, int cycles)
   }
   glClear(GL_COLOR_BUFFER_BIT);
 
-  if ((cyclesdisplayed >= 0) && (mmz->moncount() > 0)) { // draw the first monitor signal, get trace from monitor class
-
+  if ((cyclesdisplayed >= 0) && (mmz->moncount() > 0)) {
+    // draw the first monitor signal, get trace from monitor class
     glColor3f(1.0, 0.0, 0.0);
     glBegin(GL_LINE_STRIP);
     for (i=0; i<cyclesdisplayed; i++) {
       if (mmz->getsignaltrace(0, i, s)) {
-	if (s==low) y = 10.0;
-	if (s==high) y = 30.0;
-	glVertex2f(20*i+10.0, y); 
-	glVertex2f(20*i+30.0, y);
+        if (s==low) y = 10.0;
+        if (s==high) y = 30.0;
+        glVertex2f(20*i+10.0, y); 
+        glVertex2f(20*i+30.0, y);
       }
     }
     glEnd();
@@ -73,10 +85,15 @@ void MyGLCanvas::Render(wxString example_text, int cycles)
     
   }
 
+  /*
   // Example of how to use GLUT to draw text on the canvas
   glColor3f(0.0, 0.0, 1.0);
   glRasterPos2f(10, 100);
-  for (i = 0; i < example_text.Len(); i++) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, example_text[i]);
+  for (i = 0; i < example_text.Len(); i++)
+    {
+      glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, example_text[i]);
+    }
+  */
 
   // We've been drawing to the back buffer, flush the graphics pipeline and swap the back buffer to the front
   glFlush();
@@ -125,33 +142,51 @@ void MyGLCanvas::OnMouse(wxMouseEvent& event)
   // Callback function for mouse events inside the GL canvas
 {
   wxString text;
-  int w, h;;
-
+  int w, h;
   GetClientSize(&w, &h);
-  if (event.ButtonDown()) text.Printf(wxT("Mouse button %d pressed at %d %d"), event.GetButton(), event.m_x, h-event.m_y);
-  if (event.ButtonUp()) text.Printf(wxT("Mouse button %d released at %d %d"), event.GetButton(), event.m_x, h-event.m_y);
-  if (event.Dragging()) text.Printf(wxT("Mouse dragged to %d %d"), event.m_x, h-event.m_y);
-  if (event.Leaving()) text.Printf(wxT("Mouse left window at %d %d"), event.m_x, h-event.m_y);
+  if (event.ButtonDown())
+    text.Printf(wxT("Mouse button %d pressed at %d %d"),
+                event.GetButton(), event.m_x, h-event.m_y);
+  if (event.ButtonUp())
+    text.Printf(wxT("Mouse button %d released at %d %d"),
+                event.GetButton(), event.m_x, h-event.m_y);
+  if (event.Dragging())
+    text.Printf(wxT("Mouse dragged to %d %d"),
+                event.m_x, h-event.m_y);
+  if (event.Leaving())
+    text.Printf(wxT("Mouse left window at %d %d"),
+                event.m_x, h-event.m_y);
 
-  if (event.ButtonDown() || event.ButtonUp() || event.Dragging() || event.Leaving()) Render(text);
+  if (event.ButtonDown() || event.ButtonUp() || event.Dragging() || event.Leaving())
+    Render(text);
 }
 
-// MyFrame ///////////////////////////////////////////////////////////////////////////////////////
+// MyFrame /////////////////////////////////////////////////////////////////////
 
 
 BEGIN_EVENT_TABLE(MyFrame, wxFrame)
-  EVT_MENU(wxID_EXIT, MyFrame::OnExit)
-  EVT_MENU(wxID_ABOUT, MyFrame::OnAbout)
-  EVT_BUTTON(MY_BUTTON_ID, MyFrame::OnButton)
-  EVT_SPINCTRL(MY_SPINCNTRL_ID, MyFrame::OnSpin)
-  EVT_TEXT_ENTER(MY_TEXTCTRL_ID, MyFrame::OnText)
+  EVT_MENU(wxID_EXIT,       MyFrame::OnExit)
+  EVT_MENU(wxID_ABOUT,      MyFrame::OnAbout)
+  EVT_BUTTON(RUN_BUTTON_ID, MyFrame::OnRunButton)
+  EVT_BUTTON(CONT_BUTTON_ID, MyFrame::OnContButton)
+  EVT_SPINCTRL(CYCLES_SPIN, MyFrame::OnSpin)
+  EVT_SCROLLWIN(MyFrame::OnScroll)
+  EVT_COMBOBOX(SWITCH_OPTION, MyFrame::OnSwitch_option)
+  EVT_COMBOBOX(MONITOR_ADD, MyFrame::OnAddMonitor)
+  EVT_COMBOBOX(MONITOR_REM, MyFrame::OnRemMonitor)
 END_EVENT_TABLE()
   
-MyFrame::MyFrame(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size,
-		 names *names_mod, devices *devices_mod, monitor *monitor_mod, long style):
+MyFrame::MyFrame(wxWindow *parent,
+                 const wxString& title,
+                 const wxPoint& pos,
+                 const wxSize& size,
+                 names *names_mod,
+                 devices *devices_mod,
+                 monitor *monitor_mod,
+                 long style):
   wxFrame(parent, wxID_ANY, title, pos, size, style)
-  // Constructor - initialises pointers to names, devices and monitor classes, lays out widgets
-  // using sizers
+  // Constructor - initialises pointers to names, devices and monitor
+  // classes, lays out widgets using sizers
 {
   SetIcon(wxIcon(wx_icon));
 
@@ -164,51 +199,144 @@ MyFrame::MyFrame(wxWindow *parent, const wxString& title, const wxPoint& pos, co
   }
 
   wxMenu *fileMenu = new wxMenu;
-  fileMenu->Append(wxID_ABOUT, wxT("&About"));
-  fileMenu->Append(wxID_EXIT, wxT("&Quit"));
+  fileMenu->Append(wxID_EXIT, wxT("&Quit\tCtrl-Q"));
+  wxMenu *helpMenu = new wxMenu;
+  helpMenu->Append(wxID_ABOUT, wxT("&About"));
   wxMenuBar *menuBar = new wxMenuBar;
   menuBar->Append(fileMenu, wxT("&File"));
+  menuBar->Append(helpMenu, wxT("&Help"));
   SetMenuBar(menuBar);
 
-  wxBoxSizer *topsizer = new wxBoxSizer(wxHORIZONTAL);
-  canvas = new MyGLCanvas(this, wxID_ANY, monitor_mod, names_mod);
-  topsizer->Add(canvas, 1, wxEXPAND | wxALL, 10);
+  wxBoxSizer *topsizer = new wxBoxSizer(wxVERTICAL);
+  
+  wxBoxSizer *ctrlsizer = new wxBoxSizer(wxHORIZONTAL);
+  ctrlsizer->Add(new wxStaticText(this, wxID_ANY, wxT("Cycles:")),
+                 0,             /* make vertically unstrechable */
+                 wxALL | wxALIGN_CENTER_VERTICAL,         /* border all around */
+                 10);           /* border size */ 
+  
+  spin_cycles = new wxSpinCtrl(this, CYCLES_SPIN, wxString(wxT("10")));
+  ctrlsizer->Add(spin_cycles, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
+  ctrlsizer->Add(new wxButton(this, RUN_BUTTON_ID, wxT("Run")),
+                 0,
+                 wxALL | wxEXPAND,
+                 10);
+  ctrlsizer->Add(new wxButton(this, CONT_BUTTON_ID, wxT("Continue")),
+		 0,
+		 wxALL | wxEXPAND,
+		 10);
+  topsizer->Add(ctrlsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
 
-  wxBoxSizer *button_sizer = new wxBoxSizer(wxVERTICAL);
-  button_sizer->Add(new wxButton(this, MY_BUTTON_ID, wxT("Run")), 0, wxALL, 10);
-  button_sizer->Add(new wxStaticText(this, wxID_ANY, wxT("Cycles")), 0, wxTOP|wxLEFT|wxRIGHT, 10);
-  spin = new wxSpinCtrl(this, MY_SPINCNTRL_ID, wxString(wxT("10")));
-  button_sizer->Add(spin, 0 , wxALL, 10);
+  wxBoxSizer *switchsizer = new wxBoxSizer(wxHORIZONTAL);
+  switchsizer->Add(new wxStaticText(this, wxID_ANY, wxT("Switches:")),
+		   0,
+		   wxALL | wxALIGN_CENTER_VERTICAL,
+		   10);
 
-  button_sizer->Add(new wxTextCtrl(this, MY_TEXTCTRL_ID, wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER), 0 , wxALL, 10);
-  topsizer->Add(button_sizer, 0, wxALIGN_CENTER);
+  switch_list = new wxComboBox(this, SWITCH_LIST, wxEmptyString);
+  switch_list->Append(wxT("option1"));
+  switch_list->Append(wxT("option2"));
+  switch_list->Append(wxT("option3"));
+  switch_list->Append(wxT("option4"));
+  switchsizer->Add(switch_list, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
+
+  switch_option = new wxComboBox(this, SWITCH_OPTION, wxEmptyString);
+  switch_option->Append(wxT("HIGH"));
+  switch_option->Append(wxT("LOW"));
+  switchsizer->Add(switch_option, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
+
+  topsizer->Add(switchsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
+
+  wxBoxSizer *monitorsizer = new wxBoxSizer(wxHORIZONTAL);
+  monitorsizer->Add(new wxStaticText(this, wxID_ANY, wxT("Add Monitor:")),
+		    0,
+		    wxALL | wxALIGN_CENTER_VERTICAL,
+		    10);
+
+  add_monitor = new wxComboBox(this, MONITOR_ADD, wxEmptyString);
+  add_monitor->Append(wxT("an unused monitor"));
+  add_monitor->Append(wxT("another unused monitor"));
+  monitorsizer->Add(add_monitor, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
+  
+  rem_monitor = new wxComboBox(this, MONITOR_REM, wxEmptyString);
+  rem_monitor->Append(wxT("a used monitor"));
+  rem_monitor->Append(wxT("another used monitor"));
+  monitorsizer->Add(rem_monitor, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
+  
+  topsizer->Add(monitorsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
+
+
+  wxScrolledWindow* disp_scroll = new wxScrolledWindow(this,
+						       -1,
+						       wxDefaultPosition,
+						       wxDefaultSize,
+				   wxSUNKEN_BORDER | wxHSCROLL | wxVSCROLL);
+
+  wxBoxSizer *toptracesizer = new wxBoxSizer(wxVERTICAL);
+
+  disp_scroll->SetSizer(toptracesizer);
+  disp_scroll->SetScrollRate(10, 10);
+  disp_scroll->SetAutoLayout(true);
+
+  for(int i = 0; i<10; i++)
+    {
+      vtracesizers.push_back(new wxBoxSizer(wxHORIZONTAL));
+      canvases.push_back(new MyGLCanvas(disp_scroll,
+					wxID_ANY,
+					monitor_mod,
+					names_mod,
+					wxPoint(-1,-1),
+					wxSize(-1,40)));
+      tracesizer = wxT("m");
+      tracename = tracesizer << i;
+      vtracesizers[i]->Add(new wxStaticText(disp_scroll, wxID_ANY, tracename),
+      			   0,
+      			   wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
+      			   10);
+      vtracesizers[i]->Add(canvases[i], 1, wxALL | wxEXPAND, 10);
+      toptracesizer->Add(vtracesizers[i], 0, wxEXPAND | wxALL, 10);
+    }
+
+  topsizer->Add(disp_scroll, 1, wxEXPAND | wxALL, 10);
 
   SetSizeHints(400, 400);
   SetSizer(topsizer);
+
 }
 
 void MyFrame::OnExit(wxCommandEvent &event)
-  // Callback for the exit menu item
 {
   Close(true);
 }
 
 void MyFrame::OnAbout(wxCommandEvent &event)
-  // Callback for the about menu item
 {
-  wxMessageDialog about(this, wxT("Example wxWidgets GUI\nAndrew Gee\nFebruary 2011"), wxT("About Logsim"), wxICON_INFORMATION | wxOK);
+  wxMessageDialog about(this, wxT("LogicSim\n\
+    By James Glanville, George Ayris and Andy Holt"),
+                        wxT("About LogicSim"),
+                        wxICON_INFORMATION | wxOK);
   about.ShowModal();
 }
 
-void MyFrame::OnButton(wxCommandEvent &event)
-  // Callback for the push button
-{
-  int n, ncycles;
+// void MyFrame::OnButton(wxCommandEvent &event)
+// // Callback for the push button
+// {
+//   int n, ncycles;
+  
+//   cyclescompleted = 0;
+//   mmz->resetmonitor ();
+//   runnetwork(spin->GetValue());
+//   canvas->Render(wxT("Run button pressed"), cyclescompleted);
+// }
 
-  cyclescompleted = 0;
-  mmz->resetmonitor ();
-  runnetwork(spin->GetValue());
-  canvas->Render(wxT("Run button pressed"), cyclescompleted);
+void MyFrame::OnRunButton(wxCommandEvent &event)
+{
+  wxLogMessage(wxT("Run Button Pressed"));
+}
+
+void MyFrame::OnContButton(wxCommandEvent &event)
+{
+  wxLogMessage(wxT("Continue Button Pressed"));
 }
 
 void MyFrame::OnSpin(wxSpinEvent &event)
@@ -217,32 +345,52 @@ void MyFrame::OnSpin(wxSpinEvent &event)
   wxString text;
 
   text.Printf(wxT("New spinctrl value %d"), event.GetPosition());
-  canvas->Render(text);
+  //  canvas->Render(text);
 }
 
-void MyFrame::OnText(wxCommandEvent &event)
-  // Callback for the text entry field
-{
-  wxString text;
+// void MyFrame::OnText(wxCommandEvent &event)
+//   // Callback for the text entry field
+// {
+//   wxString text;
 
-  text.Printf(wxT("New text entered %s"), event.GetString().c_str());
-  canvas->Render(text);
+//   text.Printf(wxT("New text entered %s"), event.GetString().c_str());
+//   canvas->Render(text);
+// }
+
+// void MyFrame::runnetwork(int ncycles)
+//   // Function to run the network, derived from corresponding function in userint.cc
+// {
+//   bool ok = true;
+//   int n = ncycles;
+
+//   while ((n > 0) && ok) {
+//     dmz->executedevices (ok);
+//     if (ok) {
+//       n--;
+//       mmz->recordsignals ();
+//     } else
+//       cout << "Error: network is oscillating" << endl;
+//   }
+//   if (ok) cyclescompleted = cyclescompleted + ncycles;
+//   else cyclescompleted = 0;
+// }
+
+void MyFrame::OnScroll(wxScrollWinEvent& event)
+{
+  cout << "position = " << event.GetPosition() << endl;
 }
 
-void MyFrame::runnetwork(int ncycles)
-  // Function to run the network, derived from corresponding function in userint.cc
+void MyFrame::OnSwitch_option(wxCommandEvent& event)
 {
-  bool ok = true;
-  int n = ncycles;
 
-  while ((n > 0) && ok) {
-    dmz->executedevices (ok);
-    if (ok) {
-      n--;
-      mmz->recordsignals ();
-    } else
-      cout << "Error: network is oscillating" << endl;
-  }
-  if (ok) cyclescompleted = cyclescompleted + ncycles;
-  else cyclescompleted = 0;
+}
+
+void MyFrame::OnAddMonitor(wxCommandEvent& event)
+{
+
+}
+
+void MyFrame::OnRemMonitor(wxCommandEvent& event)
+{
+
 }
