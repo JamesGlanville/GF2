@@ -71,7 +71,7 @@ bool parser::readin (void)
   
   // Reset end of section marker
   endOfSection = 0;
-  
+  cout << "In connections\n";
   // Parse connections
   if(parseConnInputName(dev1id,inid,endOfSection)) return PARSER_FAIL;
     
@@ -616,12 +616,12 @@ bool parser::parseConnInputName(name &devid, name &inpid, bool &endOfSection)
     case OR:
     case NOR:
       ss.str("");
-	  for (int i=1;i<=16;i++)
-	  {
-		ss << "i"<<i;
-		if (input.compare(ss.str())==0){return PARSER_PASS;}  
-	  }
-	  return PARSER_FAIL;
+      for (int i=1;i<=16;i++)
+      {
+        ss << "i"<<i;
+        if (input.compare(ss.str())==0){return PARSER_PASS;}  
+      } 
+      return PARSER_FAIL;
   }
   return PARSER_PASS;
 }
@@ -713,7 +713,7 @@ bool parser::parseConnOutputName(name &devid, name &outid)
 bool parser::createConn(name dev1id,name dev2id,name inid,name outid)
 {
   bool ok;
-  makeconnection(dev1id,inid,dev2id,outid,ok);
+  netz->makeconnection(dev1id,inid,dev2id,outid,ok);
   if(!ok)
   {
     cout << "ERROR: Couldn't make connection\n";

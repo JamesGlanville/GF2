@@ -4,14 +4,14 @@ DEVICES
 {
 D1 = NAND(8);
 Dd = dtype;
-Dd = AND(7);
-switchy = Sw(1;
-gate = NOR(23);
+switchy = Sw(1);
+gate = NOR(16);
 or = OR(9);
 }
 CONNECTIONS
 {
+D1.i5 <= Dd.Q;
 Dd.data <= switchy;
 gate.i6 <= or;
-D1.i5 <= Dd.Q;
+
 }
