@@ -205,7 +205,7 @@ MyFrame::MyFrame(wxWindow *parent,
 
   wxBoxSizer *topsizer = new wxBoxSizer(wxVERTICAL);
   
-  wxBoxSizer *ctrlsizer = new wxBoxSizer(wxVERTICAL);
+  wxBoxSizer *ctrlsizer = new wxBoxSizer(wxHORIZONTAL);
   ctrlsizer->Add(new wxStaticText(this, wxID_ANY, wxT("Cycles:")),
                  0,             /* make vertically unstrechable */
                  wxALL | wxALIGN_CENTER_VERTICAL,         /* border all around */
@@ -218,73 +218,42 @@ MyFrame::MyFrame(wxWindow *parent,
                  0,
                  wxALL | wxEXPAND,
                  10);
-  topsizer->Add(ctrlsizer, 0, wxALIGN_CENTER | wxALL, 10);
+  topsizer->Add(ctrlsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
 
-  //  wxScrolledWindow* disp_scroll = new wxScrolledWindow(this,
-  //						       -1,
-  //						       wxDefaultPosition,
-  //						       wxDefaultSize,
-  //				   wxSUNKEN_BORDER | wxHSCROLL | wxVSCROLL);
+  wxScrolledWindow* disp_scroll = new wxScrolledWindow(this,
+						       -1,
+						       wxDefaultPosition,
+						       wxDefaultSize,
+				   wxSUNKEN_BORDER | wxHSCROLL | wxVSCROLL);
 
   wxBoxSizer *toptracesizer = new wxBoxSizer(wxVERTICAL);
 
 
-  //  disp_scroll->SetSizer(toptracesizer);
-  //  disp_scroll->SetScrollRate(10, 10);
-  //  disp_scroll->SetAutoLayout(true);
+  disp_scroll->SetSizer(toptracesizer);
+  disp_scroll->SetScrollRate(10, 10);
+  disp_scroll->SetAutoLayout(true);
 
 
   /* attempting to generate sizers and content automatically */
-  //  vector<wxBoxSizer*> vtracesizers;
-  //  vector<MyGLCanvas*> canvases;
-  //  wxString tracesizer = wxT("tracesizer");
-  //  wxString tracename;
-  //  wxSize sizeforexpansion;
 
-  wxBoxSizer *tracesizer0 = new wxBoxSizer(wxHORIZONTAL);
-  canvas0 = new MyGLCanvas(this, wxID_ANY, monitor_mod, names_mod, wxPoint(-1,-1), wxSize(40,-1));
-  tracesizer0->Add(canvas0, 1, wxEXPAND | wxALL, 10);
-  toptracesizer->Add(tracesizer0, 1, wxEXPAND | wxALL, 10);
+  vector<wxBoxSizer*> vtracesizers;
+  vector<MyGLCanvas*> canvases;
+  wxString tracesizer = wxT("tracesizer");
+  wxString tracename;
 
-  wxBoxSizer *tracesizer1 = new wxBoxSizer(wxHORIZONTAL);
-  canvas1 = new MyGLCanvas(this, wxID_ANY, monitor_mod, names_mod, wxPoint(-1,-1), wxSize(-1,40));
-  tracesizer1->Add(canvas1, 1, wxEXPAND | wxALL, 10);
-  toptracesizer->Add(tracesizer1, 1, wxEXPAND | wxALL, 10);
-  
-
-  /*
-  for(int i = 0; i<1; i++)
+  for(int i = 0; i<10; i++)
     {
       vtracesizers.push_back(new wxBoxSizer(wxHORIZONTAL));
-      sizeforexpansion = toptracesizer->GetSize();
-      cout << "toptracesizer size is: " << sizeforexpansion << endl;
       canvases.push_back(new MyGLCanvas(disp_scroll,
 					wxID_ANY,
 					monitor_mod,
 					names_mod,
 					wxPoint(-1,-1),
-					sizeforexpansion));
-      vtracesizers[i]->Add(canvases[i], 0, wxALL | wxALIGN_LEFT, 10);
-      toptracesizer->Add(vtracesizers[i], 1, wxEXPAND | wxALL, 10);
+					wxSize(-1,40)));
+      vtracesizers[i]->Add(canvases[i], 1, wxALL | wxEXPAND, 10);
+      toptracesizer->Add(vtracesizers[i], 0, wxEXPAND | wxALL, 10);
     }
-  */
 
-  /*
-  vtracesizers.push_back(new wxBoxSizer(wxHORIZONTAL));
-  canvas0 = new MyGLCanvas(disp_scroll, wxID_ANY, monitor_mod, names_mod);
-  vtracesizers[0]->Add(canvas0, 1, wxALL | wxEXPAND, 10);
-  toptracesizer->Add(vtracesizers[0], 1, wxEXPAND | wxALL, 10);
-
-  vtracesizers.push_back(new wxBoxSizer(wxHORIZONTAL));
-  canvas1 = new MyGLCanvas(disp_scroll, wxID_ANY, monitor_mod, names_mod);
-  vtracesizers[1]->Add(canvas1, 1, wxALL | wxEXPAND, 10);
-  toptracesizer->Add(vtracesizers[1], 1, wxEXPAND | wxALL, 10);
-
-  vtracesizers.push_back(new wxBoxSizer(wxHORIZONTAL));
-  canvas2 = new MyGLCanvas(disp_scroll, wxID_ANY, monitor_mod, names_mod);
-  vtracesizers[2]->Add(canvas2, 1, wxALL | wxEXPAND, 10);
-  toptracesizer->Add(vtracesizers[2], 1, wxEXPAND | wxALL, 10);
-  */
 
   /*
   for(int i = 0; i<10; i++)
@@ -300,8 +269,7 @@ MyFrame::MyFrame(wxWindow *parent,
     } 
   */
 
-  //  topsizer->Add(disp_scroll, 1, wxEXPAND | wxALL, 10);
-  topsizer->Add(toptracesizer, 0, wxALIGN_CENTER);
+  topsizer->Add(disp_scroll, 1, wxEXPAND | wxALL, 10);
 
   SetSizeHints(400, 400);
   SetSizer(topsizer);
