@@ -27,7 +27,11 @@ class MyFrame: public wxFrame
 	  names *names_mod = NULL, devices *devices_mod = NULL, monitor *monitor_mod = NULL, 
 	  long style = wxDEFAULT_FRAME_STYLE); // constructor
  private:
-  MyGLCanvas *canvas;                     // GL drawing area widget to draw traces
+  MyGLCanvas *canvas;                     // GL drawing area widget to
+					  // draw traces
+  MyGLCanvas *canvas0;
+  MyGLCanvas *canvas1;
+  MyGLCanvas *canvas2;
   //  wxSpinCtrl *spin;                       // control widget to select
 					  // the number of cycles
   wxSpinCtrl *spin_cycles;
