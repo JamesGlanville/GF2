@@ -26,8 +26,8 @@ bool parser::readin (void)
   bool endOfSection = 0;
   vector <symbol> stop_syms;
   symbol stopped_at = none;
-  int num_skipped;
-  int error_count = 0;
+  //int num_skipped;
+  error_count = 0;
 
   // {
   if(parseToken(opencurly)) 
@@ -37,157 +37,399 @@ bool parser::readin (void)
     stop_syms.push_back(MON);
     stop_syms.push_back(opencurly);
     stop_syms.push_back(closecurly);
-    stopped_at = stoppingSym(stop_syms, num_skipped);
+    stop_syms.push_back(semicol);
+    stopped_at = stoppingSym(stop_syms/*, num_skipped*/);
+    if(stopped_at == closecurly) endOfSection = 1;
     stop_syms.clear(); 
+    error_count++;
   }
   
   // DEVICES
   if(stopped_at == none) 
   {
-    if(parseSectionHeader(DEV)) return PARSER_FAIL;
+    if(parseSectionHeader(DEV)) 
+    {
+      stop_syms.push_back(CONN);
+      stop_syms.push_back(MON);
+      stop_syms.push_back(opencurly);
+      stop_syms.push_back(closecurly);
+      stop_syms.push_back(semicol);
+      stopped_at = stoppingSym(stop_syms);
+      if(stopped_at == closecurly) endOfSection = 1;
+      stop_syms.clear();
+      error_count++;
+    }
   }
   
   // {
   if(stopped_at == none || stopped_at == DEV)
   {
     stopped_at = none;
-    if(parseToken(opencurly)) return PARSER_FAIL;
+    if(parseToken(opencurly)) 
+    {
+      error_count++;
+    }
   }
   
   // Parsing defined devices
   // First device name
-  if(stopped_at == none) 
+  if(stopped_at == none || stopped_at == opencurly) 
   {
-    if(parseDeviceName(id)) return PARSER_FAIL;
-  }
-
-  // = 
-  if(stopped_at == none) 
-  {
-    if(parseToken(equals)) return PARSER_FAIL;
-  }
-  
-  // Device type 
-  if(stopped_at == none) 
-  {
-    if(parseDeviceType(current_device_type)) return PARSER_FAIL;
-  }
-
-  if(stopped_at == none) 
-  {
-    if(createDevice(current_device_type,id)) return PARSER_FAIL;
-  }
-  
-  // ;
-  if(stopped_at == none) 
-  {
-    if(parseToken(semicol)) return PARSER_FAIL;
-  }
-  
-  // Subsequent device names + checks for closing curly
-  if(stopped_at == none) 
-  {
-    if(parseDeviceName(id,endOfSection)) return PARSER_FAIL;
+    stopped_at = none;
+    if(parseDeviceName(id)) 
+    {
+      stop_syms.push_back(CONN);
+      stop_syms.push_back(MON);
+      stop_syms.push_back(opencurly);
+      stop_syms.push_back(closecurly);
+      stop_syms.push_back(semicol);
+      stopped_at = stoppingSym(stop_syms);
+      if(stopped_at == closecurly) endOfSection = 1;
+      stop_syms.clear();
+      error_count++;
+    }
   }
   
   while(!endOfSection) 
   {
+    // =
     if(stopped_at == none) 
     {
-      if(parseToken(equals)) return PARSER_FAIL;
+      if(parseToken(equals)) 
+      {
+        stop_syms.push_back(CONN);
+        stop_syms.push_back(MON);
+        stop_syms.push_back(opencurly);
+        stop_syms.push_back(closecurly);
+        stop_syms.push_back(semicol);
+        stopped_at = stoppingSym(stop_syms);
+        if(stopped_at == closecurly) endOfSection = 1;
+        stop_syms.clear();
+        error_count++;
+      }
     }
-    
+    // device type
     if(stopped_at == none) 
     {
-      if(parseDeviceType(current_device_type)) return PARSER_FAIL;
+      if(parseDeviceType(current_device_type)) 
+      {
+        stop_syms.push_back(CONN);
+        stop_syms.push_back(MON);
+        stop_syms.push_back(opencurly);
+        stop_syms.push_back(closecurly);
+        stop_syms.push_back(semicol);
+        stopped_at = stoppingSym(stop_syms);
+        if(stopped_at == closecurly) endOfSection = 1;
+        stop_syms.clear();
+        error_count++;
+      }
     }
-    
+    // create device - have to move testing for error_count before creation into function so that parameters are still parsed
     if(stopped_at == none) 
     {
-      if(createDevice(current_device_type,id)) return PARSER_FAIL;
+      if(createDevice(current_device_type,id))
+      {
+        stop_syms.push_back(CONN);
+        stop_syms.push_back(MON);
+        stop_syms.push_back(opencurly);
+        stop_syms.push_back(closecurly);
+        stop_syms.push_back(semicol);
+        stopped_at = stoppingSym(stop_syms);
+        if(stopped_at == closecurly) endOfSection = 1;
+        stop_syms.clear();
+        error_count++;
+      }
     }
-    
+    // ;
     if(stopped_at == none) 
     {
-      if(parseToken(semicol)) return PARSER_FAIL;
+      if(parseToken(semicol)) 
+      {
+        error_count++;
+      }
     }
-    
+    // device name or }
     // Goes at end of loop because it also detects the closing curly brace
-    if(stopped_at == none) 
+    if(stopped_at == none || stopped_at == semicol) 
     {
-      if(parseDeviceName(id,endOfSection)) return PARSER_FAIL;
+      stopped_at = none;
+      if(parseDeviceName(id,endOfSection)) 
+      {
+        stop_syms.push_back(CONN);
+        stop_syms.push_back(MON);
+        stop_syms.push_back(opencurly);
+        stop_syms.push_back(closecurly);
+        stop_syms.push_back(semicol);
+        stopped_at = stoppingSym(stop_syms);
+        if(stopped_at == closecurly) endOfSection = 1;
+        stop_syms.clear();
+        error_count++;
+      }
     }
   }
   
   // CONNECTIONS
-  if(stopped_at == none) 
+  if(stopped_at == none || stopped_at == closecurly) 
   {
-    if(parseSectionHeader(CONN)) return PARSER_FAIL;
+    stopped_at = none;
+    if(parseSectionHeader(CONN)) 
+    if(createDevice(current_device_type,id))
+    {
+      stop_syms.push_back(MON);
+      stop_syms.push_back(opencurly);
+      stop_syms.push_back(closecurly);
+      stop_syms.push_back(semicol);
+      stopped_at = stoppingSym(stop_syms);
+      if(stopped_at == closecurly) endOfSection = 1;
+      stop_syms.clear();
+      error_count++;
+    }
   }
   
   // {
-  if(stopped_at == none) 
+  if(stopped_at == none || stopped_at == CONN) 
   {
-    if(parseToken(opencurly)) return PARSER_FAIL;
+    stopped_at = none;
+    if(parseToken(opencurly)) 
+    if(createDevice(current_device_type,id))
+    {
+      error_count++;
+    }
   }
   
   // Reset end of section marker
   endOfSection = 0;
 
-  // Parse connections
-  if(stopped_at == none) 
+  // Connection input
+  if(stopped_at == none || stopped_at == opencurly) 
   {
-    if(parseConnInputName(dev1id,inid,endOfSection)) return PARSER_FAIL;
+    stopped_at = none;
+    if(parseConnInputName(dev1id,inid,endOfSection)) 
+    {
+      stop_syms.push_back(MON);
+      stop_syms.push_back(opencurly);
+      stop_syms.push_back(closecurly);
+      stop_syms.push_back(semicol);
+      stopped_at = stoppingSym(stop_syms);
+      if(stopped_at == closecurly) endOfSection = 1;
+      stop_syms.clear();
+      error_count++;
+    }
   }
   
   while(!endOfSection)
   {
-    if(parseToken(consym)) return PARSER_FAIL;
-    if(parseConnOutputName(dev2id,outid)) return PARSER_FAIL;
-    if(createConn(dev1id,dev2id,inid,outid)) return PARSER_FAIL;
-    if(parseToken(semicol)) return PARSER_FAIL;
-    if(parseConnInputName(dev1id,inid,endOfSection)) return PARSER_FAIL;
+    // <=
+    if(stopped_at == none) 
+    {
+      if(parseToken(consym)) 
+      {
+        stop_syms.push_back(MON);
+        stop_syms.push_back(opencurly);
+        stop_syms.push_back(closecurly);
+        stop_syms.push_back(semicol);
+        stopped_at = stoppingSym(stop_syms);
+        if(stopped_at == closecurly) endOfSection = 1;
+        stop_syms.clear();
+        error_count++;
+      }
+    }
+    // Connection output
+    if(stopped_at == none) 
+    {
+      if(parseConnOutputName(dev2id,outid)) 
+      {
+        stop_syms.push_back(MON);
+        stop_syms.push_back(opencurly);
+        stop_syms.push_back(closecurly);
+        stop_syms.push_back(semicol);
+        stopped_at = stoppingSym(stop_syms);
+        if(stopped_at == closecurly) endOfSection = 1;
+        stop_syms.clear();
+        error_count++;
+      }
+    }
+    // Create connection
+    if(stopped_at == none && error_count == 0) 
+    {
+      if(createConn(dev1id,dev2id,inid,outid)) 
+      {
+        stop_syms.push_back(MON);
+        stop_syms.push_back(opencurly);
+        stop_syms.push_back(closecurly);
+        stop_syms.push_back(semicol);
+        stopped_at = stoppingSym(stop_syms);
+        if(stopped_at == closecurly) endOfSection = 1;
+        stop_syms.clear();
+        error_count++;
+      }
+    }
+    // ;
+    if(stopped_at == none) 
+    {
+      if(parseToken(semicol)) 
+      {
+        error_count++;
+      }
+    }
+    // Connection input
+    if(stopped_at == none || stopped_at == semicol) 
+    {
+      stopped_at = none;
+      if(parseConnInputName(dev1id,inid,endOfSection)) 
+      {
+        stop_syms.push_back(MON);
+        stop_syms.push_back(opencurly);
+        stop_syms.push_back(closecurly);
+        stop_syms.push_back(semicol);
+        stopped_at = stoppingSym(stop_syms);
+        if(stopped_at == closecurly) endOfSection = 1;
+        stop_syms.clear();
+        error_count++;
+      }
+    }
   }
   
   // Should check that all inputs are connected at this point
 
   // MONITORS 
-  if(parseSectionHeader(MON)) return PARSER_FAIL;
+  if(stopped_at == none || stopped_at == closecurly) 
+  {
+    stopped_at = none;
+    if(parseSectionHeader(MON)) 
+    {
+      stop_syms.push_back(opencurly);
+      stop_syms.push_back(closecurly);
+      stop_syms.push_back(semicol);
+      stopped_at = stoppingSym(stop_syms);
+      if(stopped_at == closecurly) endOfSection = 1;
+      stop_syms.clear();
+      error_count++;
+    }
+  }
 
   // {
-  if(parseToken(opencurly)) return PARSER_FAIL;
+  if(stopped_at == none || stopped_at == MON) 
+  {
+    stopped_at = none;
+    if(parseToken(opencurly)) 
+    {
+      error_count++;
+    }
+  }
   
   // Reset end of section marker
   endOfSection = 0;
-  // Parse monitor name - id refers to main nametable
-  if(parseMonitorName(dev1id)) return PARSER_FAIL;
-//  if(parseToken(consym)) return PARSER_FAIL;
-//  if(parseConnOutputName(dev2id,outid)) return PARSER_FAIL;
-//  if(createMonitor(dev1id,dev2id,outid)) return PARSER_FAIL;
- // if(parseToken(semicol)) return PARSER_FAIL;
+  
+  // Monitor name
+  if(stopped_at == none || stopped_at == opencurly) 
+  {
+    stopped_at = none;
+    if(parseMonitorName(dev1id)) 
+    {
+      stop_syms.push_back(opencurly);
+      stop_syms.push_back(closecurly);
+      stop_syms.push_back(semicol);
+      stopped_at = stoppingSym(stop_syms);
+      if(stopped_at == closecurly) endOfSection = 1;
+      stop_syms.clear();
+      error_count++;
+    }
+  }
 
   while(!endOfSection)
   {
-	if(parseToken(consym)) return PARSER_FAIL;
-	if(parseConnOutputName(dev2id,outid)) return PARSER_FAIL;
-	if(createMonitor(dev1id,dev2id,outid)) return PARSER_FAIL;
-	if(parseToken(semicol)) return PARSER_FAIL;
-	if(parseMonitorName(dev1id,endOfSection)) return PARSER_FAIL;
+    // <=
+    if(stopped_at == none) 
+    {
+      if(parseToken(consym)) 
+      {
+        stop_syms.push_back(opencurly);
+        stop_syms.push_back(closecurly);
+        stop_syms.push_back(semicol);
+        stopped_at = stoppingSym(stop_syms);
+        if(stopped_at == closecurly) endOfSection = 1;
+        stop_syms.clear();
+        error_count++;
+      }
+    }
+    // Connection output
+    if(stopped_at == none) 
+    {
+      if(parseConnOutputName(dev2id,outid)) 
+      {
+        stop_syms.push_back(opencurly);
+        stop_syms.push_back(closecurly);
+        stop_syms.push_back(semicol);
+        stopped_at = stoppingSym(stop_syms);
+        if(stopped_at == closecurly) endOfSection = 1;
+        stop_syms.clear();
+        error_count++;
+      }
+    }
+    // Create monitor
+    if(stopped_at == none && error_count == 0) 
+    {
+      if(createMonitor(dev1id,dev2id,outid))
+      {
+        stop_syms.push_back(opencurly);
+        stop_syms.push_back(closecurly);
+        stop_syms.push_back(semicol);
+        stopped_at = stoppingSym(stop_syms);
+        if(stopped_at == closecurly) endOfSection = 1;
+        stop_syms.clear();
+        error_count++;
+      }
+    }
+    // ;
+    if(stopped_at == none) 
+    {
+      if(parseToken(semicol)) 
+      {
+        error_count++;
+      }
+    }
+    // Monitor name
+    if(stopped_at == none || stopped_at == semicol) 
+    {
+      stopped_at = none;
+      if(parseMonitorName(dev1id,endOfSection)) 
+      {
+        stop_syms.push_back(opencurly);
+        stop_syms.push_back(closecurly);
+        stop_syms.push_back(semicol);
+        stopped_at = stoppingSym(stop_syms);
+        if(stopped_at == closecurly) endOfSection = 1;
+        stop_syms.clear();
+        error_count++;
+      }
+    }
   }
 
   // }
-  if(parseToken(closecurly)) return PARSER_FAIL;
+  if(stopped_at == none || stopped_at == closecurly) 
+  {
+    if(parseToken(closecurly)) 
+    {
+      error_count++;
+    }
+  }
 
+  if(error_count) {
+    cout << "Error count is " << error_count << endl; 
+    return PARSER_FAIL;
+  }
+  
   return PARSER_PASS;
 }
 
-symbol parser::stoppingSym (vector <symbol> stopping_syms, int &num_skipped)
+symbol parser::stoppingSym (vector <symbol> stopping_syms/*, int &num_skipped*/)
 {
   int num;
   name id;
   symbol sym;
   int num_syms = stopping_syms.size();
-  num_skipped = 0;
+  //num_skipped = 0;
   
   smz->getsymbol(sym,id,num);
   while(sym != eofsym)
@@ -199,7 +441,7 @@ symbol parser::stoppingSym (vector <symbol> stopping_syms, int &num_skipped)
         return stopping_syms[i];
       }
     }
-    num_skipped++;
+    //num_skipped++;
     smz->getsymbol(sym,id,num);
   }
   return eofsym;
@@ -505,109 +747,131 @@ bool parser::createDevice (device_type current_device_type, name id)
   {
     case AND:
       if(parseParam(param_value)) return PARSER_FAIL;
-	  // Semantic check on parameter values
-	  if(param_value < 2 || param_value >16) 
-	  {
-		errorHandling(inputs_two_to_sixteen);
-		return PARSER_FAIL;
-	  }
-	  // Adds device to device table
+      // Semantic check on parameter values
+      if(param_value < 2 || param_value >16) 
+      {
+        errorHandling(inputs_two_to_sixteen);
+        return PARSER_FAIL;
+      }
+      // Adds device to device table
       devicet_id = dtz->lookup(nmz->getname(id),current_device_type,param_value);
-      cout << "Created AND gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
-      dmz->makedevice (andgate, id, param_value, ok); 
-      if (!ok){cout <<"error creating and gate"<<endl;}
+      if(error_count == 0) 
+      {
+        cout << "Created AND gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
+        dmz->makedevice (andgate, id, param_value, ok); 
+        if (!ok){cout <<"error creating and gate"<<endl;}
+      }
       break;
       
     case NAND:
       if(parseParam(param_value)) return PARSER_FAIL;
-	  // Semantic check on parameter values
-	  if(param_value < 2 || param_value >16) 
-	  {
-		errorHandling(inputs_two_to_sixteen);
-		return PARSER_FAIL;
-	  }
-	  // Adds device to device table
+      // Semantic check on parameter values
+      if(param_value < 2 || param_value >16) 
+      {
+        errorHandling(inputs_two_to_sixteen);
+        return PARSER_FAIL;
+      }
+      // Adds device to device table
       devicet_id = dtz->lookup(nmz->getname(id),current_device_type,param_value);
-      cout << "Created NAND gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
-      dmz->makedevice (nandgate, id, param_value, ok); 
-      if (!ok){cout <<"error creating nand gate"<<endl;}
+      if(error_count == 0) 
+      {
+        cout << "Created NAND gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
+        dmz->makedevice (nandgate, id, param_value, ok); 
+        if (!ok){cout <<"error creating nand gate"<<endl;}
+      }
       break;
       
     case OR:
       if(parseParam(param_value)) return PARSER_FAIL;
-	  // Semantic check on parameter values
-	  if(param_value < 2 || param_value >16) 
-	  {
-		errorHandling(inputs_two_to_sixteen);
-		return PARSER_FAIL;
-	  }
-	  // Adds device to device table
+      // Semantic check on parameter values
+      if(param_value < 2 || param_value >16) 
+      {
+        errorHandling(inputs_two_to_sixteen);
+        return PARSER_FAIL;
+      }
+      // Adds device to device table
       devicet_id = dtz->lookup(nmz->getname(id),current_device_type,param_value);
-      cout << "Created OR gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
-      dmz->makedevice (orgate, id, param_value, ok); 
-      if (!ok){cout <<"error creating or gate"<<endl;}
+      if(error_count == 0) 
+      {
+        cout << "Created OR gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
+        dmz->makedevice (orgate, id, param_value, ok); 
+        if (!ok){cout <<"error creating or gate"<<endl;}
+      }
       break;
    
     case NOR:
       if(parseParam(param_value)) return PARSER_FAIL;
-	  // Semantic check on parameter values
-  if(param_value < 2 || param_value >16) 
-	  {
-		errorHandling(inputs_two_to_sixteen);
-		return PARSER_FAIL;
-	  }
-	  // Adds device to device table
+      // Semantic check on parameter values
+      if(param_value < 2 || param_value >16) 
+      {
+        errorHandling(inputs_two_to_sixteen);
+        return PARSER_FAIL;
+      }
+      // Adds device to device table
       devicet_id = dtz->lookup(nmz->getname(id),current_device_type,param_value);
-      cout << "Created NOR gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
-      dmz->makedevice (norgate, id, param_value, ok); 
-      if (!ok){cout <<"error creating nor gate"<<endl;}
+      if(error_count == 0) 
+      {
+        cout << "Created NOR gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
+        dmz->makedevice (norgate, id, param_value, ok); 
+        if (!ok){cout <<"error creating nor gate"<<endl;}
+      }
       break;
       
     case XOR:
-	  // Adds device to device table
+      // Adds device to device table
       devicet_id = dtz->lookup(nmz->getname(id),current_device_type,0);
-      cout << "Created XOR gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
-      dmz->makedevice (xorgate, id, 2, ok);
-      if (!ok){cout <<"error creating xor gate"<<endl;}
+      if(error_count == 0) 
+      {
+        cout << "Created XOR gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
+        dmz->makedevice (xorgate, id, 2, ok);
+        if (!ok){cout <<"error creating xor gate"<<endl;}
+      }
       break;
       
     case DTYPE:
       devicet_id = dtz->lookup(nmz->getname(id),current_device_type,0);
-      cout << "Created DTYPE, with name \"" << nmz->getname(id) << "\".\n";
-      dmz->makedevice (dtype, id, 0, ok); 
-      if (!ok){cout <<"error creating dtype"<<endl;}
+      if(error_count == 0) 
+      {
+        cout << "Created DTYPE, with name \"" << nmz->getname(id) << "\".\n";
+        dmz->makedevice (dtype, id, 0, ok); 
+        if (!ok){cout <<"error creating dtype"<<endl;}
+      }
       break;
       
     case CLK:
       if(parseParam(param_value)) return PARSER_FAIL;
-	  if(param_value<1)
-	  {
-		errorHandling(clk_param);
-		return PARSER_FAIL;
-	  }
-
+      if(param_value<1)
+      {
+        errorHandling(clk_param);
+        return PARSER_FAIL;
+      }
       devicet_id = dtz->lookup(nmz->getname(id),current_device_type,0);
-      cout << "Created CLK with period of " << param_value << " and name \"" << nmz->getname(id) << "\".\n";
-      dmz->makedevice (aclock, id, param_value, ok); //THIS IS PROBABLY INCORRECT. SECOND VALUE SHOULD BE FREQUENCY, NOT PERIOD.
-      if (!ok){cout <<"error creating clock"<<endl;}
+      if(error_count == 0) 
+      {
+        cout << "Created CLK with period of " << param_value << " and name \"" << nmz->getname(id) << "\".\n";
+        dmz->makedevice (aclock, id, param_value, ok); //THIS IS PROBABLY INCORRECT. SECOND VALUE SHOULD BE FREQUENCY, NOT PERIOD.
+        if (!ok){cout <<"error creating clock"<<endl;}
+      }
       break;
       
     case SW:
       if(parseParam(param_value)) return PARSER_FAIL;
-	  if(!(param_value == 0 || param_value == 1))
-	  {
-		errorHandling(switch_param);
-		return PARSER_FAIL;
-	  }
-
+      if(!(param_value == 0 || param_value == 1))
+      {
+        errorHandling(switch_param);
+        return PARSER_FAIL;
+      }
       devicet_id = dtz->lookup(nmz->getname(id),current_device_type,0);
-      cout << "Created SW with initial state " << param_value << " and name \"" << nmz->getname(id) << "\".\n";
-      signal = low;
-      if (param_value){signal=high;}
-      dmz->makedevice (aswitch, id, 0, ok);
-      if (!ok) {cout << "Switch not created."<<endl;}
-      dmz->setswitch (id, signal, ok);
-      if (!ok) {cout << "Switch not found"<<endl;}
+      if(error_count == 0) 
+      {
+        cout << "Created SW with initial state " << param_value << " and name \"" << nmz->getname(id) << "\".\n";
+        signal = low;
+        if (param_value){signal=high;}
+        dmz->makedevice (aswitch, id, 0, ok);
+        if (!ok) {cout << "Switch not created."<<endl;}
+        dmz->setswitch (id, signal, ok);
+        if (!ok) {cout << "Switch not found"<<endl;}
+      }
       break;
 
     default:

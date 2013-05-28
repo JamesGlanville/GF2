@@ -26,6 +26,7 @@ class parser {
   names* nm_devicez;
   names* nm_monitorz;
   devicetable* dtz;
+  int error_count;
   enum error {unknown, no_opening_brace, no_devices, one_device_required, 
               names_begin_letter, device_name_expected, number_param_expected, 
               not_valid_device, number_expected, device_not_defined, invalid_input,
@@ -66,7 +67,7 @@ class parser {
   // Creates monitor
   bool createMonitor(name monitorName, name dev2id, name outid); 
   // Keeps reading symbols until one of the stopping symbols are reached
-  symbol stoppingSym (vector <symbol> stopping_syms, int &num_skipped);
+  symbol stoppingSym (vector <symbol> stopping_syms/*, int &num_skipped*/);
 
  public:
   bool readin();
