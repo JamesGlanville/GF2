@@ -2,7 +2,6 @@
 TODO:
 connections created
 monitors created
-all inputs are connected
 (look in lab handout for what has been missed)
 continuing to read errors after one is found
 total error 
@@ -24,6 +23,7 @@ bool parser::readin (void)
   int num;
   device_type current_device_type;
   bool endOfSection = 0;
+  bool networkOK;
   vector <symbol> stop_syms;
   symbol stopped_at = none;
   int num_skipped;
@@ -149,8 +149,6 @@ bool parser::readin (void)
     if(parseConnInputName(dev1id,inid,endOfSection)) return PARSER_FAIL;
   }
   
-  // Should check that all inputs are connected at this point
-
   // MONITORS 
   if(parseSectionHeader(MON)) return PARSER_FAIL;
 
@@ -177,6 +175,10 @@ bool parser::readin (void)
 
   // }
   if(parseToken(closecurly)) return PARSER_FAIL;
+
+  //Check that all inputs are connected.
+  netz->checknetwork(networkOK);
+  if (!networkOK) return PARSER_FAIL;
 
   return PARSER_PASS;
 }
