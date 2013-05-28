@@ -477,7 +477,7 @@ bool parser::createDevice (device_type current_device_type, name id)
       
     case XOR:
 	  // Adds device to device table
-      devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type,param_value);
+      devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type,0);
       cout << "Created XOR gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
       dmz->makedevice (xorgate, id, 2, ok);
       if (!ok){cout <<"error creating xor gate"<<endl;}
@@ -542,7 +542,8 @@ bool parser::parseConnInputName(name &devid, name &inpid, bool &endOfSection)
   // Check it is valid
   switch(sym) { 
     case namesym:
-      dt = dtz->gettype(nmz->getname(devid));    
+      dt = dtz->gettype(nmz->getname(devid));
+      no_of_inputs = dtz->getinputs(nmz->getname(devid));    
       break;
     case closecurly:
       // Device section ended
@@ -554,8 +555,6 @@ bool parser::parseConnInputName(name &devid, name &inpid, bool &endOfSection)
       return PARSER_FAIL;
   }
   
-  // Needs implementing when devicetable changes
-  no_of_inputs = 16;
   // Check against device table
   switch(dt)
   {
@@ -619,7 +618,18 @@ bool parser::parseConnInputName(name &devid, name &inpid, bool &endOfSection)
       {
         ss.str("");
         ss << "i"<<i;
-        if (input.compare(ss.str())==0){return PARSER_PASS;}  
+        // Only allow inputs up to the defined number
+        if (i<=no_of_inputs)
+        {
+          if (input.compare(ss.str())==0){return PARSER_PASS;}  
+        }
+        else
+        {
+          if (input.compare(ss.str())==0) {
+            errorHandling(more_inputs_than_defined);
+            return PARSER_FAIL;
+          }
+        }
       } 
       errorHandling(invalid_input);
       return PARSER_FAIL;
@@ -714,13 +724,13 @@ bool parser::parseConnOutputName(name &devid, name &outid)
 bool parser::createConn(name dev1id,name dev2id,name inid,name outid)
 {
   bool ok;
+  cout << "Connect " << nmz->getname(dev1id) << ", input " << nmz->getname(inid) << ", to " << nmz->getname(dev2id) << ", output " << nmz->getname(outid) << endl;
   netz->makeconnection(dev1id,inid,dev2id,outid,ok);
   if(!ok)
   {
     cout << "ERROR: Couldn't make connection\n";
     return PARSER_FAIL;
   }
-  cout << "Connect " << nmz->getname(dev1id) << ", input " << nmz->getname(inid) << ", to " << nmz->getname(dev2id) << ", output " << nmz->getname(outid) << endl;
   return PARSER_PASS;
 }
 
@@ -797,7 +807,14 @@ bool parser::parseMonitorName (name &id, bool &endOfSection)
 
 bool parser::createMonitor(name monitorName, name dev2id, name outid) 
 {
+  bool ok;
 	cout << "Create monitor " << nmz->getname(monitorName) << " monitoring " << nmz->getname(dev2id) << ", output " << nmz->getname(outid) << endl;
+  makemonitor (dev2id,outid,ok);
+  if(!ok)
+  {
+    cout << "ERROR: monitor not made\n";
+    return PARSER_FAIL;
+  }
 	return PARSER_PASS
 }
 
