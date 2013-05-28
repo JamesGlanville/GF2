@@ -1,0 +1,44 @@
+{
+DEVICES
+{
+	D0 = DTYPE;
+	D1 = DTYPE;
+	D2 = DTYPE;
+	D3 = DTYPE;
+	INPUT = SW(1);
+	RESET = SW(0);
+	ZERO  = SW(0);
+	CLK1  = CLK(1);
+}
+
+CONNECTIONS
+{
+	D3.DATA	<= INPUT;
+	D3.CLK	<= CLK1;
+	D3.SET	<= ZERO; //This should always be 0 for shift register.
+	D3.CLEAR<= RESET;
+
+        D2.DATA <= D3.Q;
+        D2.CLK  <= CLK1;
+        D2.SET  <= ZERO; //This should always be 0 for shift register.
+        D2.CLEAR<= RESET;
+
+        D1.DATA <= D2.Q;
+        D1.CLK  <= CLK1;
+        D1.SET  <= ZERO; //This should always be 0 for shift register.
+        D1.CLEAR<= RESET;
+
+        D0.DATA <= D1.Q;
+        D0.CLK  <= CLK1;
+        D0.SET  <= ZERO; //This should always be 0 for shift register.
+        D0.CLEAR<= RESET;
+}
+
+MONITORS
+{
+	Q3 <= D3.Q; 
+	Q2 <= D2.Q; 
+	Q1 <= D1.Q; 
+	Q0 <= D0.Q; 
+}
+}
