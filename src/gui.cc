@@ -14,20 +14,20 @@ BEGIN_EVENT_TABLE(MyGLCanvas, wxGLCanvas)
   EVT_PAINT(MyGLCanvas::OnPaint)
   EVT_MOUSE_EVENTS(MyGLCanvas::OnMouse)
 END_EVENT_TABLE()
-  
+
 int wxglcanvas_attrib_list[5] = {WX_GL_RGBA,
-                                 WX_GL_DOUBLEBUFFER,
-                                 WX_GL_DEPTH_SIZE,
-                                 16, 0};
+				 WX_GL_DOUBLEBUFFER,
+				 WX_GL_DEPTH_SIZE,
+				 16, 0};
 
 MyGLCanvas::MyGLCanvas(wxWindow *parent,
-                       wxWindowID id,
-                       monitor* monitor_mod,
-                       names* names_mod,
-                       const wxPoint& pos,
-                       const wxSize& size,
-                       long style,
-                       const wxString& name):
+		       wxWindowID id,
+		       monitor* monitor_mod,
+		       names* names_mod,
+		       const wxPoint& pos,
+		       const wxSize& size,
+		       long style,
+		       const wxString& name):
     wxGLCanvas(parent, id, pos, size, style, name, wxglcanvas_attrib_list)
   // Constructor - initialises private variables
 {
@@ -63,10 +63,10 @@ void MyGLCanvas::Render(wxString example_text, int cycles)
     glBegin(GL_LINE_STRIP);
     for (i=0; i<cyclesdisplayed; i++) {
       if (mmz->getsignaltrace(0, i, s)) {
-        if (s==low) y = 10.0;
-        if (s==high) y = 30.0;
-        glVertex2f(20*i+10.0, y); 
-        glVertex2f(20*i+30.0, y);
+	if (s==low) y = 10.0;
+	if (s==high) y = 30.0;
+	glVertex2f(20*i+10.0, y);
+	glVertex2f(20*i+30.0, y);
       }
     }
     glEnd();
@@ -78,11 +78,11 @@ void MyGLCanvas::Render(wxString example_text, int cycles)
     for (i=0; i<5; i++) {
       if (i%2) y = 10.0;
       else y = 30.0;
-      glVertex2f(20*i+10.0, y); 
+      glVertex2f(20*i+10.0, y);
       glVertex2f(20*i+30.0, y);
     }
     glEnd();
-    
+
   }
 
   /*
@@ -112,7 +112,7 @@ void MyGLCanvas::InitGL()
   glViewport(0, 0, (GLint) w, (GLint) h);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  glOrtho(0, w, 0, h, -1, 1); 
+  glOrtho(0, w, 0, h, -1, 1);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 }
@@ -146,16 +146,16 @@ void MyGLCanvas::OnMouse(wxMouseEvent& event)
   GetClientSize(&w, &h);
   if (event.ButtonDown())
     text.Printf(wxT("Mouse button %d pressed at %d %d"),
-                event.GetButton(), event.m_x, h-event.m_y);
+		event.GetButton(), event.m_x, h-event.m_y);
   if (event.ButtonUp())
     text.Printf(wxT("Mouse button %d released at %d %d"),
-                event.GetButton(), event.m_x, h-event.m_y);
+		event.GetButton(), event.m_x, h-event.m_y);
   if (event.Dragging())
     text.Printf(wxT("Mouse dragged to %d %d"),
-                event.m_x, h-event.m_y);
+		event.m_x, h-event.m_y);
   if (event.Leaving())
     text.Printf(wxT("Mouse left window at %d %d"),
-                event.m_x, h-event.m_y);
+		event.m_x, h-event.m_y);
 
   if (event.ButtonDown() || event.ButtonUp() || event.Dragging() || event.Leaving())
     Render(text);
@@ -173,15 +173,15 @@ BEGIN_EVENT_TABLE(MyFrame, wxFrame)
   EVT_COMBOBOX(MONITOR_ADD, MyFrame::OnAddMonitor)
   EVT_COMBOBOX(MONITOR_REM, MyFrame::OnRemMonitor)
 END_EVENT_TABLE()
-  
+
 MyFrame::MyFrame(wxWindow *parent,
-                 const wxString& title,
-                 const wxPoint& pos,
-                 const wxSize& size,
-                 names *names_mod,
-                 devices *devices_mod,
-                 monitor *monitor_mod,
-                 long style):
+		 const wxString& title,
+		 const wxPoint& pos,
+		 const wxSize& size,
+		 names *names_mod,
+		 devices *devices_mod,
+		 monitor *monitor_mod,
+		 long style):
   wxFrame(parent, wxID_ANY, title, pos, size, style)
   // Constructor - initialises pointers to names, devices and monitor
   // classes, lays out widgets using sizers
@@ -206,19 +206,19 @@ MyFrame::MyFrame(wxWindow *parent,
   SetMenuBar(menuBar);
 
   wxBoxSizer *topsizer = new wxBoxSizer(wxVERTICAL);
-  
+
   wxBoxSizer *ctrlsizer = new wxBoxSizer(wxHORIZONTAL);
   ctrlsizer->Add(new wxStaticText(this, wxID_ANY, wxT("Cycles:")),
-                 0,             /* make vertically unstrechable */
-                 wxALL | wxALIGN_CENTER_VERTICAL,         /* border all around */
-                 10);           /* border size */ 
-  
+		 0,             /* make vertically unstrechable */
+		 wxALL | wxALIGN_CENTER_VERTICAL,         /* border all around */
+		 10);           /* border size */
+
   spin_cycles = new wxSpinCtrl(this, CYCLES_SPIN, wxString(wxT("10")));
   ctrlsizer->Add(spin_cycles, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
   ctrlsizer->Add(new wxButton(this, RUN_BUTTON_ID, wxT("Run")),
-                 0,
-                 wxALL | wxEXPAND,
-                 10);
+		 0,
+		 wxALL | wxEXPAND,
+		 10);
   ctrlsizer->Add(new wxButton(this, CONT_BUTTON_ID, wxT("Continue")),
 		 0,
 		 wxALL | wxEXPAND,
@@ -252,15 +252,22 @@ MyFrame::MyFrame(wxWindow *parent,
 		    10);
 
   add_monitor = new wxComboBox(this, MONITOR_ADD, wxEmptyString);
-  add_monitor->Append(wxT("an unused monitor"));
-  add_monitor->Append(wxT("another unused monitor"));
+
+  for (int i=0; i < mmz->moncount(); i++)
+    {
+      // get name as string, convert to char* then to wxstring
+      add_monitor->Append(wxString::FromAscii(mmz->getmonprettyname(i).c_str()));
+    }
+
+  //  add_monitor->Append(wxT("an unused monitor"));
+  //  add_monitor->Append(wxT("another unused monitor"));
   monitorsizer->Add(add_monitor, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
-  
+
   rem_monitor = new wxComboBox(this, MONITOR_REM, wxEmptyString);
-  rem_monitor->Append(wxT("a used monitor"));
-  rem_monitor->Append(wxT("another used monitor"));
+  //  rem_monitor->Append(wxT("a used monitor"));
+  //  rem_monitor->Append(wxT("another used monitor"));
   monitorsizer->Add(rem_monitor, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
-  
+
   topsizer->Add(monitorsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
 
 
@@ -288,9 +295,9 @@ MyFrame::MyFrame(wxWindow *parent,
       tracesizer = wxT("m");
       tracename = tracesizer << i;
       vtracesizers[i]->Add(new wxStaticText(disp_scroll, wxID_ANY, tracename),
-      			   0,
-      			   wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
-      			   10);
+			   0,
+			   wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
+			   10);
       vtracesizers[i]->Add(canvases[i], 1, wxALL | wxEXPAND, 10);
       toptracesizer->Add(vtracesizers[i], 0, wxEXPAND | wxALL, 10);
     }
@@ -311,8 +318,8 @@ void MyFrame::OnAbout(wxCommandEvent &event)
 {
   wxMessageDialog about(this, wxT("LogicSim\n\
     By James Glanville, George Ayris and Andy Holt"),
-                        wxT("About LogicSim"),
-                        wxICON_INFORMATION | wxOK);
+			wxT("About LogicSim"),
+			wxICON_INFORMATION | wxOK);
   about.ShowModal();
 }
 
@@ -320,7 +327,7 @@ void MyFrame::OnAbout(wxCommandEvent &event)
 // // Callback for the push button
 // {
 //   int n, ncycles;
-  
+
 //   cyclescompleted = 0;
 //   mmz->resetmonitor ();
 //   runnetwork(spin->GetValue());
