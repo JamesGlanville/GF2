@@ -17,25 +17,29 @@ bool parser::readin (void)
   name outid;
   int num;
   device_type current_device_type;
-  bool endOfSection = 0;
+  bool endOfSection = 1;
   bool networkOK;
   vector <symbol> stop_syms;
-  symbol stopped_at = none;
+  stopped_at = none;
   error_count = 0;
 
   // {
   if(parseToken(opencurly)) 
   {
-    stop_syms.push_back(DEV);
-    stop_syms.push_back(CONN);
-    stop_syms.push_back(MON);
-    stop_syms.push_back(opencurly);
-    stop_syms.push_back(closecurly);
-    stop_syms.push_back(semicol);
-    stopped_at = stoppingSym(stop_syms);
-    if(stopped_at == closecurly) endOfSection = 1;
-    stop_syms.clear(); 
-    error_count++;
+    if(stopped_at == eofsym) {error_count++;}
+    else
+    {
+     stop_syms.push_back(DEV);
+     stop_syms.push_back(CONN);
+     stop_syms.push_back(MON);
+     stop_syms.push_back(opencurly);
+     stop_syms.push_back(closecurly);
+     stop_syms.push_back(semicol);
+     stopped_at = stoppingSym(stop_syms);
+     if(stopped_at == closecurly) endOfSection = 1;
+     stop_syms.clear(); 
+     error_count++;
+    }
   }
   
   // DEVICES
@@ -43,15 +47,19 @@ bool parser::readin (void)
   {
     if(parseSectionHeader(DEV)) 
     {
-      stop_syms.push_back(CONN);
-      stop_syms.push_back(MON);
-      stop_syms.push_back(opencurly);
-      stop_syms.push_back(closecurly);
-      stop_syms.push_back(semicol);
-      stopped_at = stoppingSym(stop_syms);
-      if(stopped_at == closecurly) endOfSection = 1;
-      stop_syms.clear();
-      error_count++;
+      if(stopped_at == eofsym) {error_count++;}
+      else
+      {
+        stop_syms.push_back(CONN);
+        stop_syms.push_back(MON);
+        stop_syms.push_back(opencurly);
+        stop_syms.push_back(closecurly);
+        stop_syms.push_back(semicol);
+        stopped_at = stoppingSym(stop_syms);
+        if(stopped_at == closecurly) endOfSection = 1;
+        stop_syms.clear();
+        error_count++;
+      }
     }
   }
   
@@ -72,17 +80,23 @@ bool parser::readin (void)
     stopped_at = none;
     if(parseDeviceName(id)) 
     {
-      stop_syms.push_back(CONN);
-      stop_syms.push_back(MON);
-      stop_syms.push_back(opencurly);
-      stop_syms.push_back(closecurly);
-      stop_syms.push_back(semicol);
-      stopped_at = stoppingSym(stop_syms);
-      if(stopped_at == closecurly) endOfSection = 1;
-      stop_syms.clear();
-      error_count++;
+      if(stopped_at == eofsym) {error_count++;}
+      else
+      {
+        stop_syms.push_back(CONN);
+        stop_syms.push_back(MON);
+        stop_syms.push_back(opencurly);
+        stop_syms.push_back(closecurly);
+        stop_syms.push_back(semicol);
+        stopped_at = stoppingSym(stop_syms);
+        if(stopped_at == closecurly) endOfSection = 1;
+        stop_syms.clear();
+        error_count++;
+      }
     }
   }
+  
+  if (stopped_at != eofsym) {endOfSection = 0;}
   
   while(!endOfSection) 
   {
@@ -91,15 +105,19 @@ bool parser::readin (void)
     {
       if(parseToken(equals)) 
       {
-        stop_syms.push_back(CONN);
-        stop_syms.push_back(MON);
-        stop_syms.push_back(opencurly);
-        stop_syms.push_back(closecurly);
-        stop_syms.push_back(semicol);
-        stopped_at = stoppingSym(stop_syms);
-        if(stopped_at == closecurly) endOfSection = 1;
-        stop_syms.clear();
-        error_count++;
+        if(stopped_at == eofsym) {error_count++;}
+        else
+        {
+          stop_syms.push_back(CONN);
+          stop_syms.push_back(MON);
+          stop_syms.push_back(opencurly);
+          stop_syms.push_back(closecurly);
+          stop_syms.push_back(semicol);
+          stopped_at = stoppingSym(stop_syms);
+          if(stopped_at == closecurly) endOfSection = 1;
+          stop_syms.clear();
+          error_count++;
+        }
       }
     }
     // device type
@@ -107,15 +125,20 @@ bool parser::readin (void)
     {
       if(parseDeviceType(current_device_type)) 
       {
-        stop_syms.push_back(CONN);
-        stop_syms.push_back(MON);
-        stop_syms.push_back(opencurly);
-        stop_syms.push_back(closecurly);
-        stop_syms.push_back(semicol);
-        stopped_at = stoppingSym(stop_syms);
-        if(stopped_at == closecurly) endOfSection = 1;
-        stop_syms.clear();
-        error_count++;
+        if(stopped_at == eofsym) {error_count++;}
+        else
+        {
+          if(stopped_at == eofsym) return PARSER_FAIL;
+          stop_syms.push_back(CONN);
+          stop_syms.push_back(MON);
+          stop_syms.push_back(opencurly);
+          stop_syms.push_back(closecurly);
+          stop_syms.push_back(semicol);
+          stopped_at = stoppingSym(stop_syms);
+          if(stopped_at == closecurly) endOfSection = 1;
+          stop_syms.clear();
+          error_count++;
+        }
       }
     }
     // create device - have to move testing for error_count before creation into function so that parameters are still parsed
@@ -123,15 +146,20 @@ bool parser::readin (void)
     {
       if(createDevice(current_device_type,id))
       {
-        stop_syms.push_back(CONN);
-        stop_syms.push_back(MON);
-        stop_syms.push_back(opencurly);
-        stop_syms.push_back(closecurly);
-        stop_syms.push_back(semicol);
-        stopped_at = stoppingSym(stop_syms);
-        if(stopped_at == closecurly) endOfSection = 1;
-        stop_syms.clear();
-        error_count++;
+        if(stopped_at == eofsym) {error_count++;}
+        else
+        {
+          if(stopped_at == eofsym) return PARSER_FAIL;
+          stop_syms.push_back(CONN);
+          stop_syms.push_back(MON);
+          stop_syms.push_back(opencurly);
+          stop_syms.push_back(closecurly);
+          stop_syms.push_back(semicol);
+          stopped_at = stoppingSym(stop_syms);
+          if(stopped_at == closecurly) endOfSection = 1;
+          stop_syms.clear();
+          error_count++;
+        }
       }
     }
     // ;
@@ -149,7 +177,32 @@ bool parser::readin (void)
       stopped_at = none;
       if(parseDeviceName(id,endOfSection)) 
       {
-        stop_syms.push_back(CONN);
+        if(stopped_at == eofsym) {error_count++;}
+        else
+        {
+          stop_syms.push_back(CONN);
+          stop_syms.push_back(MON);
+          stop_syms.push_back(opencurly);
+          stop_syms.push_back(closecurly);
+          stop_syms.push_back(semicol);
+          stopped_at = stoppingSym(stop_syms);
+          if(stopped_at == closecurly) endOfSection = 1;
+          stop_syms.clear();
+          error_count++;
+        }
+      }
+    }
+  }
+  
+  // CONNECTIONS
+  if(stopped_at == none || stopped_at == closecurly) 
+  {
+    stopped_at = none;
+    if(parseSectionHeader(CONN)) 
+    {
+      if(stopped_at == eofsym) {error_count++;}
+      else
+      {
         stop_syms.push_back(MON);
         stop_syms.push_back(opencurly);
         stop_syms.push_back(closecurly);
@@ -162,37 +215,18 @@ bool parser::readin (void)
     }
   }
   
-  // CONNECTIONS
-  if(stopped_at == none || stopped_at == closecurly) 
-  {
-    stopped_at = none;
-    if(parseSectionHeader(CONN)) 
-    if(createDevice(current_device_type,id))
-    {
-      stop_syms.push_back(MON);
-      stop_syms.push_back(opencurly);
-      stop_syms.push_back(closecurly);
-      stop_syms.push_back(semicol);
-      stopped_at = stoppingSym(stop_syms);
-      if(stopped_at == closecurly) endOfSection = 1;
-      stop_syms.clear();
-      error_count++;
-    }
-  }
-  
   // {
   if(stopped_at == none || stopped_at == CONN) 
   {
     stopped_at = none;
     if(parseToken(opencurly)) 
-    if(createDevice(current_device_type,id))
     {
       error_count++;
     }
   }
   
   // Reset end of section marker
-  endOfSection = 0;
+  if (stopped_at != eofsym) {endOfSection = 0;}
 
   // Connection input
   if(stopped_at == none || stopped_at == opencurly) 
@@ -200,14 +234,18 @@ bool parser::readin (void)
     stopped_at = none;
     if(parseConnInputName(dev1id,inid,endOfSection)) 
     {
-      stop_syms.push_back(MON);
-      stop_syms.push_back(opencurly);
-      stop_syms.push_back(closecurly);
-      stop_syms.push_back(semicol);
-      stopped_at = stoppingSym(stop_syms);
-      if(stopped_at == closecurly) endOfSection = 1;
-      stop_syms.clear();
-      error_count++;
+      if(stopped_at == eofsym) {error_count++;}
+      else
+      {
+        stop_syms.push_back(MON);
+        stop_syms.push_back(opencurly);
+        stop_syms.push_back(closecurly);
+        stop_syms.push_back(semicol);
+        stopped_at = stoppingSym(stop_syms);
+        if(stopped_at == closecurly) endOfSection = 1;
+        stop_syms.clear();
+        error_count++;
+      }
     }
   }
   
@@ -218,14 +256,18 @@ bool parser::readin (void)
     {
       if(parseToken(consym)) 
       {
-        stop_syms.push_back(MON);
-        stop_syms.push_back(opencurly);
-        stop_syms.push_back(closecurly);
-        stop_syms.push_back(semicol);
-        stopped_at = stoppingSym(stop_syms);
-        if(stopped_at == closecurly) endOfSection = 1;
-        stop_syms.clear();
-        error_count++;
+        if(stopped_at == eofsym) {error_count++;}
+        else
+        {
+          stop_syms.push_back(MON);
+          stop_syms.push_back(opencurly);
+          stop_syms.push_back(closecurly);
+          stop_syms.push_back(semicol);
+          stopped_at = stoppingSym(stop_syms);
+          if(stopped_at == closecurly) endOfSection = 1;
+          stop_syms.clear();
+          error_count++;
+        }
       }
     }
     // Connection output
@@ -233,14 +275,18 @@ bool parser::readin (void)
     {
       if(parseConnOutputName(dev2id,outid)) 
       {
-        stop_syms.push_back(MON);
-        stop_syms.push_back(opencurly);
-        stop_syms.push_back(closecurly);
-        stop_syms.push_back(semicol);
-        stopped_at = stoppingSym(stop_syms);
-        if(stopped_at == closecurly) endOfSection = 1;
-        stop_syms.clear();
-        error_count++;
+        if(stopped_at == eofsym) {error_count++;}
+        else
+        {
+          stop_syms.push_back(MON);
+          stop_syms.push_back(opencurly);
+          stop_syms.push_back(closecurly);
+          stop_syms.push_back(semicol);
+          stopped_at = stoppingSym(stop_syms);
+          if(stopped_at == closecurly) endOfSection = 1;
+          stop_syms.clear();
+          error_count++;
+        }
       }
     }
     // Create connection
@@ -248,14 +294,18 @@ bool parser::readin (void)
     {
       if(createConn(dev1id,dev2id,inid,outid)) 
       {
-        stop_syms.push_back(MON);
-        stop_syms.push_back(opencurly);
-        stop_syms.push_back(closecurly);
-        stop_syms.push_back(semicol);
-        stopped_at = stoppingSym(stop_syms);
-        if(stopped_at == closecurly) endOfSection = 1;
-        stop_syms.clear();
-        error_count++;
+        if(stopped_at == eofsym) {error_count++;}
+        else
+        {
+          stop_syms.push_back(MON);
+          stop_syms.push_back(opencurly);
+          stop_syms.push_back(closecurly);
+          stop_syms.push_back(semicol);
+          stopped_at = stoppingSym(stop_syms);
+          if(stopped_at == closecurly) endOfSection = 1;
+          stop_syms.clear();
+          error_count++;
+        }
       }
     }
     // ;
@@ -272,14 +322,18 @@ bool parser::readin (void)
       stopped_at = none;
       if(parseConnInputName(dev1id,inid,endOfSection)) 
       {
-        stop_syms.push_back(MON);
-        stop_syms.push_back(opencurly);
-        stop_syms.push_back(closecurly);
-        stop_syms.push_back(semicol);
-        stopped_at = stoppingSym(stop_syms);
-        if(stopped_at == closecurly) endOfSection = 1;
-        stop_syms.clear();
-        error_count++;
+        if(stopped_at == eofsym) {error_count++;}
+        else
+        {
+          stop_syms.push_back(MON);
+          stop_syms.push_back(opencurly);
+          stop_syms.push_back(closecurly);
+          stop_syms.push_back(semicol);
+          stopped_at = stoppingSym(stop_syms);
+          if(stopped_at == closecurly) endOfSection = 1;
+          stop_syms.clear();
+          error_count++;
+        }
       }
     }
   }
@@ -290,13 +344,17 @@ bool parser::readin (void)
     stopped_at = none;
     if(parseSectionHeader(MON)) 
     {
-      stop_syms.push_back(opencurly);
-      stop_syms.push_back(closecurly);
-      stop_syms.push_back(semicol);
-      stopped_at = stoppingSym(stop_syms);
-      if(stopped_at == closecurly) endOfSection = 1;
-      stop_syms.clear();
-      error_count++;
+      if(stopped_at == eofsym) {error_count++;}
+      else
+      {
+        stop_syms.push_back(opencurly);
+        stop_syms.push_back(closecurly);
+        stop_syms.push_back(semicol);
+        stopped_at = stoppingSym(stop_syms);
+        if(stopped_at == closecurly) endOfSection = 1;
+        stop_syms.clear();
+        error_count++;
+      }
     }
   }
 
@@ -311,7 +369,7 @@ bool parser::readin (void)
   }
   
   // Reset end of section marker
-  endOfSection = 0;
+  if (stopped_at != eofsym) {endOfSection = 0;}
   
   // Monitor name
   if(stopped_at == none || stopped_at == opencurly) 
@@ -319,13 +377,17 @@ bool parser::readin (void)
     stopped_at = none;
     if(parseMonitorName(dev1id)) 
     {
-      stop_syms.push_back(opencurly);
-      stop_syms.push_back(closecurly);
-      stop_syms.push_back(semicol);
-      stopped_at = stoppingSym(stop_syms);
-      if(stopped_at == closecurly) endOfSection = 1;
-      stop_syms.clear();
-      error_count++;
+      if(stopped_at == eofsym) {error_count++;}
+      else
+      {
+        stop_syms.push_back(opencurly);
+        stop_syms.push_back(closecurly);
+        stop_syms.push_back(semicol);
+        stopped_at = stoppingSym(stop_syms);
+        if(stopped_at == closecurly) endOfSection = 1;
+        stop_syms.clear();
+        error_count++;
+      }
     }
   }
 
@@ -336,13 +398,17 @@ bool parser::readin (void)
     {
       if(parseToken(consym)) 
       {
-        stop_syms.push_back(opencurly);
-        stop_syms.push_back(closecurly);
-        stop_syms.push_back(semicol);
-        stopped_at = stoppingSym(stop_syms);
-        if(stopped_at == closecurly) endOfSection = 1;
-        stop_syms.clear();
-        error_count++;
+        if(stopped_at == eofsym) {error_count++;}
+        else
+        {
+          stop_syms.push_back(opencurly);
+          stop_syms.push_back(closecurly);
+          stop_syms.push_back(semicol);
+          stopped_at = stoppingSym(stop_syms);
+          if(stopped_at == closecurly) endOfSection = 1;
+          stop_syms.clear();
+          error_count++;
+        }
       }
     }
     // Connection output
@@ -350,13 +416,17 @@ bool parser::readin (void)
     {
       if(parseConnOutputName(dev2id,outid)) 
       {
-        stop_syms.push_back(opencurly);
-        stop_syms.push_back(closecurly);
-        stop_syms.push_back(semicol);
-        stopped_at = stoppingSym(stop_syms);
-        if(stopped_at == closecurly) endOfSection = 1;
-        stop_syms.clear();
-        error_count++;
+        if(stopped_at == eofsym) {error_count++;}
+        else
+        {
+          stop_syms.push_back(opencurly);
+          stop_syms.push_back(closecurly);
+          stop_syms.push_back(semicol);
+          stopped_at = stoppingSym(stop_syms);
+          if(stopped_at == closecurly) endOfSection = 1;
+          stop_syms.clear();
+          error_count++;
+        }
       }
     }
     // Create monitor
@@ -364,13 +434,17 @@ bool parser::readin (void)
     {
       if(createMonitor(dev1id,dev2id,outid))
       {
-        stop_syms.push_back(opencurly);
-        stop_syms.push_back(closecurly);
-        stop_syms.push_back(semicol);
-        stopped_at = stoppingSym(stop_syms);
-        if(stopped_at == closecurly) endOfSection = 1;
-        stop_syms.clear();
-        error_count++;
+        if(stopped_at == eofsym) {error_count++;}
+        else
+        {
+          stop_syms.push_back(opencurly);
+          stop_syms.push_back(closecurly);
+          stop_syms.push_back(semicol);
+          stopped_at = stoppingSym(stop_syms);
+          if(stopped_at == closecurly) endOfSection = 1;
+          stop_syms.clear();
+          error_count++;
+        }
       }
     }
     // ;
@@ -387,13 +461,17 @@ bool parser::readin (void)
       stopped_at = none;
       if(parseMonitorName(dev1id,endOfSection)) 
       {
-        stop_syms.push_back(opencurly);
-        stop_syms.push_back(closecurly);
-        stop_syms.push_back(semicol);
-        stopped_at = stoppingSym(stop_syms);
-        if(stopped_at == closecurly) endOfSection = 1;
-        stop_syms.clear();
-        error_count++;
+        if(stopped_at == eofsym) {error_count++;}
+        else
+        {
+          stop_syms.push_back(opencurly);
+          stop_syms.push_back(closecurly);
+          stop_syms.push_back(semicol);
+          stopped_at = stoppingSym(stop_syms);
+          if(stopped_at == closecurly) endOfSection = 1;
+          stop_syms.clear();
+          error_count++;
+        }
       }
     }
   }
@@ -560,6 +638,7 @@ bool parser::parseToken (symbol token)
         error_token = "ERRRORR";
     }
     smz->printError("Expected " + error_token);
+    if (sym == eofsym) stopped_at = eofsym;
     return PARSER_FAIL;
   } 
   

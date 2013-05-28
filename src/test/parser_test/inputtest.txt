@@ -1,3 +1,4 @@
+##
 {
 DEVICES
 {
@@ -12,10 +13,4 @@ CONNECTIONS
 D1.i1 = Dd.Q;
 AA.data <= switchy;
 gate.i6 <= or;
-}
-MONITORS
-{
-TESTmonitor <= AA.Q;
-Monitor2 <= Dd.qbar;
-}
 }

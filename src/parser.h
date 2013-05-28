@@ -27,6 +27,7 @@ class parser {
   names* nm_monitorz;
   devicetable* dtz;
   int error_count;
+  symbol stopped_at;
   enum error {unknown, no_opening_brace, no_devices, one_device_required, 
               names_begin_letter, device_name_expected, number_param_expected, 
               not_valid_device, number_expected, device_not_defined, invalid_input,
