@@ -161,14 +161,16 @@ void scanner::printError(string errordesc)
 	if (currentline.size()>0&&currentline.size()<=80)
 	{
 		cout << currentline;
-		while (!nextChar()){cout <<curch;}cout <<endl;
+		currentline.clear();
+		while (!nextChar()){cout <<currentline;}cout <<endl;
 		for (int i=0;i<errorloc;i++){cout << " ";}
 		cout << "^" << endl;
 	}
 	else if (currentline.size()>80)
 	{
 		cout << currentline.substr(currentline.size()-81,currentline.size()-1);
-	while (!nextChar()){cout <<curch;}
+		currentline.clear();
+	while (!nextChar()){cout <<currentline;}
 
 		for (int i=0;i<80-1;i++){cout << " ";}
 		cout << "^" <<endl;
