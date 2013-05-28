@@ -114,7 +114,6 @@ bool parser::readin (void)
   
   // Reset end of section marker
   endOfSection = 0;
-
   // Parse monitor name - id refers to main nametable
   if(parseMonitorName(dev1id)) return PARSER_FAIL;
   if(parseToken(consym)) return PARSER_FAIL;
@@ -784,17 +783,16 @@ bool parser::parseMonitorName (name &id)
   symbol sym;
   int num;
   name symid;
-  
   smz->getsymbol(sym,id,num);
   switch(sym) { 
     case namesym:	  // Check that monitor name is not already used - will return non-zero if already in use
-      if(nm_monitorz->cvtname(nmz->getname(symid))) 
+      if(nm_monitorz->cvtname(nmz->getname(id))) 
       {
       errorHandling(monitor_not_unique);
       return PARSER_FAIL;
       }
       // Here is where the monitor name should be stored somewhere useful
-      symid = nm_monitorz->lookup(nmz->getname(symid));
+      symid = nm_monitorz->lookup(nmz->getname(id));
       break;
     case closecurly:
       // Error for at least one monitor must be defined
@@ -809,7 +807,6 @@ bool parser::parseMonitorName (name &id)
       errorHandling(monitor_name_expected);
       return PARSER_FAIL;
   }
-  
   return PARSER_PASS;
 }
 
@@ -825,13 +822,13 @@ bool parser::parseMonitorName (name &id, bool &endOfSection)
   switch(sym) { 
     case namesym:
       // Check for duplicate monitor names - returns 0 for name unused
-      if(nm_monitorz->cvtname(nmz->getname(symid))) 
+      if(nm_monitorz->cvtname(nmz->getname(id))) 
       {
         errorHandling(monitor_not_unique);
         return PARSER_FAIL;
       }
       // Here is where the device name should be stored somewhere useful
-      symid = nm_monitorz->lookup(nmz->getname(symid));      
+      symid = nm_monitorz->lookup(nmz->getname(id));      
       break;
     case closecurly:
       // Monitors section ended
@@ -881,6 +878,7 @@ parser::parser (
   nmz = name_table;	
   /* any other initialisation you want to do? */
   nm_devicez = new names();
+  nm_monitorz=new names();
   dtz = new devicetable();
 }
 
