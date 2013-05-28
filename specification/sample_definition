@@ -10,20 +10,20 @@ DEVICES
 
 CONNECTIONS
 {
-	A1.1 <= N1.O;
-	A1.2 <= I1.O;
-	A2.1 <= I1.0;
-	A2.2 <= A1.O;
-	A2.3 <= N1.NO;  /*Comments can /* be nested.*/*/
-	N1.1 <= A2.O;
-	N1.2 <= A1.O;
-	I1   <= SW.O;
+	A1.i1 <= N1;
+	A1.i2 <= A1;
+	A2.i1 <= A1;
+	A2.i2 <= A1;
+	A2.i3 <= N1;  /*Comments can /* be nested.*/*/
+	N1.i1 <= A2;
+	N1.i2 <= A1;
+	I1   <= SW;
 
 }
 
 MONITORS
 {
-	OUTPUT <= I1.O; 
-	CLK    <= A1.O;
+	OUTPUT <= I1; 
+	CLK    <= A1;
 }
 }

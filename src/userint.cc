@@ -18,6 +18,12 @@ void userint::readline (void)
   do {
     cout << "# " << flush;
     cin.getline (cmdline, maxline);
+    
+    for (int i=0;i<maxline;i++)
+	{
+		cmdline[i]=tolower(cmdline[i]);
+	}    
+    
     if (cin.eof()){curch='q';cmdline[0]='q';}
     cmdlen = cin.gcount() - 1;
   } while (cmdlen == 0);
