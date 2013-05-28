@@ -95,7 +95,7 @@ bool parser::readin (void)
   // Reset end of section marker
   endOfSection = 0;
 
-  // Parse monitor name - id refers to monitor nametable
+  // Parse monitor name - id refers to main nametable
   if(parseMonitorName(dev1id)) return PARSER_FAIL;
   if(parseToken(consym)) return PARSER_FAIL;
   if(parseConnOutputName(dev2id,outid)) return PARSER_FAIL;
@@ -724,14 +724,14 @@ bool parser::createConn(name dev1id,name dev2id,name inid,name outid)
   return PARSER_PASS;
 }
 
-// Gives back (in id) the name location in the monitor nametable
+// Gives back (in id) the name location in the main nametable
 bool parser::parseMonitorName (name &id)
 {
   symbol sym;
   int num;
   name symid;
   
-  smz->getsymbol(sym,symid,num);
+  smz->getsymbol(sym,id,num);
   switch(sym) { 
     case namesym:	  // Check that monitor name is not already used - will return non-zero if already in use
       if(nm_monitorz->cvtname(nmz->getname(symid))) 
@@ -740,7 +740,7 @@ bool parser::parseMonitorName (name &id)
       return PARSER_FAIL;
       }
       // Here is where the monitor name should be stored somewhere useful
-      id = nm_monitorz->lookup(nmz->getname(symid));
+      symid = nm_monitorz->lookup(nmz->getname(symid));
       break;
     case closecurly:
       // Error for at least one monitor must be defined
@@ -759,7 +759,7 @@ bool parser::parseMonitorName (name &id)
   return PARSER_PASS;
 }
 
-// Gives back (in id) the name location in the monitors nametable - should semantic error check for repeated names
+// Gives back (in id) the name location in the main nametable - should semantic error check for repeated names
 bool parser::parseMonitorName (name &id, bool &endOfSection)
 {
   symbol sym;
@@ -767,12 +767,17 @@ bool parser::parseMonitorName (name &id, bool &endOfSection)
   name symid;
   endOfSection = 0;
   
-  smz->getsymbol(sym,symid,num);
+  smz->getsymbol(sym,id,num);
   switch(sym) { 
     case namesym:
+      // Check for duplicate monitor names - returns 0 for name unused
+      if(nm_monitorz->cvtname(nmz->getname(symid))) 
+      {
+        errorHandling(monitor_not_unique);
+        return PARSER_FAIL;
+      }
       // Here is where the device name should be stored somewhere useful
-      // SEMANTIC CHECKING TO OCCUR here
-      id = nm_monitorz->lookup(nmz->getname(symid));      
+      symid = nm_monitorz->lookup(nmz->getname(symid));      
       break;
     case closecurly:
       // Monitors section ended
@@ -792,7 +797,7 @@ bool parser::parseMonitorName (name &id, bool &endOfSection)
 
 bool parser::createMonitor(name monitorName, name dev2id, name outid) 
 {
-	cout << "Create monitor " << nm_monitorz->getname(monitorName) << " monitoring " << nmz->getname(dev2id) << ", output " << nmz->getname(outid) << endl;
+	cout << "Create monitor " << nmz->getname(monitorName) << " monitoring " << nmz->getname(dev2id) << ", output " << nmz->getname(outid) << endl;
 	return PARSER_PASS
 }
 

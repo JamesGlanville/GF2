@@ -13,5 +13,4 @@ CONNECTIONS
 D1.i5 <= Dd.Q;
 Dd.data <= switchy;
 gate.i6 <= or;
-
 }
