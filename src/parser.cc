@@ -71,10 +71,10 @@ bool parser::readin (void)
   
   // Reset end of section marker
   endOfSection = 0;
-  cout << "In connections\n";
+
   // Parse connections
   if(parseConnInputName(dev1id,inid,endOfSection)) return PARSER_FAIL;
-    
+
   while(!endOfSection)
   {
     if(parseToken(consym)) return PARSER_FAIL;
@@ -615,12 +615,13 @@ bool parser::parseConnInputName(name &devid, name &inpid, bool &endOfSection)
     case NAND:
     case OR:
     case NOR:
-      ss.str("");
       for (int i=1;i<=16;i++)
       {
+        ss.str("");
         ss << "i"<<i;
         if (input.compare(ss.str())==0){return PARSER_PASS;}  
       } 
+      errorHandling(invalid_input);
       return PARSER_FAIL;
   }
   return PARSER_PASS;
