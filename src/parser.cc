@@ -1,11 +1,11 @@
 /*
 TODO:
-ensure monitor names are unique
 connections created
 monitors created
 all inputs are connected
 (look in lab handout for what has been missed)
-skip symbols
+continuing to read errors after one is found
+total error 
 */
 #include "parser.h"
 
@@ -307,7 +307,7 @@ bool parser::parseDeviceName (name &id, bool &endOfDevices)
   smz->getsymbol(sym,symid,num);
   switch(sym) { 
     case namesym:
-	  // Check that device name is not already used - will return non-zero is already in use
+	  // Check that device name is not already used - will return non-zero if already in use
 	  if(nm_devicez->cvtname(nmz->getname(symid))) 
 	  {
 		errorHandling(device_not_unique);
@@ -837,6 +837,13 @@ bool parser::parseConnOutputName(name &devid, name &outid)
 // Should just be a simple function call hopefully
 bool parser::createConn(name dev1id,name dev2id,name inid,name outid)
 {
+  bool ok;
+  makeconnection(dev1id,inid,dev2id,outid,ok);
+  if(!ok)
+  {
+    cout << "ERROR: Couldn't make connection\n";
+    return PARSER_FAIL;
+  }
   cout << "Connect " << nmz->getname(dev1id) << ", input " << nmz->getname(inid) << ", to " << nmz->getname(dev2id) << ", output " << nmz->getname(outid) << endl;
   return PARSER_PASS;
 }
@@ -850,7 +857,12 @@ bool parser::parseMonitorName (name &id)
   
   smz->getsymbol(sym,symid,num);
   switch(sym) { 
-    case namesym:
+    case namesym:	  // Check that monitor name is not already used - will return non-zero if already in use
+      if(nm_monitorz->cvtname(nmz->getname(symid))) 
+      {
+      errorHandling(monitor_not_unique);
+      return PARSER_FAIL;
+      }
       // Here is where the monitor name should be stored somewhere useful
       id = nm_monitorz->lookup(nmz->getname(symid));
       break;
