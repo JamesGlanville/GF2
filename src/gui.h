@@ -50,17 +50,12 @@ class MyFrame: public wxFrame
   devices *dmz;                           // pointer to devices class
   monitor *mmz;                           // pointer to monitor class
   int cyclescompleted;                    // how many simulation cycles have been completed
-  //  void runnetwork(int ncycles);           // function to run the logic network
+  void runnetwork(int ncycles);           // function to run the logic network
   void OnExit(wxCommandEvent& event);     // callback for exit menu item
   void OnAbout(wxCommandEvent& event);    // callback for about menu item
-  //  void OnButton(wxCommandEvent& event);   // callback for push button
   void OnRunButton(wxCommandEvent &event);
   void OnContButton(wxCommandEvent &event);
-  void OnSpin(wxSpinEvent& event);        // callback for spin control
-  //  void OnText(wxCommandEvent& event);     // callback for text
-  //  entry field
-  void OnScroll(wxScrollWinEvent& event);
-  void OnSwitch_option(wxCommandEvent& event);
+  void OnSwitchOption(wxCommandEvent& event);
   void OnAddMonitor(wxCommandEvent& event);
   void OnRemMonitor(wxCommandEvent& event);
   DECLARE_EVENT_TABLE()

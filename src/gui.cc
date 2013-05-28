@@ -169,9 +169,7 @@ BEGIN_EVENT_TABLE(MyFrame, wxFrame)
   EVT_MENU(wxID_ABOUT,      MyFrame::OnAbout)
   EVT_BUTTON(RUN_BUTTON_ID, MyFrame::OnRunButton)
   EVT_BUTTON(CONT_BUTTON_ID, MyFrame::OnContButton)
-  EVT_SPINCTRL(CYCLES_SPIN, MyFrame::OnSpin)
-  EVT_SCROLLWIN(MyFrame::OnScroll)
-  EVT_COMBOBOX(SWITCH_OPTION, MyFrame::OnSwitch_option)
+  EVT_COMBOBOX(SWITCH_OPTION, MyFrame::OnSwitchOption)
   EVT_COMBOBOX(MONITOR_ADD, MyFrame::OnAddMonitor)
   EVT_COMBOBOX(MONITOR_REM, MyFrame::OnRemMonitor)
 END_EVENT_TABLE()
@@ -331,57 +329,56 @@ void MyFrame::OnAbout(wxCommandEvent &event)
 
 void MyFrame::OnRunButton(wxCommandEvent &event)
 {
-  wxLogMessage(wxT("Run Button Pressed"));
+  // run network from scratch for selected number of cycles.
+  int n, ncycles;
+  cyclescompleted = 0;
+  mmz->resetmonitor();
+  //cout << "run network for " << spin_cycles->GetValue() << " cycles." << endl;
+  runnetwork(spin_cycles->GetValue());
 }
 
 void MyFrame::OnContButton(wxCommandEvent &event)
 {
-  wxLogMessage(wxT("Continue Button Pressed"));
+  // continue simulation - same as OnRunButton but w/o resetting cyclescompleted
+  int n, ncycles;
+  //cout << "network has run " << cyclescompleted << " cycles." << endl;
+  //cout << "and will continue with " << spin_cycles->GetValue() << " more cycles." << endl;
+  runnetwork(spin_cycles->GetValue());
 }
 
-void MyFrame::OnSpin(wxSpinEvent &event)
-  // Callback for the spin control
+void MyFrame::runnetwork(int ncycles)
 {
-  wxString text;
+  // Function to run the network, derived from corresponding function in userint.cc
+  bool ok = true;
+  int n = ncycles;
 
-  text.Printf(wxT("New spinctrl value %d"), event.GetPosition());
-  //  canvas->Render(text);
+  while ((n > 0) && ok) {
+    dmz->executedevices (ok);
+    if (ok)
+      {
+	n--;
+	mmz->recordsignals ();
+      }
+    else
+      cout << "Error: network is oscillating" << endl;
+  }
+  if (ok)
+    {
+      cyclescompleted = cyclescompleted + ncycles;
+    }
+  else
+    {
+      cyclescompleted = 0;
+    }
 }
 
-// void MyFrame::OnText(wxCommandEvent &event)
-//   // Callback for the text entry field
-// {
-//   wxString text;
-
-//   text.Printf(wxT("New text entered %s"), event.GetString().c_str());
-//   canvas->Render(text);
-// }
-
-// void MyFrame::runnetwork(int ncycles)
-//   // Function to run the network, derived from corresponding function in userint.cc
-// {
-//   bool ok = true;
-//   int n = ncycles;
-
-//   while ((n > 0) && ok) {
-//     dmz->executedevices (ok);
-//     if (ok) {
-//       n--;
-//       mmz->recordsignals ();
-//     } else
-//       cout << "Error: network is oscillating" << endl;
-//   }
-//   if (ok) cyclescompleted = cyclescompleted + ncycles;
-//   else cyclescompleted = 0;
-// }
-
-void MyFrame::OnScroll(wxScrollWinEvent& event)
+void MyFrame::OnSwitchOption(wxCommandEvent& event)
 {
-  cout << "position = " << event.GetPosition() << endl;
-}
-
-void MyFrame::OnSwitch_option(wxCommandEvent& event)
-{
+  // cout << "switch: " << switch_list->GetValue() << " set to " <<
+  // switch_option->GetValue();
+  cout << "got to OnSwitchOption callback" << endl;
+  cout << "switch value: " << switch_option->GetValue().ToAscii() << endl;
+  // TODO STUFF HERE!
 
 }
 
