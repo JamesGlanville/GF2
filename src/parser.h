@@ -8,6 +8,7 @@
 #include "monitor.h"
 //#define PARSER_TEST
 #include <iostream>
+#include <sstream>
 #include "scanner.h"
 using namespace std;
 

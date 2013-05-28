@@ -534,6 +534,7 @@ bool parser::parseConnInputName(name &devid, name &inpid, bool &endOfSection)
   device_type dt;
   int no_of_inputs;
   string input;
+  stringstream ss;
   
   // Retrieve device name
   smz->getsymbol(sym, devid, num);
@@ -613,139 +614,13 @@ bool parser::parseConnInputName(name &devid, name &inpid, bool &endOfSection)
     case NAND:
     case OR:
     case NOR:
-      if(input.compare("i1")==0) {return PARSER_PASS;}
-      else if(input.compare("i2")==0) {return PARSER_PASS;}
-      else if(input.compare("i3")==0)
-      {
-        if (no_of_inputs > 2) {return PARSER_PASS;}
-        else 
-        {
-          errorHandling(more_inputs_than_defined);
-          return PARSER_FAIL;
-        }
-      }
-      else if(input.compare("i4")==0)
-      {
-        if (no_of_inputs > 3) {return PARSER_PASS;}
-        else 
-        {
-          errorHandling(more_inputs_than_defined);
-          return PARSER_FAIL;
-        }
-      }
-      else if(input.compare("i5")==0)
-      {
-        if (no_of_inputs > 4) {return PARSER_PASS;}
-        else 
-        {
-          errorHandling(more_inputs_than_defined);
-          return PARSER_FAIL;
-        }
-      }
-      else if(input.compare("i6")==0)
-      {
-        if (no_of_inputs > 5) {return PARSER_PASS;}
-        else 
-        {
-          errorHandling(more_inputs_than_defined);
-          return PARSER_FAIL;
-        }
-      }
-      else if(input.compare("i7")==0)
-      {
-        if (no_of_inputs > 6) {return PARSER_PASS;}
-        else 
-        {
-          errorHandling(more_inputs_than_defined);
-          return PARSER_FAIL;
-        }
-      }
-      else if(input.compare("i8")==0)
-      {
-        if (no_of_inputs > 7) {return PARSER_PASS;}
-        else 
-        {
-          errorHandling(more_inputs_than_defined);
-          return PARSER_FAIL;
-        }
-      }
-      else if(input.compare("i9")==0)
-      {
-        if (no_of_inputs > 8) {return PARSER_PASS;}
-        else 
-        {
-          errorHandling(more_inputs_than_defined);
-          return PARSER_FAIL;
-        }
-      }
-      else if(input.compare("i10")==0)
-      {
-        if (no_of_inputs > 9) {return PARSER_PASS;}
-        else 
-        {
-          errorHandling(more_inputs_than_defined);
-          return PARSER_FAIL;
-        }
-      }
-      else if(input.compare("i11")==0)
-      {
-        if (no_of_inputs > 10) {return PARSER_PASS;}
-        else 
-        {
-          errorHandling(more_inputs_than_defined);
-          return PARSER_FAIL;
-        }
-      }
-      else if(input.compare("i12")==0)
-      {
-        if (no_of_inputs > 11) {return PARSER_PASS;}
-        else 
-        {
-          errorHandling(more_inputs_than_defined);
-          return PARSER_FAIL;
-        }
-      }
-      else if(input.compare("i13")==0)
-      {
-        if (no_of_inputs > 12) {return PARSER_PASS;}
-        else 
-        {
-          errorHandling(more_inputs_than_defined);
-          return PARSER_FAIL;
-        }
-      }
-      else if(input.compare("i14")==0)
-      {
-        if (no_of_inputs > 13) {return PARSER_PASS;}
-        else 
-        {
-          errorHandling(more_inputs_than_defined);
-          return PARSER_FAIL;
-        }
-      }
-      else if(input.compare("i15")==0)
-      {
-        if (no_of_inputs > 14) {return PARSER_PASS;}
-        else 
-        {
-          errorHandling(more_inputs_than_defined);
-          return PARSER_FAIL;
-        }
-      }
-      else if(input.compare("i16")==0)
-      {
-        if (no_of_inputs > 15) {return PARSER_PASS;}
-        else 
-        {
-          errorHandling(more_inputs_than_defined);
-          return PARSER_FAIL;
-        }
-      }
-      else
-      {
-        errorHandling(invalid_input);
-        return PARSER_FAIL;
-      }
+      ss.str("");
+	  for (int i=1;i<=16;i++)
+	  {
+		ss << "i"<<i;
+		if (input.compare(ss.str())==0){return PARSER_PASS;}  
+	  }
+	  return PARSER_FAIL;
   }
   return PARSER_PASS;
 }
