@@ -125,7 +125,7 @@ void devices::makegate (devicekind dkind, name did, int ninputs, bool& ok)
     netz->adddevice (dkind, did, d);
     netz->addoutput (d, blankname);
     for (n = 1; n <= ninputs; n++) {
-      iname = "I";
+      iname = "i";
       if (n < 10) {
 	iname += ((char) n) + '0';
       } else {
@@ -446,22 +446,22 @@ devices::devices (names* names_mod, network* net_mod)
 {
   nmz = names_mod;
   netz = net_mod;
-  dtab[aswitch]   =  nmz->lookup("SWITCH");
-  dtab[aclock]    =  nmz->lookup("CLOCK");
-  dtab[andgate]   =  nmz->lookup("AND");
-  dtab[nandgate]  =  nmz->lookup("NAND");
-  dtab[orgate]    =  nmz->lookup("OR");
-  dtab[norgate]   =  nmz->lookup("NOR");
-  dtab[xorgate]   =  nmz->lookup("XOR");
-  dtab[dtype]     =  nmz->lookup("DTYPE");
+  dtab[aswitch]   =  nmz->lookup("switch");
+  dtab[aclock]    =  nmz->lookup("clock");
+  dtab[andgate]   =  nmz->lookup("and");
+  dtab[nandgate]  =  nmz->lookup("nand");
+  dtab[orgate]    =  nmz->lookup("or");
+  dtab[norgate]   =  nmz->lookup("nor");
+  dtab[xorgate]   =  nmz->lookup("xor");
+  dtab[dtype]     =  nmz->lookup("dtype");
   dtab[baddevice] =  blankname;
   debugging = false;
-  datapin = nmz->lookup("DATA");
-  clkpin  = nmz->lookup("CLK");
-  setpin  = nmz->lookup("SET");
-  clrpin  = nmz->lookup("CLEAR");
-  qpin    = nmz->lookup("Q");
-  qbarpin = nmz->lookup("QBAR");
+  datapin = nmz->lookup("data");
+  clkpin  = nmz->lookup("clk");
+  setpin  = nmz->lookup("set");
+  clrpin  = nmz->lookup("clear");
+  qpin    = nmz->lookup("q");
+  qbarpin = nmz->lookup("qbar");
 }
 
 

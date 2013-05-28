@@ -70,6 +70,7 @@ outplink network::findoutput (devlink dev, name id)
   o = dev->olist;
   found = false;
   while ((o != NULL) && (! found)) {
+	  cout << "o->id is : " << o->id << endl;
     found = (o->id == id);
     if (! found)
 	o = o->next;
@@ -163,11 +164,16 @@ void network::makeconnection (name idev, name inp, name odev, name outp, bool& o
   cout << "dout: " << din << endl;
   ok = ((din != NULL) && (dout != NULL));
   if (ok) {
+	  cout << "OK!" <<endl;
     o = findoutput (dout, outp);
+    cout << "o: " << o <<"  outp: " << outp << endl;
     i = findinput (din, inp);
+    cout << "i: " << i << endl;
     ok = ((o != NULL) && (i != NULL));
-    if (ok)
+    if (ok){
       i->connect = o;
+      cout << "ok!!!!"<<endl;
+  }
   }
 }
 

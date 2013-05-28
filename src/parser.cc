@@ -729,7 +729,15 @@ bool parser::createConn(name dev1id,name dev2id,name inid,name outid)
   if(!ok)
   {
     cout << "ERROR: Couldn't make connection\n";
+    
+    for (int i=0;i<100;i++)
+    {
+		cout << i << "   " <<nmz->getname(i) << endl;
+	}
     return PARSER_FAIL;
+    
+    
+    
   }
   return PARSER_PASS;
 }
