@@ -1,0 +1,171 @@
+% File name: GF2/specification/classes.tex
+% handy reference sheet for names, monitors and devices classes
+% Author: adh
+% Date: Tue 28 May 2013 14:13
+
+\documentclass[a4paper,11pt]{article}  % Standard document class
+\usepackage[english]{babel}            % Set document language
+\usepackage{fullpage}                  % Set up page for small margins etc
+
+\usepackage{graphicx}                  % For including images in document
+\usepackage{placeins}                  % Allows use of \FloatBarrier
+% to avoid images or tables
+% moving into next section
+\usepackage{subfig}                    % For subfigures...
+
+\usepackage{amsmath}                   % For improving maths/formula typesetting
+\usepackage{tabularx}                  % Table changing package
+
+\usepackage{algpseudocode}             % For producing algorithms/flowcharts
+\usepackage{listings}                  % For including source code in document
+
+
+% Provide command for scientific notation
+\providecommand{\e}[1]{\ensuremath{\times10^{#1}}}
+\providecommand{\degrees}{\ensuremath{^{\circ}}}
+
+% Define title here:
+\title{GF2 Classes Reference Sheet}
+\author{Andrew Holt}
+\date{28 May 2013}
+
+\begin{document}
+
+% generate title
+\maketitle
+
+\section{Names Class}
+
+\subsection*{\texttt{vector<namestring> nametable;}}
+
+\subsection*{\texttt{name lookup (namestring str);}}
+\begin{itemize}
+  \item Returns internal representation of the name given in character form.
+  \item If name is not already in table, it is automatically inserted.
+\end{itemize}
+
+\subsection*{\texttt{name cvtname (namestring str);}}
+\begin{itemize}
+  \item Returns internal representation of the name given in character form.
+  \item If name is not already in table then 'blankname' is returned.
+\end{itemize}
+
+\subsection*{\texttt{void writename (name id);}}
+\begin{itemize}
+  \item Prints out given name on console.
+\end{itemize}
+
+\subsection*{\texttt{void getname (name id);}}
+\begin{itemize}
+  \item Returns the string.
+\end{itemize}
+
+\subsection*{\texttt{int namelength (name id);}}
+\begin{itemize}
+  \item Returns the length (i.e. number of characters in given name).
+\end{itemize}
+
+\newpage
+
+\section{Devices Class}
+
+\subsection*{\texttt{void makedevice (devicekind dkind, name did, int
+    variant, bool\& ok);}}
+\begin{itemize}
+  \item Adds device to the network.
+  \item Variant for no. of inputs etc.
+  \item \texttt{ok} returns \texttt{TRUE} if successful.
+\end{itemize}
+
+\subsection*{\texttt{void setswitch (name sid, asignal level, bool\& ok);}}
+\begin{itemize}
+  \item sets state of named switch.
+  \item \texttt{ok} returns false if switch not found.
+\end{itemize}
+
+\subsection*{\texttt{void executedevices (bool\& ok);}}
+\begin{itemize}
+  \item Executes all devices in the network to simulate one complete
+    clock cycle. 
+  \item \texttt{ok} returns \texttt{FALSE} if network fails to
+    stabilise.
+\end{itemize}
+
+\subsection*{\texttt{devicekind devkind (name id);}}
+\begin{itemize}
+  \item Returns the kind of device corresponding to the given name.
+  \item \texttt{baddevice} is returned if the name is not a legal device.
+\end{itemize}
+
+\subsection*{\texttt{void writedevice (devicekind k);}}
+\begin{itemize}
+  \item Prints out the given device kind.
+\end{itemize}
+
+\subsection*{\texttt{void debug (bool on);}}
+\begin{itemize}
+  \item Used to set debugging switch.
+\end{itemize}
+
+\newpage
+
+\section{Monitor Class}
+
+\subsection*{\texttt{void makemonitor (name dev, name outp, bool\& ok);}}
+\begin{itemize}
+  \item Sets a monitor on the `outp' output of device `dev' by placing
+    an entry in the monitor table.
+  \item `ok' is set true if operation succeeds.
+\end{itemize}
+
+\subsection*{\texttt{void remmonitor (name dev, name outp, bool\& ok);}}
+\begin{itemize}
+  \item Removes the monitor set on the `outp' output of device `dev'
+  \item `ok' is set true if operation succeeds.
+\end{itemize}
+
+\subsection*{\texttt{int moncount (void);}}
+\begin{itemize}
+  \item Returns the number of signals currently monitored.
+\end{itemize}
+
+\subsection*{\texttt{asignal getmonsignal (int n);}}
+\begin{itemize}
+  \item returns signal level of n'th monitor point.
+\end{itemize}
+
+\subsection*{\texttt{bool getsignaltrace (int m, int c, asignal \&s);}}
+\begin{itemize}
+  \item Access recorded signal trace.
+  \item Returns \texttt{FALSE} if invalid monitor or cycle.
+\end{itemize}
+
+\subsection*{\texttt{void getmonname (int n, name\& dev, name\& outp);}}
+\begin{itemize}
+  \item Returns the name of n'th monitor
+\end{itemize}
+
+\subsection*{\texttt{string getmonprettyname (int n);}}
+\begin{itemize}
+  \item Returns name of device \texttt{n} in a string.
+\end{itemize}
+
+
+\subsection*{\texttt{void resetmonitor (void);}}
+\begin{itemize}
+  \item Initialises monitor memory in preparation for a new output
+    sequence.
+\end{itemize}
+
+\subsection*{\texttt{void recordsignals (void);}}
+\begin{itemize}
+  \item Called every clock cycle to record the state of each monitored
+    signal.
+\end{itemize}
+
+\subsection*{\texttt{void displaysignals (void);}}
+\begin{itemize}
+  \item Displays state of monitored signals.
+\end{itemize}
+
+\end{document}
