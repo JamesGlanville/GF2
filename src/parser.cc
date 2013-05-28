@@ -1,3 +1,11 @@
+/*
+TODO:
+ensure monitor names are unique
+connections created
+monitors created
+all inputs are connected
+(look in lab handout for what has been missed)
+*/
 #include "parser.h"
 
 using namespace std;
@@ -75,6 +83,36 @@ bool parser::readin (void)
     if(parseConnInputName(dev1id,inid,endOfSection)) return PARSER_FAIL;
   }
   
+  // Should check that all inputs are connected at this point
+
+  // MONITORS 
+  if(parseSectionHeader(MON)) return PARSER_FAIL;
+
+  // {
+  if(parseToken(opencurly)) return PARSER_FAIL;
+  
+  // Reset end of section marker
+  endOfSection = 0;
+
+  // Parse monitor name - id refers to monitor nametable
+  if(parseMonitorName(dev1id)) return PARSER_FAIL;
+  if(parseToken(consym)) return PARSER_FAIL;
+  if(parseConnOutputName(dev2id,outid)) return PARSER_FAIL;
+  if(createMonitor(dev1id,dev2id,outid)) return PARSER_FAIL;
+  if(parseToken(semicol)) return PARSER_FAIL;
+
+  while(!endOfSection)
+  {
+	if(parseToken(consym)) return PARSER_FAIL;
+	if(parseConnOutputName(dev2id,outid)) return PARSER_FAIL;
+	if(createMonitor(dev1id,dev2id,outid)) return PARSER_FAIL;
+	if(parseToken(semicol)) return PARSER_FAIL;
+	if(parseMonitorName(dev1id,endOfSection)) return PARSER_FAIL;
+  }
+
+  // }
+  if(parseToken(closecurly)) return PARSER_FAIL;
+
   return PARSER_PASS;
 }
 
@@ -98,6 +136,9 @@ void parser::errorHandling (error error_num)
       break;
     case device_name_expected:
       smz->printError("Expected device name");
+      break;
+    case monitor_name_expected:
+      smz->printError("Expected monitor name");
       break;
     case number_param_expected:
       smz->printError("Expected numeric parameter");
@@ -123,6 +164,24 @@ void parser::errorHandling (error error_num)
     case invalid_output:
       smz->printError("Not a valid device output");
       break;
+	case one_monitor_required:
+	  smz->printError("At least one monitor definition is required");
+	  break;
+	case inputs_two_to_sixteen:
+	  smz->printError("Gate requires between 2 and 16 inputs");
+      break;
+	case clk_param:
+	  smz->printError("Clock requires a positive, integer period");
+	  break;
+	case switch_param:
+	  smz->printError("Switch can only be set to 1 or 0");
+	  break;
+	case device_not_unique:
+		smz->printError("Device names must be unique");
+		break;
+	case monitor_not_unique:
+		smz->printError("Monitor names must be unique");
+		break;
     default:
       cout << "You should never see this message\n";
   }
@@ -247,10 +306,14 @@ bool parser::parseDeviceName (name &id, bool &endOfDevices)
   smz->getsymbol(sym,symid,num);
   switch(sym) { 
     case namesym:
-      // Here is where the device name should be stored somewhere useful
-      // SEMANTIC CHECKING TO OCCUR here
+	  // Check that device name is not already used - will return non-zero is already in use
+	  if(nm_devicez->cvtname(nmz->getname(symid))) 
+	  {
+		errorHandling(device_not_unique);
+		return PARSER_FAIL;
+	  }
+	  // Save in device nametable
       id = nm_devicez->lookup(nmz->getname(symid));      
-      //cout << "Device name \"" << nmz->getname(id) << "\" recognised.\n";
       break;
     case closecurly:
       // Device section ended
@@ -353,6 +416,13 @@ bool parser::createDevice (device_type current_device_type, name id)
   {
     case AND:
       if(parseParam(param_value)) return PARSER_FAIL;
+	  // Semantic check on parameter values
+	  if(param_value < 2 || param_value >16) 
+	  {
+		errorHandling(inputs_two_to_sixteen);
+		return PARSER_FAIL;
+	  }
+	  // Adds device to device table
       devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type,param_value);
       cout << "Created AND gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
       dmz->makedevice (andgate, id, param_value, ok); 
@@ -361,6 +431,13 @@ bool parser::createDevice (device_type current_device_type, name id)
       
     case NAND:
       if(parseParam(param_value)) return PARSER_FAIL;
+	  // Semantic check on parameter values
+	  if(param_value < 2 || param_value >16) 
+	  {
+		errorHandling(inputs_two_to_sixteen);
+		return PARSER_FAIL;
+	  }
+	  // Adds device to device table
       devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type,param_value);
       cout << "Created NAND gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
       dmz->makedevice (nandgate, id, param_value, ok); 
@@ -369,6 +446,13 @@ bool parser::createDevice (device_type current_device_type, name id)
       
     case OR:
       if(parseParam(param_value)) return PARSER_FAIL;
+	  // Semantic check on parameter values
+	  if(param_value < 2 || param_value >16) 
+	  {
+		errorHandling(inputs_two_to_sixteen);
+		return PARSER_FAIL;
+	  }
+	  // Adds device to device table
       devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type,param_value);
       cout << "Created OR gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
       dmz->makedevice (orgate, id, param_value, ok); 
@@ -377,6 +461,13 @@ bool parser::createDevice (device_type current_device_type, name id)
    
     case NOR:
       if(parseParam(param_value)) return PARSER_FAIL;
+	  // Semantic check on parameter values
+	  if(param_value < 2 || param_value >16) 
+	  {
+		errorHandling(inputs_two_to_sixteen);
+		return PARSER_FAIL;
+	  }
+	  // Adds device to device table
       devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type,param_value);
       cout << "Created NOR gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
       dmz->makedevice (norgate, id, param_value, ok); 
@@ -384,6 +475,7 @@ bool parser::createDevice (device_type current_device_type, name id)
       break;
       
     case XOR:
+	  // Adds device to device table
       devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type,param_value);
       cout << "Created XOR gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
       dmz->makedevice (xorgate, id, 2, ok);
@@ -399,6 +491,12 @@ bool parser::createDevice (device_type current_device_type, name id)
       
     case CLK:
       if(parseParam(param_value)) return PARSER_FAIL;
+	  if(param_value<1)
+	  {
+		errorHandling(clk_param);
+		return PARSER_FAIL;
+	  }
+
       devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type,0);
       cout << "Created CLK with period of " << param_value << " and name \"" << nm_devicez->getname(id) << "\".\n";
       dmz->makedevice (aclock, id, param_value, ok); //THIS IS PROBABLY INCORRECT. SECOND VALUE SHOULD BE FREQUENCY, NOT PERIOD.
@@ -407,6 +505,12 @@ bool parser::createDevice (device_type current_device_type, name id)
       
     case SW:
       if(parseParam(param_value)) return PARSER_FAIL;
+	  if(param_value != 0 || param_value != 1)
+	  {
+		errorHandling(switch_param);
+		return PARSER_FAIL;
+	  }
+
       devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type,0);
       cout << "Created SW with initial state " << param_value << " and name \"" << nm_devicez->getname(id) << "\".\n";
       signal = low;
@@ -442,13 +546,9 @@ bool parser::parseConnInputName(name &devid, name &inpid, bool &endOfSection)
       // Device section ended
       endOfSection = 1;
       return PARSER_PASS;
-    case numsym:
-      // All names must begin with a letter
-      errorHandling(names_begin_letter);
-      return PARSER_FAIL;
     default:
-      // Generic expected a name here error
-      errorHandling(device_name_expected);
+      // Generic device not defined error
+      errorHandling(device_not_defined);
       return PARSER_FAIL;
   }
   
@@ -678,13 +778,9 @@ bool parser::parseConnOutputName(name &devid, name &outid)
     case namesym:
       dt = dtz->gettype(nmz->getname(devid));    
       break;
-    case numsym:
-      // All names must begin with a letter
-      errorHandling(names_begin_letter);
-      return PARSER_FAIL;
     default:
-      // Generic expected a name here error
-      errorHandling(device_name_expected);
+      // Generic device not defined error
+      errorHandling(device_not_defined);
       return PARSER_FAIL;
   }
   
@@ -742,6 +838,73 @@ bool parser::createConn(name dev1id,name dev2id,name inid,name outid)
 {
   cout << "Connect " << nmz->getname(dev1id) << ", input " << nmz->getname(inid) << ", to " << nmz->getname(dev2id) << ", output " << nmz->getname(outid) << endl;
   return PARSER_PASS;
+}
+
+// Gives back (in id) the name location in the monitor nametable
+bool parser::parseMonitorName (name &id)
+{
+  symbol sym;
+  int num;
+  name symid;
+  
+  smz->getsymbol(sym,symid,num);
+  switch(sym) { 
+    case namesym:
+      // Here is where the monitor name should be stored somewhere useful
+      id = nm_monitorz->lookup(nmz->getname(symid));
+      break;
+    case closecurly:
+      // Error for at least one monitor must be defined
+      errorHandling(one_monitor_required);
+      return PARSER_FAIL;
+    case numsym:
+      // All names must begin with a letter
+      errorHandling(names_begin_letter);
+      return PARSER_FAIL;
+    default:
+      // Generic expected a name here error
+      errorHandling(monitor_name_expected);
+      return PARSER_FAIL;
+  }
+  
+  return PARSER_PASS;
+}
+
+// Gives back (in id) the name location in the monitors nametable - should semantic error check for repeated names
+bool parser::parseMonitorName (name &id, bool &endOfSection)
+{
+  symbol sym;
+  int num;
+  name symid;
+  endOfSection = 0;
+  
+  smz->getsymbol(sym,symid,num);
+  switch(sym) { 
+    case namesym:
+      // Here is where the device name should be stored somewhere useful
+      // SEMANTIC CHECKING TO OCCUR here
+      id = nm_monitorz->lookup(nmz->getname(symid));      
+      break;
+    case closecurly:
+      // Monitors section ended
+      endOfSection = 1;
+      break;
+    case numsym:
+      // All names must begin with a letter
+      errorHandling(names_begin_letter);
+      return PARSER_FAIL;
+    default:
+      // Generic expected a name here error
+      errorHandling(device_name_expected);
+      return PARSER_FAIL;
+  }
+  return PARSER_PASS;
+}
+
+bool parser::createMonitor(name monitorName, name dev2id, name outid) 
+{
+	cout << "Create monitor " << nm_monitorz->getname(monitorName) << " monitoring " << nmz->getname(dev2id) << ", output " << nmz->getname(outid) << endl;
+	return PARSER_PASS
 }
 
 parser::parser (
