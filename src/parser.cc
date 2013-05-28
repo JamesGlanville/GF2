@@ -266,18 +266,18 @@ bool parser::parseSectionHeader (symbol header)
   return PARSER_PASS;
 }
 
-// Gives back (in id) the name location in the devices nametable
+// Gives back (in id) the name location in the main nametable
 bool parser::parseDeviceName (name &id)
 {
   symbol sym;
   int num;
   name symid;
   
-  smz->getsymbol(sym,symid,num);
+  smz->getsymbol(sym,id,num);
   switch(sym) { 
     case namesym:
       // Here is where the device name should be stored somewhere useful
-      id = nm_devicez->lookup(nmz->getname(symid));
+      symid = nm_devicez->lookup(nmz->getname(id));
       break;
     case closecurly:
       // Error for at least one device must be defined
@@ -296,7 +296,7 @@ bool parser::parseDeviceName (name &id)
   return PARSER_PASS;
 }
 
-// Gives back (in id) the name location in the devices nametable - should semantic error check for repeated names
+// Gives back (in id) the name location in the main nametable - should semantic error check for repeated names
 bool parser::parseDeviceName (name &id, bool &endOfDevices)
 {
   symbol sym;
@@ -304,17 +304,17 @@ bool parser::parseDeviceName (name &id, bool &endOfDevices)
   name symid;
   endOfDevices = 0;
   
-  smz->getsymbol(sym,symid,num);
+  smz->getsymbol(sym,id,num);
   switch(sym) { 
     case namesym:
 	  // Check that device name is not already used - will return non-zero if already in use
-	  if(nm_devicez->cvtname(nmz->getname(symid))) 
+	  if(nm_devicez->cvtname(nmz->getname(id))) 
 	  {
 		errorHandling(device_not_unique);
 		return PARSER_FAIL;
 	  }
 	  // Save in device nametable
-      id = nm_devicez->lookup(nmz->getname(symid));      
+      symid = nm_devicez->lookup(nmz->getname(id));      
       break;
     case closecurly:
       // Device section ended
@@ -424,8 +424,8 @@ bool parser::createDevice (device_type current_device_type, name id)
 		return PARSER_FAIL;
 	  }
 	  // Adds device to device table
-      devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type,param_value);
-      cout << "Created AND gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
+      devicet_id = dtz->lookup(nmz->getname(id),current_device_type,param_value);
+      cout << "Created AND gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
       dmz->makedevice (andgate, id, param_value, ok); 
       if (!ok){cout <<"error creating and gate"<<endl;}
       break;
@@ -439,8 +439,8 @@ bool parser::createDevice (device_type current_device_type, name id)
 		return PARSER_FAIL;
 	  }
 	  // Adds device to device table
-      devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type,param_value);
-      cout << "Created NAND gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
+      devicet_id = dtz->lookup(nmz->getname(id),current_device_type,param_value);
+      cout << "Created NAND gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
       dmz->makedevice (nandgate, id, param_value, ok); 
       if (!ok){cout <<"error creating nand gate"<<endl;}
       break;
@@ -454,8 +454,8 @@ bool parser::createDevice (device_type current_device_type, name id)
 		return PARSER_FAIL;
 	  }
 	  // Adds device to device table
-      devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type,param_value);
-      cout << "Created OR gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
+      devicet_id = dtz->lookup(nmz->getname(id),current_device_type,param_value);
+      cout << "Created OR gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
       dmz->makedevice (orgate, id, param_value, ok); 
       if (!ok){cout <<"error creating or gate"<<endl;}
       break;
@@ -469,23 +469,23 @@ bool parser::createDevice (device_type current_device_type, name id)
 		return PARSER_FAIL;
 	  }
 	  // Adds device to device table
-      devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type,param_value);
-      cout << "Created NOR gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
+      devicet_id = dtz->lookup(nmz->getname(id),current_device_type,param_value);
+      cout << "Created NOR gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
       dmz->makedevice (norgate, id, param_value, ok); 
       if (!ok){cout <<"error creating nor gate"<<endl;}
       break;
       
     case XOR:
 	  // Adds device to device table
-      devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type,0);
-      cout << "Created XOR gate with " << param_value << " inputs, with name \"" << nm_devicez->getname(id) << "\".\n";
+      devicet_id = dtz->lookup(nmz->getname(id),current_device_type,0);
+      cout << "Created XOR gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
       dmz->makedevice (xorgate, id, 2, ok);
       if (!ok){cout <<"error creating xor gate"<<endl;}
       break;
       
     case DTYPE:
-      devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type,0);
-      cout << "Created DTYPE, with name \"" << nm_devicez->getname(id) << "\".\n";
+      devicet_id = dtz->lookup(nmz->getname(id),current_device_type,0);
+      cout << "Created DTYPE, with name \"" << nmz->getname(id) << "\".\n";
       dmz->makedevice (dtype, id, 0, ok); 
       if (!ok){cout <<"error creating dtype"<<endl;}
       break;
@@ -498,8 +498,8 @@ bool parser::createDevice (device_type current_device_type, name id)
 		return PARSER_FAIL;
 	  }
 
-      devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type,0);
-      cout << "Created CLK with period of " << param_value << " and name \"" << nm_devicez->getname(id) << "\".\n";
+      devicet_id = dtz->lookup(nmz->getname(id),current_device_type,0);
+      cout << "Created CLK with period of " << param_value << " and name \"" << nmz->getname(id) << "\".\n";
       dmz->makedevice (aclock, id, param_value, ok); //THIS IS PROBABLY INCORRECT. SECOND VALUE SHOULD BE FREQUENCY, NOT PERIOD.
       if (!ok){cout <<"error creating clock"<<endl;}
       break;
@@ -512,8 +512,8 @@ bool parser::createDevice (device_type current_device_type, name id)
 		return PARSER_FAIL;
 	  }
 
-      devicet_id = dtz->lookup(nm_devicez->getname(id),current_device_type,0);
-      cout << "Created SW with initial state " << param_value << " and name \"" << nm_devicez->getname(id) << "\".\n";
+      devicet_id = dtz->lookup(nmz->getname(id),current_device_type,0);
+      cout << "Created SW with initial state " << param_value << " and name \"" << nmz->getname(id) << "\".\n";
       signal = low;
       if (param_value){signal=high;}
       dmz->makedevice (aswitch, id, 0, ok);
