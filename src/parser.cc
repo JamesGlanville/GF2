@@ -56,45 +56,90 @@ bool parser::readin (void)
   
   // Parsing defined devices
   // First device name
-  if(parseDeviceName(id)) return PARSER_FAIL;
-  
-  // = 
-  if(parseToken(equals)) return PARSER_FAIL;
-  
-  // Device type 
-  if(parseDeviceType(current_device_type)) return PARSER_FAIL;
+  if(stopped_at == none) 
+  {
+    if(parseDeviceName(id)) return PARSER_FAIL;
+  }
 
-  // Nametable shouldn't allow multiple of the same name - THIS NEEDS DOING (I think)
-  if(createDevice(current_device_type,id)) return PARSER_FAIL;
-  
-  // ;
-  if(parseToken(semicol)) return PARSER_FAIL;
-  
-  // Subsequent device names + checks for closing curly
-  if(parseDeviceName(id,endOfSection)) return PARSER_FAIL;
-  
-  while(!endOfSection) 
+  // = 
+  if(stopped_at == none) 
   {
     if(parseToken(equals)) return PARSER_FAIL;
+  }
+  
+  // Device type 
+  if(stopped_at == none) 
+  {
     if(parseDeviceType(current_device_type)) return PARSER_FAIL;
+  }
+
+  if(stopped_at == none) 
+  {
     if(createDevice(current_device_type,id)) return PARSER_FAIL;
+  }
+  
+  // ;
+  if(stopped_at == none) 
+  {
     if(parseToken(semicol)) return PARSER_FAIL;
-    // Goes at end of loop because it also detects the closing curly brace
+  }
+  
+  // Subsequent device names + checks for closing curly
+  if(stopped_at == none) 
+  {
     if(parseDeviceName(id,endOfSection)) return PARSER_FAIL;
   }
   
+  while(!endOfSection) 
+  {
+    if(stopped_at == none) 
+    {
+      if(parseToken(equals)) return PARSER_FAIL;
+    }
+    
+    if(stopped_at == none) 
+    {
+      if(parseDeviceType(current_device_type)) return PARSER_FAIL;
+    }
+    
+    if(stopped_at == none) 
+    {
+      if(createDevice(current_device_type,id)) return PARSER_FAIL;
+    }
+    
+    if(stopped_at == none) 
+    {
+      if(parseToken(semicol)) return PARSER_FAIL;
+    }
+    
+    // Goes at end of loop because it also detects the closing curly brace
+    if(stopped_at == none) 
+    {
+      if(parseDeviceName(id,endOfSection)) return PARSER_FAIL;
+    }
+  }
+  
   // CONNECTIONS
-  if(parseSectionHeader(CONN)) return PARSER_FAIL;
+  if(stopped_at == none) 
+  {
+    if(parseSectionHeader(CONN)) return PARSER_FAIL;
+  }
   
   // {
-  if(parseToken(opencurly)) return PARSER_FAIL;
+  if(stopped_at == none) 
+  {
+    if(parseToken(opencurly)) return PARSER_FAIL;
+  }
   
   // Reset end of section marker
   endOfSection = 0;
 
   // Parse connections
-  if(parseConnInputName(dev1id,inid,endOfSection)) return PARSER_FAIL;
-
+  if(stopped_at == none) 
+  {
+    if(parseConnInputName(dev1id,inid,endOfSection)) return PARSER_FAIL;
+  }
+  
   while(!endOfSection)
   {
     if(parseToken(consym)) return PARSER_FAIL;
