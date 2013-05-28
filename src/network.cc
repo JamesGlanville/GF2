@@ -89,7 +89,6 @@ void network::adddevice (devicekind dkind, name did, devlink& dev)
 {
   dev = new devicerec;
   dev->id = did;
-  cout << "Device id just created was: " << dev->id << endl;
   dev->kind = dkind;
   dev->ilist = NULL;
   dev->olist = NULL;

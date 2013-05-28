@@ -9,7 +9,7 @@ or = OR(9);
 }
 CONNECTIONS
 {
-D1.i1 <= Dd.Q;
+D1.i1 = Dd.Q;
 AA.data <= switchy;
 gate.i6 <= or;
 }
