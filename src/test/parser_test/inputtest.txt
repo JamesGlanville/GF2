@@ -14,3 +14,7 @@ D1.i1 <= Dd.Q;
 Dd.data <= switchy;
 gate.i6 <= or;
 }
+MONITORS
+{
+TESTmonitor <= Dd.Q;
+}

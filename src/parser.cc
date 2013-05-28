@@ -715,7 +715,7 @@ bool parser::parseConnOutputName(name &devid, name &outid)
       }
     default:
       // For all other devices the output name is blank
-      outid = 0;
+      outid = -1;
   }
   return PARSER_PASS;  
 }

@@ -27,7 +27,7 @@ devlink network::finddevice (name id)
   found = false;
   d = devs;
   while ((d != NULL) && (! found)) {
-	 cout <<"d->id is: " << d->id << endl;
+	// cout <<"d->id is: " << d->id << endl;
     found = (d->id == id);
     if (! found)
       d = d->next;
@@ -70,7 +70,7 @@ outplink network::findoutput (devlink dev, name id)
   o = dev->olist;
   found = false;
   while ((o != NULL) && (! found)) {
-	  cout << "o->id is : " << o->id << endl;
+	//  cout << "o->id is : " << o->id << endl;
     found = (o->id == id);
     if (! found)
 	o = o->next;
@@ -155,24 +155,24 @@ void network::makeconnection (name idev, name inp, name odev, name outp, bool& o
   devlink din, dout;
   outplink o;
   inplink i;
-  cout << "idev: " << idev << endl;
-  cout << "odev: " << odev << endl;
+ // cout << "idev: " << idev << endl;
+//  cout << "odev: " << odev << endl;
 
   din = finddevice (idev);
-  cout << "din: " << din << endl;
+ // cout << "din: " << din << endl;
   dout = finddevice (odev);
-  cout << "dout: " << din << endl;
+ // cout << "dout: " << din << endl;
   ok = ((din != NULL) && (dout != NULL));
   if (ok) {
-	  cout << "OK!" <<endl;
+//	  cout << "OK!" <<endl;
     o = findoutput (dout, outp);
-    cout << "o: " << o <<"  outp: " << outp << endl;
+ //   cout << "o: " << o <<"  outp: " << outp << endl;
     i = findinput (din, inp);
-    cout << "i: " << i << endl;
+  //  cout << "i: " << i << endl;
     ok = ((o != NULL) && (i != NULL));
     if (ok){
       i->connect = o;
-      cout << "ok!!!!"<<endl;
+   //   cout << "ok!!!!"<<endl;
   }
   }
 }
