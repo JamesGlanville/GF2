@@ -1,5 +1,5 @@
 # Expected { } #
-
+{
 DEVICES
 {
 D1 = NAND(4);
@@ -17,4 +17,5 @@ gate.i6 <= or;
 MONITORS
 {
 TESTmonitor <= Dd.Q;
+}
 }

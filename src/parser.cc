@@ -116,10 +116,10 @@ bool parser::readin (void)
   endOfSection = 0;
   // Parse monitor name - id refers to main nametable
   if(parseMonitorName(dev1id)) return PARSER_FAIL;
-  if(parseToken(consym)) return PARSER_FAIL;
-  if(parseConnOutputName(dev2id,outid)) return PARSER_FAIL;
-  if(createMonitor(dev1id,dev2id,outid)) return PARSER_FAIL;
-  if(parseToken(semicol)) return PARSER_FAIL;
+//  if(parseToken(consym)) return PARSER_FAIL;
+//  if(parseConnOutputName(dev2id,outid)) return PARSER_FAIL;
+//  if(createMonitor(dev1id,dev2id,outid)) return PARSER_FAIL;
+ // if(parseToken(semicol)) return PARSER_FAIL;
 
   while(!endOfSection)
   {
