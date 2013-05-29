@@ -71,6 +71,8 @@ class parser {
   symbol stoppingSym (vector <symbol> stopping_syms);
 
  public:
+string getswitch(int swnum);
+
   bool readin();
     /* Reads the definition of the logic system and builds the             */
     /* corresponding internal representation via calls to the 'Network'    */

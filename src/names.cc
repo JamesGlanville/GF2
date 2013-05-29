@@ -59,6 +59,11 @@ string names::getname (name id)
 	}
 }
 
+int names::tablelength()
+{
+	return nametable.size();
+}
+
 
 int names::namelength (name id)
 {
