@@ -9,7 +9,7 @@ bool test_file_parser::testFileDefinition (void)
   int num;
   bool error = 0;
   
-  cout << "Expected errors: \n";
+  cout << "Expected errors: \n   ";
   
   smz->getsymbol(sym,id,num);
 
@@ -52,7 +52,7 @@ bool test_file_parser::testFileDefinition (void)
         cout << num;
         break;
       case fullstop:
-        cout << endl;
+        cout << endl << "   ";
         break;
       case DEV:
         cout << "DEVICES ";

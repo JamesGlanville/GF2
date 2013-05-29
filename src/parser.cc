@@ -352,7 +352,7 @@ bool parser::readin (void)
       else
       {
         stop_syms.push_back(opencurly);
-        stop_syms.push_back(closecurly);
+        //stop_syms.push_back(closecurly);
         stop_syms.push_back(semicol);
         stopped_at = stoppingSym(stop_syms);
         if(stopped_at == closecurly) endOfSection = 1;
@@ -384,8 +384,11 @@ bool parser::readin (void)
       if(stopped_at == eofsym) {error_count++;}
       else
       {
+        int num;
+        name id;
+        symbol sym;
         stop_syms.push_back(opencurly);
-        stop_syms.push_back(closecurly);
+        //stop_syms.push_back(closecurly);
         stop_syms.push_back(semicol);
         stopped_at = stoppingSym(stop_syms);
         if(stopped_at == closecurly) endOfSection = 1;
@@ -406,7 +409,7 @@ bool parser::readin (void)
         else
         {
           stop_syms.push_back(opencurly);
-          stop_syms.push_back(closecurly);
+          //stop_syms.push_back(closecurly);
           stop_syms.push_back(semicol);
           stopped_at = stoppingSym(stop_syms);
           if(stopped_at == closecurly) endOfSection = 1;
@@ -424,7 +427,7 @@ bool parser::readin (void)
         else
         {
           stop_syms.push_back(opencurly);
-          stop_syms.push_back(closecurly);
+          //stop_syms.push_back(closecurly);
           stop_syms.push_back(semicol);
           stopped_at = stoppingSym(stop_syms);
           if(stopped_at == closecurly) endOfSection = 1;
@@ -442,7 +445,7 @@ bool parser::readin (void)
         else
         {
           stop_syms.push_back(opencurly);
-          stop_syms.push_back(closecurly);
+          //stop_syms.push_back(closecurly);
           stop_syms.push_back(semicol);
           stopped_at = stoppingSym(stop_syms);
           if(stopped_at == closecurly) endOfSection = 1;
@@ -469,7 +472,7 @@ bool parser::readin (void)
         else
         {
           stop_syms.push_back(opencurly);
-          stop_syms.push_back(closecurly);
+          //stop_syms.push_back(closecurly);
           stop_syms.push_back(semicol);
           stopped_at = stoppingSym(stop_syms);
           if(stopped_at == closecurly) endOfSection = 1;

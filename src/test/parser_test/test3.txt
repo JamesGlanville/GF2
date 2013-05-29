@@ -5,3 +5,7 @@ DeViceS
                                                                 {
 dtyp=dtyp;  
 aAa = NAND(17);
+
+
+
+
