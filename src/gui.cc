@@ -222,12 +222,7 @@ MyFrame::MyFrame(wxWindow *parent,
 		 wxALL | wxEXPAND,
 		 10);
 		 
-  text = new wxTextCtrl(this,wxID_ANY,wxT("blah"));
-          wxStreamToTextRedirector redirect(text);
 
-//  topsizer->Add(text, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
-
-  //ctrlsizer->Add(*text, 0, wxALL|wxEXPAND,10);
 
 		 
   ctrlsizer->Add(new wxButton(this, CONT_BUTTON_ID, wxT("Continue")),
@@ -335,6 +330,15 @@ MyFrame::MyFrame(wxWindow *parent,
     }
 
   topsizer->Add(disp_scroll, 1, wxEXPAND | wxALL, 10);
+
+  wxBoxSizer *termwinsizer = new wxBoxSizer(wxHORIZONTAL);
+  text = new wxTextCtrl(this, wxID_ANY, wxT("blah"), wxDefaultPosition, wxSize(400,100));
+  wxStreamToTextRedirector redirect(text);
+  termwinsizer->Add(text, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
+  topsizer->Add(termwinsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
+
+  cout << "display this text \n";
+  cout << "then display this" << endl;
 
   SetSizeHints(400, 400);
   SetSizer(topsizer);

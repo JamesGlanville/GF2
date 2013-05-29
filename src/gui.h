@@ -46,6 +46,7 @@ class MyFrame: public wxFrame
   wxComboBox *add_monitor;
   wxComboBox *rem_monitor;
   wxWindow *disp_scroll;
+  wxTextCtrl *text;
   names *nmz;                             // pointer to names class
   devices *dmz;                           // pointer to devices class
   monitor *mmz;                           // pointer to monitor class
