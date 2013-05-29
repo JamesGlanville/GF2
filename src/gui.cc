@@ -97,7 +97,8 @@ void MyGLCanvas::Render(wxString example_text, int cycles)
     }
   */
 
-  // We've been drawing to the back buffer, flush the graphics pipeline and swap the back buffer to the front
+  // We've been drawing to the back buffer, flush the graphics
+  // pipeline and swap the back buffer to the front 
   glFlush();
   SwapBuffers();
 }
@@ -332,13 +333,19 @@ MyFrame::MyFrame(wxWindow *parent,
   topsizer->Add(disp_scroll, 1, wxEXPAND | wxALL, 10);
 
   wxBoxSizer *termwinsizer = new wxBoxSizer(wxHORIZONTAL);
-  text = new wxTextCtrl(this, wxID_ANY, wxT("blah"), wxDefaultPosition, wxSize(400,100));
+  text = new wxTextCtrl(this,
+			wxID_ANY,
+			wxT("blah"),
+			wxDefaultPosition,
+			wxSize(400,100),
+			wxTE_MULTILINE);
   wxStreamToTextRedirector redirect(text);
   termwinsizer->Add(text, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
   topsizer->Add(termwinsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
 
   cout << "display this text \n";
   cout << "then display this" << endl;
+  cout << "and a bit more to be sure" << endl;
 
   SetSizeHints(400, 400);
   SetSizer(topsizer);
@@ -391,7 +398,8 @@ void MyFrame::OnContButton(wxCommandEvent &event)
 
 void MyFrame::runnetwork(int ncycles)
 {
-  // Function to run the network, derived from corresponding function in userint.cc
+  // Function to run the network, derived from corresponding function
+  // in userint.cc
   bool ok = true;
   int n = ncycles;
 
