@@ -232,6 +232,18 @@ MyFrame::MyFrame(wxWindow *parent,
 		   10);
 
   switch_list = new wxComboBox(this, SWITCH_LIST, wxEmptyString);
+  
+  vector<string> switches;
+  string devname;
+  string devtype;
+
+  for (int i = 0; nmz->tablelength(); i++)
+    {
+      devname = nmz->getname(i));
+      cout << devname << endl;
+    }
+
+
   switch_list->Append(wxT("option1"));
   switch_list->Append(wxT("option2"));
   switch_list->Append(wxT("option3"));
@@ -258,11 +270,12 @@ MyFrame::MyFrame(wxWindow *parent,
       // get name as string, convert to char* then to wxstring
       add_monitor->Append(wxString::FromAscii(mmz->getmonprettyname(i).c_str()));
     }
-
-  //  add_monitor->Append(wxT("an unused monitor"));
-  //  add_monitor->Append(wxT("another unused monitor"));
   monitorsizer->Add(add_monitor, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
 
+  monitorsizer->Add(new wxStaticText(this, wxID_ANY, wxT("Remove Monitor:")),
+		    0,
+		    wxALL | wxALIGN_CENTER_VERTICAL,
+		    10);
   rem_monitor = new wxComboBox(this, MONITOR_REM, wxEmptyString);
   //  rem_monitor->Append(wxT("a used monitor"));
   //  rem_monitor->Append(wxT("another used monitor"));

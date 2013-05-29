@@ -36,9 +36,11 @@ public:
 
   void writename (name id);
     /* Prints out the given name on the console                            */
-    
+
   string getname (name id);
     /* Returns the string */
+    
+  int tablelength();
 
   int namelength (name id);
     /* Returns length ie number of characters in given name                */
@@ -50,6 +52,3 @@ public:
 };
 
 #endif /* names_h */
-
-
-

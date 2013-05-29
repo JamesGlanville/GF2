@@ -1337,6 +1337,11 @@ bool parser::createMonitor(name monitorName, name dev2id, name outid)
 	return PARSER_PASS
 }
 
+string parser::getswitch(int swnum)
+{
+	return dtz->getswitch(swnum);
+}
+
 parser::parser (
                 #ifndef PARSER_TEST
                 network* network_mod, 

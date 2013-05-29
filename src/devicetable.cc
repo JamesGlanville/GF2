@@ -30,6 +30,27 @@ name devicetable::lookup (namestring str,device_type type,numinputs numinput)
   return device_table.size() - 1;
 }
 
+string devicetable::getswitch(int swnum)
+{
+	int currentsw=0;
+	for (int i = 0; i < device_table.size();i++)
+	{
+		if (device_table[i].dt == SW)
+		{
+			if (swnum == currentsw)
+			{
+				return device_table[i].ns;
+			}
+			else
+			{
+				currentsw++;
+			}
+		}
+	}
+	
+	return "";
+}
+
 device_type devicetable::gettype(namestring str)
 {
  for(int i = 0; i < device_table.size(); i++) {

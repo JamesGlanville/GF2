@@ -45,7 +45,7 @@ void names::writename (name id)
 	{
 		cout << "Error, index out of range." << endl;
 	}}
-	
+
 string names::getname (name id)
 {
 	if (id < nametable.size())
@@ -58,7 +58,12 @@ string names::getname (name id)
 		return "";
 	}
 }
-	
+
+int names::tablelength()
+{
+	return nametable.size();
+}
+
 
 int names::namelength (name id)
 {
@@ -70,35 +75,3 @@ int names::namelength (name id)
 	{
 		cout << "Error, index out of range." << endl;
 	}	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
