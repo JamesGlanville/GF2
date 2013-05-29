@@ -26,8 +26,11 @@ class parser {
   names* nm_devicez;
   names* nm_monitorz;
   devicetable* dtz;
+  // Defined here so that devices aren't created if errors are already present, but some semantic checking can still be done
   int error_count;
+  // Defined here so that parsing functions can stop parsing if eof is found
   symbol stopped_at;
+  bool endOfSection;
   enum error {unknown, no_opening_brace, no_devices, one_device_required, 
               names_begin_letter, device_name_expected, number_param_expected, 
               not_valid_device, number_expected, device_not_defined, invalid_input,

@@ -9,6 +9,8 @@ bool test_file_parser::testFileDefinition (void)
   int num;
   bool error = 0;
   
+  cout << "Expected errors: \n";
+  
   smz->getsymbol(sym,id,num);
 
   if(sym != badsym)
@@ -46,6 +48,21 @@ bool test_file_parser::testFileDefinition (void)
       case closecurly:
         cout << "}";
         break;
+      case numsym:
+        cout << num;
+        break;
+      case fullstop:
+        cout << endl;
+        break;
+      case DEV:
+        cout << "DEVICES ";
+        break;
+      case CONN:
+        cout << "CONNECTIONS ";
+        break;
+      case MON:
+        cout << "MONITORS ";
+        break;
     }
     smz->getsymbol(sym,id,num);
   }
@@ -56,7 +73,7 @@ bool test_file_parser::testFileDefinition (void)
     return PARSER_FAIL; 
   }
   
-  cout << endl;
+  cout << endl << endl;
   return PARSER_PASS;  
 }
 

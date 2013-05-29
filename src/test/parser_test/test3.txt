@@ -1,0 +1,7 @@
+# Invalid device type line 6. Invalid param line 7 #
+{
+DeViceS
+
+                                                                {
+dtyp=dtyp;  
+aAa = NAND(17);
