@@ -39,6 +39,8 @@ public:
 
   string getname (name id);
     /* Returns the string */
+    
+  int tablelength();
 
   int namelength (name id);
     /* Returns length ie number of characters in given name                */
