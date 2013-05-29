@@ -17,7 +17,8 @@ bool parser::readin (void)
   name outid;
   int num;
   device_type current_device_type;
-  bool endOfSection = 1;
+  // For control flow through input file
+  endOfSection = 1;
   bool networkOK;
   vector <symbol> stop_syms;
   stopped_at = none;
@@ -26,6 +27,8 @@ bool parser::readin (void)
   // {
   if(parseToken(opencurly)) 
   {
+    // If eof is reached prematurely then no more parsing is performed
+    // stopped_at can be set by the parsing functions to deal with early eof
     if(stopped_at == eofsym) {error_count++;}
     else
     {
@@ -100,6 +103,7 @@ bool parser::readin (void)
   
   while(!endOfSection) 
   {
+    
     // =
     if(stopped_at == none) 
     {
@@ -120,6 +124,7 @@ bool parser::readin (void)
         }
       }
     }
+    
     // device type
     if(stopped_at == none) 
     {
@@ -128,7 +133,6 @@ bool parser::readin (void)
         if(stopped_at == eofsym) {error_count++;}
         else
         {
-          if(stopped_at == eofsym) return PARSER_FAIL;
           stop_syms.push_back(CONN);
           stop_syms.push_back(MON);
           stop_syms.push_back(opencurly);
@@ -141,6 +145,7 @@ bool parser::readin (void)
         }
       }
     }
+
     // create device - have to move testing for error_count before creation into function so that parameters are still parsed
     if(stopped_at == none) 
     {
@@ -149,7 +154,6 @@ bool parser::readin (void)
         if(stopped_at == eofsym) {error_count++;}
         else
         {
-          if(stopped_at == eofsym) return PARSER_FAIL;
           stop_syms.push_back(CONN);
           stop_syms.push_back(MON);
           stop_syms.push_back(opencurly);
@@ -523,6 +527,8 @@ symbol parser::stoppingSym (vector <symbol> stopping_syms/*, int &num_skipped*/)
     //num_skipped++;
     smz->getsymbol(sym,id,num);
   }
+  // If eof reached skip parsing
+  endOfSection = 1;
   return eofsym;
 }
 
@@ -638,7 +644,12 @@ bool parser::parseToken (symbol token)
         error_token = "ERRRORR";
     }
     smz->printError("Expected " + error_token);
-    if (sym == eofsym) stopped_at = eofsym;
+    // Stop parsing if eof is found
+    if (sym == eofsym) 
+    {
+      stopped_at = eofsym;
+      endOfSection = 1;
+    }
     return PARSER_FAIL;
   } 
   
@@ -672,6 +683,12 @@ bool parser::parseSectionHeader (symbol header)
       default:
         section_name = "ERRRORR";
     }
+    // Stop parsing if eof is found
+    if (sym == eofsym) 
+    {
+      stopped_at = eofsym;
+      endOfSection = 1;
+    }
     smz->printError("Expected " + section_name + " section header");
     return PARSER_FAIL;
   } 
@@ -703,6 +720,12 @@ bool parser::parseDeviceName (name &id)
     default:
       // Generic expected a name here error
       errorHandling(device_name_expected);
+      // Stop parsing if eof is found
+      if (sym == eofsym) 
+      {
+        stopped_at = eofsym;
+        endOfSection = 1;
+      }
       return PARSER_FAIL;
   }
   
@@ -715,7 +738,6 @@ bool parser::parseDeviceName (name &id, bool &endOfDevices)
   symbol sym;
   int num;
   name symid;
-  endOfDevices = 0;
   
   smz->getsymbol(sym,id,num);
   switch(sym) { 
@@ -740,6 +762,12 @@ bool parser::parseDeviceName (name &id, bool &endOfDevices)
     default:
       // Generic expected a name here error
       errorHandling(device_name_expected);
+      // Stop parsing if eof is found
+      if (sym == eofsym) 
+      {
+        stopped_at = eofsym;
+        endOfDevices = 1;
+      }
       return PARSER_FAIL;
   }
   return PARSER_PASS;
@@ -787,6 +815,12 @@ bool parser::parseDeviceType (device_type &current_device_type)
   }
   else
   {
+    // Stop parsing if eof is found
+    if (sym == eofsym) 
+    {
+      stopped_at = eofsym;
+      endOfSection = 1;
+    }
     errorHandling(not_valid_device);
     return PARSER_FAIL;
   }
@@ -809,6 +843,12 @@ bool parser::parseParam(int &param_value)
   else  
   {
     errorHandling(number_param_expected);
+    // Stop parsing if eof is found
+    if (sym == eofsym) 
+    {
+      stopped_at = eofsym;
+      endOfSection = 1;
+    }
     return PARSER_FAIL;
   }
   
@@ -987,6 +1027,12 @@ bool parser::parseConnInputName(name &devid, name &inpid, bool &endOfSection)
     default:
       // Generic device not defined error
       errorHandling(device_not_defined);
+      // Stop parsing if eof is found
+      if (sym == eofsym) 
+      {
+        stopped_at = eofsym;
+        endOfSection = 1;
+      }
       return PARSER_FAIL;
   }
   
@@ -1022,6 +1068,12 @@ bool parser::parseConnInputName(name &devid, name &inpid, bool &endOfSection)
   }
   else {
     errorHandling(invalid_input);
+    // Stop parsing if eof is found
+    if (sym == eofsym) 
+    {
+      stopped_at = eofsym;
+      endOfSection = 1;
+    }
     return PARSER_FAIL;
   }
   // Semantic checking of inputs 
@@ -1060,7 +1112,8 @@ bool parser::parseConnInputName(name &devid, name &inpid, bool &endOfSection)
         }
         else
         {
-          if (input.compare(ss.str())==0) {
+          if (input.compare(ss.str())==0) 
+          {
             errorHandling(more_inputs_than_defined);
             return PARSER_FAIL;
           }
@@ -1081,6 +1134,12 @@ bool parser::parseNumber(int &num)
   if(sym != numsym)
   {
     errorHandling(number_expected);
+    // Stop parsing if eof is found
+    if (sym == eofsym) 
+    {
+      stopped_at = eofsym;
+      endOfSection = 1;
+    }
     return PARSER_FAIL;
   }
   return PARSER_PASS;
@@ -1096,13 +1155,20 @@ bool parser::parseConnOutputName(name &devid, name &outid)
   // Retrieve device name
   smz->getsymbol(sym, devid, num);
   // Check it is valid
-  switch(sym) { 
+  switch(sym) 
+  { 
     case namesym:
       dt = dtz->gettype(nmz->getname(devid));    
       break;
     default:
       // Generic device not defined error
       errorHandling(device_name_expected);
+      // Stop parsing if eof is found
+      if (sym == eofsym) 
+      {
+        stopped_at = eofsym;
+        endOfSection = 1;
+      }
       return PARSER_FAIL;
   }
   
@@ -1133,14 +1199,22 @@ bool parser::parseConnOutputName(name &devid, name &outid)
   {
     case DTYPE:
       if(parseToken(fullstop)) return PARSER_FAIL;
+      
       smz->getsymbol(sym,outid,num);
       if (sym == namesym) {
         output = nmz->getname(outid);
       }
       else {
         errorHandling(invalid_output);
+        // Stop parsing if eof is found
+        if (sym == eofsym) 
+        {
+          stopped_at = eofsym;
+          endOfSection = 1;
+        }
         return PARSER_FAIL;
       }
+      
       if(output.compare("q")==0) {return PARSER_PASS;} 
       else if(output.compare("qbar")==0) {return PARSER_PASS;} 
       else 
@@ -1149,7 +1223,7 @@ bool parser::parseConnOutputName(name &devid, name &outid)
         return PARSER_FAIL;
       }
     default:
-      // For all other devices the output needs to be id=-1
+      // For all other devices the output needs to be id = -1, which is an empty string
       outid = -1;
   }
   return PARSER_PASS;  
@@ -1197,6 +1271,12 @@ bool parser::parseMonitorName (name &id)
     default:
       // Generic expected a name here error
       errorHandling(monitor_name_expected);
+      // Stop parsing if eof is found
+      if (sym == eofsym) 
+      {
+        stopped_at = eofsym;
+        endOfSection = 1;
+      }
       return PARSER_FAIL;
   }
   return PARSER_PASS;
@@ -1233,6 +1313,12 @@ bool parser::parseMonitorName (name &id, bool &endOfSection)
     default:
       // Generic expected a name here error
       errorHandling(device_name_expected);
+      // Stop parsing if eof is found
+      if (sym == eofsym) 
+      {
+        stopped_at = eofsym;
+        endOfSection = 1;
+      }
       return PARSER_FAIL;
   }
   return PARSER_PASS;

@@ -1,4 +1,4 @@
-# { #
+# DEVICES expected on line 5 #
 
 
                            {

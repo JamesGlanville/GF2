@@ -237,11 +237,11 @@ MyFrame::MyFrame(wxWindow *parent,
   string devname;
   string devtype;
 
-  //  for (int i = 0; nmz->nametable.size(); i++)
-  //    {
-  //      devname = nmz->getname(nmz->lookup(nmz->nametable[i]));
-  //      cout << devname << endl;
-  //    }
+  for (int i = 0; nmz->tablelength(); i++)
+    {
+      devname = nmz->getname(i));
+      cout << devname << endl;
+    }
 
 
   switch_list->Append(wxT("option1"));
