@@ -7,6 +7,8 @@
 
 using namespace std;
 
+wxTextCtrl* text;
+
 // MyGLCanvas //////////////////////////////////////////////////////////////////
 
 BEGIN_EVENT_TABLE(MyGLCanvas, wxGLCanvas)
@@ -219,6 +221,15 @@ MyFrame::MyFrame(wxWindow *parent,
 		 0,
 		 wxALL | wxEXPAND,
 		 10);
+		 
+  text = new wxTextCtrl(this,wxID_ANY,wxT("blah"));
+          wxStreamToTextRedirector redirect(text);
+
+//  topsizer->Add(text, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
+
+  //ctrlsizer->Add(*text, 0, wxALL|wxEXPAND,10);
+
+		 
   ctrlsizer->Add(new wxButton(this, CONT_BUTTON_ID, wxT("Continue")),
 		 0,
 		 wxALL | wxEXPAND,

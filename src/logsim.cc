@@ -5,6 +5,8 @@
 
 #define USE_GUI
 
+extern wxTextCtrl* text;
+
 IMPLEMENT_APP(MyApp)
   
 bool MyApp::OnInit()
@@ -35,14 +37,15 @@ bool MyApp::OnInit()
 #ifndef PARSER_TEST
   pmz = new parser(netz,dmz,mmz,smz,nmz);
 #endif
-
+    MyFrame *frame = new MyFrame(NULL, wxT("Logic simulator"), wxDefaultPosition,  wxSize(800, 600), nmz, dmz, mmz);
+        wxStreamToTextRedirector redirect(text);
   if (!pmz->readin ()) { // check the logic file parsed correctly
 #ifdef USE_GUI
     // glutInit cannot cope with Unicode command line arguments, so we pass
     // it some fake ASCII ones instead
     char **tmp1; int tmp2 = 0; glutInit(&tmp2, tmp1);
     // Construct the GUI
-    MyFrame *frame = new MyFrame(NULL, wxT("Logic simulator"), wxDefaultPosition,  wxSize(800, 600), nmz, dmz, mmz);
+
     frame->Show(true);
     return(true); // enter the GUI event loop
 #else
