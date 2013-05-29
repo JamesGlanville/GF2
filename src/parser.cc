@@ -72,7 +72,19 @@ bool parser::readin (void)
     stopped_at = none;
     if(parseToken(opencurly)) 
     {
-      error_count++;
+      if(stopped_at == eofsym) {error_count++;}
+      else
+      {
+        stop_syms.push_back(CONN);
+        stop_syms.push_back(MON);
+        stop_syms.push_back(opencurly);
+        stop_syms.push_back(closecurly);
+        stop_syms.push_back(semicol);
+        stopped_at = stoppingSym(stop_syms);
+        if(stopped_at == closecurly) endOfSection = 1;
+        stop_syms.clear();
+        error_count++;
+      }
     }
   }
   
@@ -225,7 +237,19 @@ bool parser::readin (void)
     stopped_at = none;
     if(parseToken(opencurly)) 
     {
-      error_count++;
+      if(stopped_at == eofsym) {error_count++;}
+      else
+      {
+        stop_syms.push_back(CONN);
+        stop_syms.push_back(MON);
+        stop_syms.push_back(opencurly);
+        stop_syms.push_back(closecurly);
+        stop_syms.push_back(semicol);
+        stopped_at = stoppingSym(stop_syms);
+        if(stopped_at == closecurly) endOfSection = 1;
+        stop_syms.clear();
+        error_count++;
+      }
     }
   }
   
@@ -368,7 +392,19 @@ bool parser::readin (void)
     stopped_at = none;
     if(parseToken(opencurly)) 
     {
-      error_count++;
+      if(stopped_at == eofsym) {error_count++;}
+      else
+      {
+        stop_syms.push_back(CONN);
+        stop_syms.push_back(MON);
+        stop_syms.push_back(opencurly);
+        stop_syms.push_back(closecurly);
+        stop_syms.push_back(semicol);
+        stopped_at = stoppingSym(stop_syms);
+        if(stopped_at == closecurly) endOfSection = 1;
+        stop_syms.clear();
+        error_count++;
+      }
     }
   }
   
@@ -524,6 +560,7 @@ symbol parser::stoppingSym (vector <symbol> stopping_syms/*, int &num_skipped*/)
     {
       if (sym == stopping_syms[i])
       {
+        cout << "stopped_at == " << sym << endl;
         return stopping_syms[i];
       }
     }
@@ -653,6 +690,12 @@ bool parser::parseToken (symbol token)
       stopped_at = eofsym;
       endOfSection = 1;
     }
+    // End section if a closecurly is found
+    if (sym == closecurly)
+    {
+      endOfSection = 1;
+      stopped_at = closecurly;
+    }
     return PARSER_FAIL;
   } 
   
@@ -748,8 +791,8 @@ bool parser::parseDeviceName (name &id, bool &endOfDevices)
 	  // Check that device name is not already used - will return non-zero if already in use
 	  if(nm_devicez->cvtname(nmz->getname(id))) 
 	  {
-		errorHandling(device_not_unique);
-		return PARSER_FAIL;
+		  errorHandling(device_not_unique);
+		  return PARSER_FAIL;
 	  }
 	  // Save in device nametable
       symid = nm_devicez->lookup(nmz->getname(id));      
