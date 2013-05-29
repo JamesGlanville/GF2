@@ -237,10 +237,10 @@ MyFrame::MyFrame(wxWindow *parent,
   string devname;
   string devtype;
 
-  for (int i = 0; nmz->tablelength(); i++)
+  for (int i = 0; i < nmz->tablelength(); i++)
     {
-      devname = nmz->getname(i));
-      cout << devname << endl;
+      devname = nmz->getname(i);
+      cout << devname " is a " << dmz->devkind(nmz->lookup(devname)) << endl;
     }
 
 
