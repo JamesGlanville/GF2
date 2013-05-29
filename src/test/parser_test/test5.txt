@@ -1,0 +1,11 @@
+# Expected openparen line 5. Device not defined line 11. Expected monitor name line 11#
+{
+Devices
+{
+clk6 = clK(8.7)
+
+
+
+
+;dt =dtype;
+}                      coNNections { dt.CleAr<= clk6; dt.datA <= dt.qbar;} monitors {}}

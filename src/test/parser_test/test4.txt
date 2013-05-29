@@ -1,0 +1,2 @@
+# No errors #
+{devicES{sw1 =sw(1);and1                    =AND(2);}coNNections{and1.i1 <=sw1;and1.I2<=sw1;}monitORs{mon1<=and1;}}

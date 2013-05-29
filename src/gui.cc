@@ -241,6 +241,7 @@ MyFrame::MyFrame(wxWindow *parent,
     {
       devname = nmz->getname(i);
       cout << devname " is a " << dmz->devkind(nmz->lookup(devname)) << endl;
+      //cout << devname << endl;
     }
 
 
