@@ -821,7 +821,7 @@ bool parser::parseDeviceType (device_type &current_device_type)
       stopped_at = eofsym;
       endOfSection = 1;
     }
-//    errorHandling(not_valid_device);
+    errorHandling(not_valid_device);
     return PARSER_FAIL;
   }
   return PARSER_PASS;

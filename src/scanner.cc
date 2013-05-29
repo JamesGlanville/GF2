@@ -155,6 +155,7 @@ void scanner::doComments()
 
 void scanner::printError(string errordesc)
 {
+	int r=1;
 	int errorloc=currentline.size()-1;
 	//For now:
 	cout << "Error: " << errordesc << " on line " << linenum << " at location (startat0) " << max((int)currentline.size()-1,0) << ":" << endl;
@@ -162,7 +163,7 @@ void scanner::printError(string errordesc)
 	{
 		cout << currentline;
 		currentline.clear();
-		while (!nextChar()){cout <<currentline;currentline.clear();}rewind();rewind();cout <<endl;
+		while (!nextChar()){r++;cout <<currentline;currentline.clear();}while(r){rewind();r--;}cout <<endl;
 		for (int i=0;i<errorloc;i++){cout << " ";}
 		cout << "^" << endl;
 	}
@@ -170,9 +171,8 @@ void scanner::printError(string errordesc)
 	{
 		cout << currentline.substr(currentline.size()-81,currentline.size()-1);
 		currentline.clear();
-	while (!nextChar()){cout <<currentline;currentline.clear();}
-		rewind();rewind();
-		for (int i=0;i<80-1;i++){cout << " ";}
+	while (!nextChar()){r++;cout <<currentline;currentline.clear();}
+while(r){rewind();r--;}		for (int i=0;i<80-1;i++){cout << " ";}
 		cout << "^" <<endl;
 	}
 }
