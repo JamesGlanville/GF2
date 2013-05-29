@@ -236,11 +236,18 @@ MyFrame::MyFrame(wxWindow *parent,
   vector<string> switches;
   string devname;
   string devtype;
+  cout << endl;
+  cout << endl;
+  cout << "Beginning switch list:" << endl;
 
   for (int i = 0; i < nmz->tablelength(); i++)
     {
       devname = nmz->getname(i);
-      cout << devname << " is a " << dmz->devkind(nmz->lookup(devname)) << endl;
+      //cout << devname << " is a " << dmz->devkind(nmz->lookup(devname)) << endl;
+      if (dmz->devkind(nmz->lookup(devname)) == aswitch)
+	{
+	  cout << devname << " is a switch" << endl;;
+	}
       //cout << devname << endl;
     }
 
