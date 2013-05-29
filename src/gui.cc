@@ -332,20 +332,24 @@ MyFrame::MyFrame(wxWindow *parent,
 
   topsizer->Add(disp_scroll, 1, wxEXPAND | wxALL, 10);
 
-  wxBoxSizer *termwinsizer = new wxBoxSizer(wxHORIZONTAL);
+  wxBoxSizer *termwinsizer = new wxBoxSizer(wxVERTICAL);
+  termwinsizer->Add(new wxStaticText(this, wxID_ANY, wxT("Messages:")),
+		    0,
+		    wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
+		    10);
   text = new wxTextCtrl(this,
 			wxID_ANY,
 			wxT("blah"),
 			wxDefaultPosition,
 			wxSize(400,100),
-			wxTE_MULTILINE);
+			wxTE_MULTILINE | wxHSCROLL);
   wxStreamToTextRedirector redirect(text);
   termwinsizer->Add(text, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
   topsizer->Add(termwinsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
 
-  cout << "display this text \n";
-  cout << "then display this" << endl;
-  cout << "and a bit more to be sure" << endl;
+  cout << endl << "Lorem ipsum dolor sit amet, consectetur adipiscing elit." << endl;
+  cout << "Morbi viverra purus nec leo blandit vel mattis turpis bibendum. Integer dictum eleifend tellus, sit amet commodo nibh scelerisque nec." << endl;
+  cout << " Vivamus malesuada sodales justo, ut luctus nulla molestie vitae. Nulla rutrum urna quis magna tristique rhoncus. Etiam auctor consequat ligula eget placerat. Integer vulputate, velit vitae venenatis convallis, nibh nibh euismod leo, in mollis quam massa sit amet ipsum." << endl;
 
   SetSizeHints(400, 400);
   SetSizer(topsizer);
