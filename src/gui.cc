@@ -239,7 +239,7 @@ MyFrame::MyFrame(wxWindow *parent,
 
   for (int i = 0; nmz->tablelength(); i++)
     {
-      devname = nmz->getname(i));
+      devname = nmz->getname(i);
       cout << devname << endl;
     }
 
