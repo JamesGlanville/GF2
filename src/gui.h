@@ -44,6 +44,7 @@ class MyFrame: public wxFrame
   wxString tracename;
   string devname;
 
+  wxBoxSizer *topsizer;
   wxBoxSizer *toptracesizer;
   
   wxSpinCtrl *spin_cycles;
@@ -77,7 +78,7 @@ class MyGLCanvas: public wxGLCanvas
   MyGLCanvas(wxWindow *parent, wxWindowID id = wxID_ANY, monitor* monitor_mod = NULL, names* names_mod = NULL,
 	     const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0,
 	     const wxString& name = wxT("MyGLCanvas")); // constructor
-  void Render(wxString example_text = wxT(""), int cycles = -1); // function to draw canvas contents
+  void Render(int monren = 0, int cycles = -1); // function to draw canvas contents
  private:
   bool init;                         // has the GL context been initialised?
   int cyclesdisplayed;               // how many simulation cycles have been displayed

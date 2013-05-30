@@ -39,7 +39,7 @@ MyGLCanvas::MyGLCanvas(wxWindow *parent,
   cyclesdisplayed = -1;
 }
 
-void MyGLCanvas::Render(wxString example_text, int cycles)
+void MyGLCanvas::Render(int monren, int cycles)
   // Draws canvas contents - the following example writes the string
   // "example text" onto the canvas and draws a signal trace.
   // The trace is artificial if the simulator has not yet been
@@ -65,7 +65,7 @@ void MyGLCanvas::Render(wxString example_text, int cycles)
     glColor3f(1.0, 0.0, 0.0);
     glBegin(GL_LINE_STRIP);
     for (i=0; i<cyclesdisplayed; i++) {
-      if (mmz->getsignaltrace(0, i, s)) {
+      if (mmz->getsignaltrace(monren, i, s)) {
 	if (s==low) y = 10.0;
 	if (s==high) y = 30.0;
 	glVertex2f(20*i+10.0, y);
@@ -74,7 +74,9 @@ void MyGLCanvas::Render(wxString example_text, int cycles)
     }
     glEnd();
 
-  } else { // draw an artificial trace
+  }
+  /*
+  else { // draw an artificial trace
 
     glColor3f(0.0, 1.0, 0.0);
     glBegin(GL_LINE_STRIP);
@@ -87,6 +89,7 @@ void MyGLCanvas::Render(wxString example_text, int cycles)
     glEnd();
 
   }
+  */
 
   /*
   // Example of how to use GLUT to draw text on the canvas
@@ -129,8 +132,8 @@ void MyGLCanvas::OnPaint(wxPaintEvent& event)
 
   wxPaintDC dc(this); // required for correct refreshing under MS windows
   GetClientSize(&w, &h);
-  text.Printf(wxT("Canvas redrawn by OnPaint callback, canvas size is %d by %d"), w, h);
-  Render(text);
+  //text.Printf(wxT("Canvas redrawn by OnPaint callback, canvas size is %d by %d"), w, h);
+  Render();
 }
 
 void MyGLCanvas::OnSize(wxSizeEvent& event)
@@ -145,6 +148,7 @@ void MyGLCanvas::OnSize(wxSizeEvent& event)
 void MyGLCanvas::OnMouse(wxMouseEvent& event)
   // Callback function for mouse events inside the GL canvas
 {
+  /*
   wxString text;
   int w, h;
   GetClientSize(&w, &h);
@@ -163,6 +167,7 @@ void MyGLCanvas::OnMouse(wxMouseEvent& event)
 
   if (event.ButtonDown() || event.ButtonUp() || event.Dragging() || event.Leaving())
     Render(text);
+  */
 }
 
 // MyFrame /////////////////////////////////////////////////////////////////////
@@ -212,7 +217,7 @@ MyFrame::MyFrame(wxWindow *parent,
   menuBar->Append(helpMenu, wxT("&Help"));
   SetMenuBar(menuBar);
 
-  wxBoxSizer *topsizer = new wxBoxSizer(wxVERTICAL);
+  topsizer = new wxBoxSizer(wxVERTICAL);
 
   wxBoxSizer *filesizer = new wxBoxSizer(wxHORIZONTAL);
   filesizer->Add(new wxButton(this, FILE_BUTTON, wxT("Select File")),
@@ -430,7 +435,7 @@ void MyFrame::runnetwork(int ncycles)
   bool ok = true;
   int n = ncycles;
 
-  cout << "in run network function." << endl;
+  //cout << "in run network function." << endl;
 
   while ((n > 0) && ok) {
     dmz->executedevices (ok);
@@ -443,7 +448,7 @@ void MyFrame::runnetwork(int ncycles)
       cout << "Error: network is oscillating" << endl;
   }
 
-  cout << "finished while" << endl;
+  //cout << "finished while" << endl;
   if (ok)
     {
       cyclescompleted = cyclescompleted + ncycles;
@@ -454,11 +459,18 @@ void MyFrame::runnetwork(int ncycles)
     }
   cout << "network has run " << cyclescompleted << " cycles." << endl;
 
+  int mon;
+
+  // draw each trace
   for (int i=0; toptracesizer->IsShown(vtracesizers[i]); i++)
     {
-        canvases[i]->Render(wxT(""), cyclescompleted);
+      mon = 0;
+      while (mmz->getmonprettyname(mon) != (string)tracelabels[i]->GetLabel().mb_str() && mon < 5)
+	{
+	  mon++;
+	}
+      canvases[i]->Render(mon, cyclescompleted);
     }
-
 }
 
 void MyFrame::OnSwitchSelect(wxCommandEvent& event)
@@ -508,6 +520,7 @@ void MyFrame::OnAddMonitor(wxCommandEvent& event)
   vtracesizers[i]->Layout();
   toptracesizer->Show(vtracesizers[i], true, true);
   toptracesizer->Layout();
+  topsizer->Layout();
 
   add_monitor->Delete(add_monitor->FindString(add_monitor->GetValue()));
   add_monitor->SetValue(wxT(""));
@@ -527,6 +540,7 @@ void MyFrame::OnRemMonitor(wxCommandEvent& event)
   toptracesizer->Hide(vtracesizers[i
 ], true);
   toptracesizer->Layout();
+  topsizer->Layout();
 
   rem_monitor->Delete(rem_monitor->FindString(rem_monitor->GetValue()));
   rem_monitor->SetValue(wxT(""));
