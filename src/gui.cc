@@ -324,11 +324,11 @@ MyFrame::MyFrame(wxWindow *parent,
 			wxID_ANY,
 			wxT(""),
 			wxDefaultPosition,
-			wxSize(400,100),
+			wxDefaultSize,
 			wxTE_MULTILINE | wxHSCROLL);
   wxStreamToTextRedirector redirect(textout);
-  termwinsizer->Add(textout, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
-  topsizer->Add(termwinsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
+  termwinsizer->Add(textout, 1, wxEXPAND | wxALL, 10);
+  topsizer->Add(termwinsizer, 1, wxEXPAND | wxALL, 10);
 
   /*
   cout << endl << "Lorem ipsum dolor sit amet, consectetur adipiscing elit." << endl;
