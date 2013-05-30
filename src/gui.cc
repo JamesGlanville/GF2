@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <wx/font.h>
 
 using namespace std;
 
@@ -40,11 +41,6 @@ MyGLCanvas::MyGLCanvas(wxWindow *parent,
 }
 
 void MyGLCanvas::Render(int monren, int cycles)
-  // Draws canvas contents - the following example writes the string
-  // "example text" onto the canvas and draws a signal trace.
-  // The trace is artificial if the simulator has not yet been
-  // run. When the simulator is run, the number of cycles is passed as
-  // a parameter and the first monitor trace is displayed.
 {
   float y;
   unsigned int i;
@@ -58,7 +54,6 @@ void MyGLCanvas::Render(int monren, int cycles)
     init = true;
   }
   glClear(GL_COLOR_BUFFER_BIT);
-
   
   if ((cyclesdisplayed >= 0) && (mmz->moncount() > 0)) {
     // draw the first monitor signal, get trace from monitor class
@@ -122,28 +117,7 @@ void MyGLCanvas::OnSize(wxSizeEvent& event)
 
 void MyGLCanvas::OnMouse(wxMouseEvent& event)
   // Callback function for mouse events inside the GL canvas
-{
-  /*
-  wxString text;
-  int w, h;
-  GetClientSize(&w, &h);
-  if (event.ButtonDown())
-    text.Printf(wxT("Mouse button %d pressed at %d %d"),
-		event.GetButton(), event.m_x, h-event.m_y);
-  if (event.ButtonUp())
-    text.Printf(wxT("Mouse button %d released at %d %d"),
-		event.GetButton(), event.m_x, h-event.m_y);
-  if (event.Dragging())
-    text.Printf(wxT("Mouse dragged to %d %d"),
-		event.m_x, h-event.m_y);
-  if (event.Leaving())
-    text.Printf(wxT("Mouse left window at %d %d"),
-		event.m_x, h-event.m_y);
-
-  if (event.ButtonDown() || event.ButtonUp() || event.Dragging() || event.Leaving())
-    Render(text);
-  */
-}
+{}
 
 // MyFrame /////////////////////////////////////////////////////////////////////
 
@@ -178,10 +152,11 @@ MyFrame::MyFrame(wxWindow *parent,
   nmz = names_mod;
   dmz = devices_mod;
   mmz = monitor_mod;
-  if (nmz == NULL || dmz == NULL || mmz == NULL) {
-    cout << "Cannot operate GUI without names, devices and monitor classes" << endl;
-    exit(1);
-  }
+  if (nmz == NULL || dmz == NULL || mmz == NULL)
+    {
+      cout << "Cannot operate GUI without names, devices and monitor classes" << endl;
+      exit(1);
+    }
 
   wxMenu *fileMenu = new wxMenu;
   fileMenu->Append(wxID_EXIT, wxT("&Quit\tCtrl-Q"));
@@ -247,17 +222,14 @@ MyFrame::MyFrame(wxWindow *parent,
 		    wxALL | wxALIGN_CENTER_VERTICAL,
 		    10);
   rem_monitor = new wxComboBox(this, MONITOR_REM, wxEmptyString);
-  //  rem_monitor->Append(wxT("a used monitor"));
-  //  rem_monitor->Append(wxT("another used monitor"));
   monitorsizer->Add(rem_monitor, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
   topsizer->Add(monitorsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
-
 
   wxScrolledWindow* disp_scroll = new wxScrolledWindow(this,
 						       -1,
 						       wxDefaultPosition,
 						       wxDefaultSize,
-				   wxSUNKEN_BORDER | wxHSCROLL | wxVSCROLL | wxFULL_REPAINT_ON_RESIZE);
+						       wxSUNKEN_BORDER | wxHSCROLL | wxVSCROLL | wxFULL_REPAINT_ON_RESIZE);
 
   toptracesizer = new wxBoxSizer(wxVERTICAL);
 
@@ -301,6 +273,9 @@ MyFrame::MyFrame(wxWindow *parent,
 			wxDefaultPosition,
 			wxDefaultSize,
 			wxTE_MULTILINE | wxHSCROLL);
+  //textout->SetDefaultStyle(wxTextAttr(wxFONTFAMILY_TELETYPE));
+  wxFont * monofont = new wxFont(8,wxFONTFAMILY_TELETYPE,wxFONTWEIGHT_NORMAL,false,wxEmptyString,wxFONTENCODING_DEFAULT);
+  this->SetFont(*monofont);
   wxStreamToTextRedirector redirect(textout);
   termwinsizer->Add(textout, 1, wxEXPAND | wxALL, 10);
   topsizer->Add(termwinsizer, 1, wxEXPAND | wxALL, 10);

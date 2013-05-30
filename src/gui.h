@@ -55,12 +55,13 @@ class MyFrame: public wxFrame
   wxComboBox *add_monitor;
   wxComboBox *rem_monitor;
   wxWindow *disp_scroll;
-  wxTextCtrl *text;
+
   names *nmz;                             // pointer to names class
   devices *dmz;                           // pointer to devices class
   monitor *mmz;                           // pointer to monitor class
   int cyclescompleted;                    // how many simulation cycles have been completed
   void runnetwork(int ncycles);           // function to run the logic network
+
   void OnExit(wxCommandEvent& event);     // callback for exit menu item
   void OnAbout(wxCommandEvent& event);    // callback for about menu item
   //  void OnFileButton(wxCommandEvent &event);
