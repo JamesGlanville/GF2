@@ -170,8 +170,11 @@ void MyGLCanvas::OnMouse(wxMouseEvent& event)
 BEGIN_EVENT_TABLE(MyFrame, wxFrame)
   EVT_MENU(wxID_EXIT,       MyFrame::OnExit)
   EVT_MENU(wxID_ABOUT,      MyFrame::OnAbout)
+  EVT_BUTTON(FILE_BUTTON, MyFrame::OnFileButton)
+  EVT_BUTTON(LOAD_BUTTON, MyFrame::OnLoadButton)
   EVT_BUTTON(RUN_BUTTON_ID, MyFrame::OnRunButton)
   EVT_BUTTON(CONT_BUTTON_ID, MyFrame::OnContButton)
+  EVT_COMBOBOX(SWITCH_LIST, MyFrame::OnSwitchSelect)
   EVT_COMBOBOX(SWITCH_OPTION, MyFrame::OnSwitchOption)
   EVT_COMBOBOX(MONITOR_ADD, MyFrame::OnAddMonitor)
   EVT_COMBOBOX(MONITOR_REM, MyFrame::OnRemMonitor)
@@ -210,22 +213,28 @@ MyFrame::MyFrame(wxWindow *parent,
 
   wxBoxSizer *topsizer = new wxBoxSizer(wxVERTICAL);
 
+  wxBoxSizer *filesizer = new wxBoxSizer(wxHORIZONTAL);
+  filesizer->Add(new wxButton(this, FILE_BUTTON, wxT("Select File")),
+		 0,
+		 wxALL | wxALIGN_CENTER_VERTICAL,
+		 10);
+  filesizer->Add(new wxButton(this, LOAD_BUTTON, wxT("Load Data")),
+		 0,
+		 wxALL | wxALIGN_CENTER_VERTICAL,
+		 10);
+  topsizer->Add(filesizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
+
   wxBoxSizer *ctrlsizer = new wxBoxSizer(wxHORIZONTAL);
   ctrlsizer->Add(new wxStaticText(this, wxID_ANY, wxT("Cycles:")),
 		 0,             /* make vertically unstrechable */
 		 wxALL | wxALIGN_CENTER_VERTICAL,         /* border all around */
 		 10);           /* border size */
-
   spin_cycles = new wxSpinCtrl(this, CYCLES_SPIN, wxString(wxT("10")));
   ctrlsizer->Add(spin_cycles, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
   ctrlsizer->Add(new wxButton(this, RUN_BUTTON_ID, wxT("Run")),
 		 0,
 		 wxALL | wxEXPAND,
 		 10);
-		 
-
-
-		 
   ctrlsizer->Add(new wxButton(this, CONT_BUTTON_ID, wxT("Continue")),
 		 0,
 		 wxALL | wxEXPAND,
@@ -237,38 +246,12 @@ MyFrame::MyFrame(wxWindow *parent,
 		   0,
 		   wxALL | wxALIGN_CENTER_VERTICAL,
 		   10);
-
   switch_list = new wxComboBox(this, SWITCH_LIST, wxEmptyString);
-  
-  vector<string> switches;
-  string devname;
-  string devtype;
-  cout << endl;
-  cout << endl;
-  cout << "Beginning switch list:" << endl;
-
-  for (int i = 0; i < nmz->tablelength(); i++)
-    {
-      devname = nmz->getname(i);
-      cout << devname << " is a " << dmz->devkind(nmz->lookup(devname)) << endl;
-      if (dmz->devkind(nmz->lookup(devname)) == aswitch)
-	{
-	  cout << devname << " is a switch" << endl;;
-	}
-      //cout << devname << endl;
-    }
-
-  switch_list->Append(wxT("option1"));
-  switch_list->Append(wxT("option2"));
-  switch_list->Append(wxT("option3"));
-  switch_list->Append(wxT("option4"));
   switchsizer->Add(switch_list, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
-
   switch_option = new wxComboBox(this, SWITCH_OPTION, wxEmptyString);
   switch_option->Append(wxT("HIGH"));
   switch_option->Append(wxT("LOW"));
   switchsizer->Add(switch_option, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
-
   topsizer->Add(switchsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
 
   wxBoxSizer *monitorsizer = new wxBoxSizer(wxHORIZONTAL);
@@ -276,19 +259,8 @@ MyFrame::MyFrame(wxWindow *parent,
 		    0,
 		    wxALL | wxALIGN_CENTER_VERTICAL,
 		    10);
-
   add_monitor = new wxComboBox(this, MONITOR_ADD, wxEmptyString);
-  cout << "got to this bit" << endl;
-  cout << "number of monitors set is: " << mmz->moncount() << endl;
-  
-  for (int i=0; i < mmz->moncount(); i++)
-    {
-      // get name as string, convert to char* then to wxstring
-      cout << "got here" << endl;
-      add_monitor->Append(wxString::FromAscii(mmz->getmonprettyname(i).c_str()));
-    }
   monitorsizer->Add(add_monitor, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
-
   monitorsizer->Add(new wxStaticText(this, wxID_ANY, wxT("Remove Monitor:")),
 		    0,
 		    wxALL | wxALIGN_CENTER_VERTICAL,
@@ -297,7 +269,6 @@ MyFrame::MyFrame(wxWindow *parent,
   //  rem_monitor->Append(wxT("a used monitor"));
   //  rem_monitor->Append(wxT("another used monitor"));
   monitorsizer->Add(rem_monitor, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
-
   topsizer->Add(monitorsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
 
 
@@ -383,6 +354,38 @@ void MyFrame::OnAbout(wxCommandEvent &event)
 //   canvas->Render(wxT("Run button pressed"), cyclescompleted);
 // }
 
+void MyFrame::OnFileButton(wxCommandEvent &event)
+{
+
+}
+
+void MyFrame::OnLoadButton(wxCommandEvent &event)
+{
+  // get switches and put in the switches dialog box
+  int i = 0;  
+  while (dmz->getswitch(i).compare("") != 0)
+    {
+      //wxStreamToTextRedirector redirect(text);
+      //cout << dmz->getswitch(i) << " is a switch." << endl;
+      if(switch_list->FindString(wxString::FromAscii(dmz->getswitch(i).c_str())) == -1)
+	{
+	  switch_list->Append(wxString::FromAscii(dmz->getswitch(i).c_str()));
+	}
+      i++;
+    }
+
+
+  // get monitors and put them in the add monitors dialog box
+  for (int i=0; i < mmz->moncount(); i++)
+    {
+      if(add_monitor->FindString(wxString::FromAscii(mmz->getmonprettyname(i).c_str())) == -1)
+	{
+	  // get name as string, convert to char* then to wxstring
+	  add_monitor->Append(wxString::FromAscii(mmz->getmonprettyname(i).c_str()));
+	}
+    }
+}
+
 void MyFrame::OnRunButton(wxCommandEvent &event)
 {
   // run network from scratch for selected number of cycles.
@@ -429,14 +432,36 @@ void MyFrame::runnetwork(int ncycles)
     }
 }
 
+void MyFrame::OnSwitchSelect(wxCommandEvent& event)
+{
+  
+}
+
 void MyFrame::OnSwitchOption(wxCommandEvent& event)
 {
-  cout << "switch: " << switch_list->GetValue().ToAscii() << " set to " << switch_option->GetValue().ToAscii() << endl;
-  //  cout << "got to OnSwitchOption callback" << endl;
-  //  cout << "switch selected: " << switch_list->GetValue().ToAscii() << endl;
-  //  cout << "switch value: " << switch_option->GetValue().ToAscii() << endl;
+  wxStreamToTextRedirector redirect(text);
 
-
+  bool ok;
+  if (switch_option->GetValue() == wxT("HIGH"))
+    {
+      dmz->setswitch(nmz->lookup((string)switch_list->GetValue().mb_str()), high, ok);
+      if (ok)
+	cout << "switch \"" << switch_list->GetValue().ToAscii()
+	     << "\" set to HIGH" << endl;
+      else
+	cout << "Error: switch \"" << switch_list->GetValue().ToAscii()
+	     << "\" not found." << endl;
+    }
+  else if (switch_option->GetValue() == wxT("LOW"))
+    {
+      dmz->setswitch(nmz->lookup((string)switch_list->GetValue().mb_str()), low, ok);
+      if (ok)
+	cout << "switch \"" << switch_list->GetValue().ToAscii()
+	     << "\" set to LOW" << endl;
+      else
+	cout << "Error: switch \"" << switch_list->GetValue().ToAscii()
+	     << "\" not found." << endl;
+    }
 }
 
 void MyFrame::OnAddMonitor(wxCommandEvent& event)

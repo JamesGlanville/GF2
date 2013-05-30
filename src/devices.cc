@@ -419,7 +419,7 @@ devicekind devices::devkind (name id)
 {
   devicekind d;
   d = aswitch;
-  while ((d != baddevice) && (dtab[d] != id))
+  while ((d != baddevice) && (dtab[d] != id)) 
     d = static_cast<devicekind>(d + 1);
   return (d);
 }
@@ -442,10 +442,11 @@ void devices::debug (bool on)
  * Registers the names of all the possible devices.
  * 
  */
-devices::devices (names* names_mod, network* net_mod)
+devices::devices (names* names_mod, network* net_mod, devicetable* dt_mod)
 {
   nmz = names_mod;
   netz = net_mod;
+  dtz = dt_mod;
   dtab[aswitch]   =  nmz->lookup("switch");
   dtab[aclock]    =  nmz->lookup("clock");
   dtab[andgate]   =  nmz->lookup("and");
@@ -464,4 +465,13 @@ devices::devices (names* names_mod, network* net_mod)
   qbarpin = nmz->lookup("qbar");
 }
 
+/***********************************************************************
+ * 
+ * Allows the GUI to access the switch names
+ * 
+ */
+string devices::getswitch(int swnum)
+{
+  return dtz->getswitch(swnum);
+}
 
