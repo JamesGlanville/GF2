@@ -41,6 +41,7 @@ class MyFrame: public wxFrame
 
   wxString tracesizer;
   wxString tracename;
+  string devname;
 
   wxSpinCtrl *spin_cycles;
   wxComboBox *switch_list;
@@ -60,6 +61,7 @@ class MyFrame: public wxFrame
   void OnLoadButton(wxCommandEvent &event);
   void OnRunButton(wxCommandEvent &event);
   void OnContButton(wxCommandEvent &event);
+  void OnSwitchSelect(wxCommanndEvent& event);
   void OnSwitchOption(wxCommandEvent& event);
   void OnAddMonitor(wxCommandEvent& event);
   void OnRemMonitor(wxCommandEvent& event);
