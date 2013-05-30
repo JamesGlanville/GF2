@@ -362,6 +362,7 @@ void MyFrame::OnFileButton(wxCommandEvent &event)
 void MyFrame::OnLoadButton(wxCommandEvent &event)
 {
   // get switches and put in the switches dialog box
+  /*
   for (int i = 0; i < nmz->tablelength(); i++)
     {
       devname = nmz->getname(i);
@@ -372,6 +373,16 @@ void MyFrame::OnLoadButton(wxCommandEvent &event)
 	  switch_list->Append(wxString::FromAscii(devname.c_str()));
 	}
     }
+  */
+  // get switches method attempt 2...
+  /*
+ int i = 0;  
+  while (dmz->getswitch(i).compare("") != 0)
+    {
+      cout << dmz->getswitch(i) << " is a switch." << endl;
+      switch_list->Append(wxString::FromAscii(dmz->getswitch(i).c_str()));
+    }
+  */
 
   // get monitors and put them in the add monitors dialog box
   for (int i=0; i < mmz->moncount(); i++)
@@ -427,7 +438,7 @@ void MyFrame::runnetwork(int ncycles)
     }
 }
 
-void MyFrame::OnSwitchSelect(wxCommanndEvent& event)
+void MyFrame::OnSwitchSelect(wxCommandEvent& event)
 {
   
 }

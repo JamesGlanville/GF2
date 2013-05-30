@@ -61,7 +61,7 @@ class MyFrame: public wxFrame
   void OnLoadButton(wxCommandEvent &event);
   void OnRunButton(wxCommandEvent &event);
   void OnContButton(wxCommandEvent &event);
-  void OnSwitchSelect(wxCommanndEvent& event);
+  void OnSwitchSelect(wxCommandEvent& event);
   void OnSwitchOption(wxCommandEvent& event);
   void OnAddMonitor(wxCommandEvent& event);
   void OnRemMonitor(wxCommandEvent& event);
