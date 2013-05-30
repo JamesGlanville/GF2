@@ -12,7 +12,7 @@ using namespace std;
 bool parser::readin (void)
 {
   wxStreamToTextRedirector redirect(textout);
-  cout << "Hello" << endl;
+
   // Stores parsing function output
   name id;
   name dev1id;
@@ -528,13 +528,6 @@ bool parser::readin (void)
     cout << "\nError count is " << error_count << endl; 
     return PARSER_FAIL;
   }
-  
-  string dname;
-  devicekind dk;
-  dname = nmz->getname(20);
-  cout << dname << endl; 
-  dk = dmz->devkind(20);
-  cout << dk << endl;
   
   return PARSER_PASS;
 }

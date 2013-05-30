@@ -8,7 +8,7 @@
 #include "devices.h"
 #include "monitor.h"
 //#define PARSER_TEST
-#define verbose
+//#define verbose
 #include <iostream>
 #include <sstream>
 #include "scanner.h"
