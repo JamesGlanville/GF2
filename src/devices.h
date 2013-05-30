@@ -3,13 +3,15 @@
 
 #include "names.h"
 #include "network.h"
+#include "devicetable.h"
 
 class devices{
   names* nmz;      // the version of the names module we use.
-  network* netz;   // the version of the network module we use.  
+  network* netz;   // the version of the network module we use. 
+  devicetable* dtz; // the device table that is filled by the parser 
   
-  typedef name devicetable[baddevice + 1]; 
-  devicetable dtab;
+  typedef name devtable[baddevice + 1]; 
+  devtable dtab;
   bool        steadystate;
   name        clkpin, datapin, setpin;
   name        clrpin, qpin, qbarpin;     /* Input and Output Pin names */
@@ -55,8 +57,11 @@ public:
   void debug (bool on);
     /* Used to set debugging switch.                                       */
  
-  devices (names* names_mod, network* net_mod);
+  devices (names* names_mod, network* net_mod, devicetable* dt_mod);
     /* Called to initialise module.                                        */
+
+  string getswitch(int swnum);
+    /* Wrapper function for device getswitch                               */
 };
 
 #endif /* devices_h */

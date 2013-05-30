@@ -75,9 +75,6 @@ class parser {
   symbol stoppingSym (vector <symbol> stopping_syms);
 
  public:
-  // Wrapper function for device getswitch
-  string getswitch(int swnum);
-
   bool readin();
     /* Reads the definition of the logic system and builds the             */
     /* corresponding internal representation via calls to the 'Network'    */
@@ -90,7 +87,8 @@ class parser {
           monitor* monitor_mod, 
           #endif
           scanner* scanner_mod, 
-          names* name_table);
+          names* name_table,
+          devicetable* dt_mod);
     /* the constructor takes pointers to various other classes as parameters */
 };
 

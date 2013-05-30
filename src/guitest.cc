@@ -10,7 +10,8 @@ bool MyApp::OnInit()
   // Construct the four classes required by the innards of the logic simulator
   nmz = new names();
   netz = new network(nmz);
-  dmz = new devices(nmz, netz);
+  dtz = new devicetable();
+  dmz = new devices(nmz, netz, dtz);
   mmz = new monitor(nmz, netz);
 
   // glutInit cannot cope with Unicode command line arguments, so we pass

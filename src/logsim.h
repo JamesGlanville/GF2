@@ -19,6 +19,7 @@ class MyApp: public wxApp
   monitor *mmz;  // pointer to the monitor class
   scanner *smz;  // pointer to the scanner class
   parser *pmz;   // pointer to the parser class
+  devicetable *dtz;
 };
 
 #endif /* logsim_h */

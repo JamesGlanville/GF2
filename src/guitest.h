@@ -16,6 +16,7 @@ class MyApp: public wxApp
   network *netz; // pointer to the network class
   devices *dmz;  // pointer to the devices class
   monitor *mmz;  // pointer to the monitor class
+  devicetable *dtz;
 };
 
 #endif /* guitest_h */
