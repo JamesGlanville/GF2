@@ -535,15 +535,37 @@ void MyFrame::OnRemMonitor(wxCommandEvent& event)
     {
       i++;
     }
-  tracelabels[i]->SetLabel(wxT(""));
-  vtracesizers[i]->Layout();
-  toptracesizer->Hide(vtracesizers[i
-], true);
+
+  // bump down all traces above to fill empty slot
+  // first, find how many are shown below:
+  int j = i+1;
+  while(toptracesizer->IsShown(vtracesizers[j]) && j<10)
+    {
+      j++;
+    }
+  j = j-i-1;			// there are now j below emptied trace
+  for(int k=0; k<j; k++)
+    {
+      tracelabels[i+k]->SetLabel(tracelabels[i+k+1]->GetLabel());
+      vtracesizers[i+k]->Layout();
+    }
+  tracelabels[i+j]->SetLabel(wxT(""));
+  vtracesizers[i+j]->Layout();
+  toptracesizer->Hide(vtracesizers[i+j], true);
   toptracesizer->Layout();
   topsizer->Layout();
 
+  /*
+  tracelabels[i]->SetLabel(wxT(""));
+  vtracesizers[i]->Layout();
+  toptracesizer->Hide(vtracesizers[i], true);
+  toptracesizer->Layout();
+  topsizer->Layout();
+  */
+
   rem_monitor->Delete(rem_monitor->FindString(rem_monitor->GetValue()));
   rem_monitor->SetValue(wxT(""));
+  runnetwork(0);
   //cout << "Remove trace at monitor point: " << rem_monitor->GetValue().ToAscii() << endl;
 }
 
