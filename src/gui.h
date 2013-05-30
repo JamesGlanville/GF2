@@ -38,11 +38,14 @@ class MyFrame: public wxFrame
  private:
   vector<wxBoxSizer*> vtracesizers;       /* Vector to hold sizers for traces */
   vector<MyGLCanvas*> canvases;	          /* vector to hold canvases */
+  vector<wxStaticText*> tracelabels;
 
   wxString tracesizer;
   wxString tracename;
   string devname;
 
+  wxBoxSizer *toptracesizer;
+  
   wxSpinCtrl *spin_cycles;
   wxComboBox *switch_list;
   wxComboBox *switch_option;
@@ -65,7 +68,6 @@ class MyFrame: public wxFrame
   void OnSwitchOption(wxCommandEvent& event);
   void OnAddMonitor(wxCommandEvent& event);
   void OnRemMonitor(wxCommandEvent& event);
-  //  void DrawTraces(names *names_mod, devices *devices_mod, monitor *monitor_mod);
   DECLARE_EVENT_TABLE()
 };
     

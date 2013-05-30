@@ -276,14 +276,37 @@ MyFrame::MyFrame(wxWindow *parent,
 						       -1,
 						       wxDefaultPosition,
 						       wxDefaultSize,
-				   wxSUNKEN_BORDER | wxHSCROLL | wxVSCROLL);
+				   wxSUNKEN_BORDER | wxHSCROLL | wxVSCROLL | wxFULL_REPAINT_ON_RESIZE);
 
-  wxBoxSizer *toptracesizer = new wxBoxSizer(wxVERTICAL);
+  toptracesizer = new wxBoxSizer(wxVERTICAL);
 
   disp_scroll->SetSizer(toptracesizer);
   disp_scroll->SetScrollRate(10, 10);
   disp_scroll->SetAutoLayout(true);
 
+  for(int i = 0; i<10; i++)
+    {
+      vtracesizers.push_back(new wxBoxSizer(wxHORIZONTAL));
+      canvases.push_back(new MyGLCanvas(disp_scroll,
+					wxID_ANY,
+					monitor_mod,
+					names_mod,
+					wxPoint(-1,-1),
+					wxSize(-1,40)));
+      tracesizer = wxT("m");
+      tracename = tracesizer << i;
+      tracelabels.push_back(new wxStaticText(disp_scroll, wxID_ANY, tracename));
+      vtracesizers[i]->Add(tracelabels[i], 0, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 10);
+      //vtracesizers[i]->Add(new wxStaticText(disp_scroll, wxID_ANY, tracename),
+      //			   0,
+      //			   wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
+      //			   10);
+      vtracesizers[i]->Add(canvases[i], 1, wxALL | wxEXPAND, 10);
+      toptracesizer->Add(vtracesizers[i], 0, wxEXPAND | wxALL, 10);
+      toptracesizer->Hide(vtracesizers[i], true);
+      toptracesizer->Layout();
+    }
+  
   topsizer->Add(disp_scroll, 1, wxEXPAND | wxALL, 10);
 
   wxBoxSizer *termwinsizer = new wxBoxSizer(wxVERTICAL);
@@ -338,7 +361,7 @@ void MyFrame::OnAbout(wxCommandEvent &event)
 //   cyclescompleted = 0;
 //   mmz->resetmonitor ();
 //   runnetwork(spin->GetValue());
-//   canvas->Render(wxT("Run button pressed"), cyclescompleted);
+//   canvas->Render(wxT("Run button pressed"), cypppclescompleted);
 // }
 
 void MyFrame::OnFileButton(wxCommandEvent &event)
@@ -373,7 +396,8 @@ void MyFrame::OnLoadButton(wxCommandEvent &event)
 	}
     }
   cout << "Loaded devices from file." << endl;
-  //DrawTraces(nmz, dmz, mmz);
+
+
 }
 
 void MyFrame::OnRunButton(wxCommandEvent &event)
@@ -457,39 +481,39 @@ void MyFrame::OnSwitchOption(wxCommandEvent& event)
 void MyFrame::OnAddMonitor(wxCommandEvent& event)
 {
   rem_monitor->Append(add_monitor->GetValue());
+  //cout << "Add trace at monitor point: " <<
+  //add_monitor->GetValue().ToAscii() << endl;
+
+  int i=0;
+  while (toptracesizer->IsShown(vtracesizers[i]))
+    {
+      i++;
+    }
+  tracelabels[i]->SetLabel(add_monitor->GetValue());
+  vtracesizers[i]->Layout();
+  toptracesizer->Show(vtracesizers[i], true, true);
+  toptracesizer->Layout();
+
   add_monitor->Delete(add_monitor->FindString(add_monitor->GetValue()));
   add_monitor->SetValue(wxT(""));
-  //cout << "Add trace at monitor point: " << add_monitor->GetValue().ToAscii() << endl;
 }
 
 void MyFrame::OnRemMonitor(wxCommandEvent& event)
 {
   add_monitor->Append(rem_monitor->GetValue());
+
+  int i = 0;
+  while (tracelabels[i]->GetLabel() != rem_monitor->GetValue())
+    {
+      i++;
+    }
+  tracelabels[i]->SetLabel(wxT(""));
+  vtracesizers[i]->Layout();
+  toptracesizer->Hide(vtracesizers[i], true);
+  toptracesizer->Layout();
+
   rem_monitor->Delete(rem_monitor->FindString(rem_monitor->GetValue()));
   rem_monitor->SetValue(wxT(""));
   //cout << "Remove trace at monitor point: " << rem_monitor->GetValue().ToAscii() << endl;
 }
 
-/*
-void MyFrame::DrawTraces(names *names_mod, devices *devices_mod, monitor *monitor_mod)
-{
-  for(int i = 0; i<10; i++)
-    {
-      vtracesizers.push_back(new wxBoxSizer(wxHORIZONTAL));
-      canvases.push_back(new MyGLCanvas(disp_scroll,
-					wxID_ANY,
-					monitor_mod,
-					names_mod,
-					wxPoint(-1,-1),
-					wxSize(-1,40)));
-      tracesizer = wxT("m");
-      tracename = tracesizer << i;
-      vtracesizers[i]->Add(new wxStaticText(disp_scroll, wxID_ANY, tracename),
-			   0,
-			   wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
-			   10);
-      vtracesizers[i]->Add(canvases[i], 1, wxALL | wxEXPAND, 10);
-      toptracesizer.Add(vtracesizers[i], 0, wxEXPAND | wxALL, 10);
-    }
-}
-*/
