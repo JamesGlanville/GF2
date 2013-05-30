@@ -274,8 +274,8 @@ MyFrame::MyFrame(wxWindow *parent,
 			wxDefaultSize,
 			wxTE_MULTILINE | wxHSCROLL);
   //textout->SetDefaultStyle(wxTextAttr(wxFONTFAMILY_TELETYPE));
-  wxFont * monofont = new wxFont(8,wxFONTFAMILY_TELETYPE,wxFONTWEIGHT_NORMAL,false,wxEmptyString,wxFONTENCODING_DEFAULT);
-  this->SetFont(*monofont);
+  wxFont * monofont = new wxFont(10,wxFONTFAMILY_TELETYPE,wxFONTSTYLE_NORMAL,wxFONTWEIGHT_NORMAL,false,wxEmptyString,wxFONTENCODING_DEFAULT);
+  textout->SetFont(*monofont);
   wxStreamToTextRedirector redirect(textout);
   termwinsizer->Add(textout, 1, wxEXPAND | wxALL, 10);
   topsizer->Add(termwinsizer, 1, wxEXPAND | wxALL, 10);
