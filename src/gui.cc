@@ -174,6 +174,7 @@ BEGIN_EVENT_TABLE(MyFrame, wxFrame)
   EVT_BUTTON(LOAD_BUTTON, MyFrame::OnLoadButton)
   EVT_BUTTON(RUN_BUTTON_ID, MyFrame::OnRunButton)
   EVT_BUTTON(CONT_BUTTON_ID, MyFrame::OnContButton)
+  EVT_COMBOBOX(SWITCH_LIST, MyFrame::OnSwitchSelect)
   EVT_COMBOBOX(SWITCH_OPTION, MyFrame::OnSwitchOption)
   EVT_COMBOBOX(MONITOR_ADD, MyFrame::OnAddMonitor)
   EVT_COMBOBOX(MONITOR_REM, MyFrame::OnRemMonitor)
@@ -245,17 +246,12 @@ MyFrame::MyFrame(wxWindow *parent,
 		   0,
 		   wxALL | wxALIGN_CENTER_VERTICAL,
 		   10);
-
   switch_list = new wxComboBox(this, SWITCH_LIST, wxEmptyString);
-  
-
   switchsizer->Add(switch_list, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
-
   switch_option = new wxComboBox(this, SWITCH_OPTION, wxEmptyString);
   switch_option->Append(wxT("HIGH"));
   switch_option->Append(wxT("LOW"));
   switchsizer->Add(switch_option, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
-
   topsizer->Add(switchsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
 
   wxBoxSizer *monitorsizer = new wxBoxSizer(wxHORIZONTAL);
@@ -263,16 +259,8 @@ MyFrame::MyFrame(wxWindow *parent,
 		    0,
 		    wxALL | wxALIGN_CENTER_VERTICAL,
 		    10);
-
   add_monitor = new wxComboBox(this, MONITOR_ADD, wxEmptyString);
-  
-  for (int i=0; i < mmz->moncount(); i++)
-    {
-      // get name as string, convert to char* then to wxstring
-        add_monitor->Append(wxString::FromAscii(mmz->getmonprettyname(i).c_str()));
-    }
   monitorsizer->Add(add_monitor, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
-
   monitorsizer->Add(new wxStaticText(this, wxID_ANY, wxT("Remove Monitor:")),
 		    0,
 		    wxALL | wxALIGN_CENTER_VERTICAL,
@@ -281,7 +269,6 @@ MyFrame::MyFrame(wxWindow *parent,
   //  rem_monitor->Append(wxT("a used monitor"));
   //  rem_monitor->Append(wxT("another used monitor"));
   monitorsizer->Add(rem_monitor, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
-
   topsizer->Add(monitorsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
 
 
@@ -374,13 +361,7 @@ void MyFrame::OnFileButton(wxCommandEvent &event)
 
 void MyFrame::OnLoadButton(wxCommandEvent &event)
 {
-  vector<string> switches;
-  string devname;
-  string devtype;
-  cout << endl;
-  cout << endl;
-  cout << "Beginning switch list:" << endl;
-
+  // get switches and put in the switches dialog box
   for (int i = 0; i < nmz->tablelength(); i++)
     {
       devname = nmz->getname(i);
@@ -388,15 +369,16 @@ void MyFrame::OnLoadButton(wxCommandEvent &event)
       if (dmz->devkind(nmz->lookup(devname)) == aswitch)
 	{
 	  cout << devname << " is a switch" << endl;;
+	  switch_list->Append(wxString::FromAscii(devname.c_str()));
 	}
-      //cout << devname << endl;
     }
-    /*
-  switch_list->Append(wxT("option1"));
-  switch_list->Append(wxT("option2"));
-  switch_list->Append(wxT("option3"));
-  switch_list->Append(wxT("option4"));
-  */
+
+  // get monitors and put them in the add monitors dialog box
+  for (int i=0; i < mmz->moncount(); i++)
+    {
+      // get name as string, convert to char* then to wxstring
+      add_monitor->Append(wxString::FromAscii(mmz->getmonprettyname(i).c_str()));
+    }
 }
 
 void MyFrame::OnRunButton(wxCommandEvent &event)
@@ -443,6 +425,11 @@ void MyFrame::runnetwork(int ncycles)
     {
       cyclescompleted = 0;
     }
+}
+
+void MyFrame::OnSwitchSelect(wxCommanndEvent& event)
+{
+  
 }
 
 void MyFrame::OnSwitchOption(wxCommandEvent& event)
