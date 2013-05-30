@@ -250,7 +250,7 @@ MyFrame::MyFrame(wxWindow *parent,
   for (int i = 0; i < nmz->tablelength(); i++)
     {
       devname = nmz->getname(i);
-      //cout << devname << " is a " << dmz->devkind(nmz->lookup(devname)) << endl;
+      cout << devname << " is a " << dmz->devkind(nmz->lookup(devname)) << endl;
       if (dmz->devkind(nmz->lookup(devname)) == aswitch)
 	{
 	  cout << devname << " is a switch" << endl;;

@@ -1,6 +1,6 @@
-/*
-TODO:
-*/
+// TODO
+// Check whether clocks require period or frequency
+
 #include "parser.h"
 
 using namespace std;
@@ -32,19 +32,19 @@ bool parser::readin (void)
     if(stopped_at == eofsym) {error_count++;}
     else
     {
-     stop_syms.push_back(DEV);
-     stop_syms.push_back(CONN);
-     stop_syms.push_back(MON);
-     stop_syms.push_back(opencurly);
-     stop_syms.push_back(closecurly);
-     stop_syms.push_back(semicol);
-     stopped_at = stoppingSym(stop_syms);
-     if(stopped_at == closecurly) endOfSection = 1;
-     stop_syms.clear(); 
-     error_count++;
+      // Stopping symbols to continue parsing     
+      stop_syms.push_back(DEV);
+      stop_syms.push_back(CONN);
+      stop_syms.push_back(MON);
+      stop_syms.push_back(opencurly);
+      stop_syms.push_back(closecurly);
+      stop_syms.push_back(semicol);
+      stopped_at = stoppingSym(stop_syms);
+      if(stopped_at == closecurly) endOfSection = 1;
+      stop_syms.clear(); 
+      error_count++;
     }
-  }
-  
+  }  
   // DEVICES
   if(stopped_at == none) 
   {
@@ -65,7 +65,6 @@ bool parser::readin (void)
       }
     }
   }
-  
   // {
   if(stopped_at == none || stopped_at == DEV)
   {
@@ -86,8 +85,7 @@ bool parser::readin (void)
         error_count++;
       }
     }
-  }
-  
+  }  
   // Parsing defined devices
   // First device name
   if(stopped_at == none || stopped_at == opencurly) 
@@ -115,7 +113,6 @@ bool parser::readin (void)
   
   while(!endOfSection) 
   {
-    
     // =
     if(stopped_at == none) 
     {
@@ -136,7 +133,6 @@ bool parser::readin (void)
         }
       }
     }
-    
     // device type
     if(stopped_at == none) 
     {
@@ -157,8 +153,9 @@ bool parser::readin (void)
         }
       }
     }
-
-    // create device - have to move testing for error_count before creation into function so that parameters are still parsed
+    // Create device
+    // Still called when there are errrors so that parameters are still parsed
+    // Devices not actually created with errors present
     if(stopped_at == none) 
     {
       if(createDevice(current_device_type,id))
@@ -344,7 +341,7 @@ bool parser::readin (void)
         error_count++;
       }
     }
-    // Connection input
+    // Connection input and }
     if(stopped_at == none || stopped_at == semicol) 
     {
       stopped_at = none;
@@ -375,8 +372,8 @@ bool parser::readin (void)
       if(stopped_at == eofsym) {error_count++;}
       else
       {
+        // From this point no longer check for closecurly to avoid erros with eof
         stop_syms.push_back(opencurly);
-        //stop_syms.push_back(closecurly);
         stop_syms.push_back(semicol);
         stopped_at = stoppingSym(stop_syms);
         if(stopped_at == closecurly) endOfSection = 1;
@@ -395,10 +392,6 @@ bool parser::readin (void)
       if(stopped_at == eofsym) {error_count++;}
       else
       {
-        stop_syms.push_back(CONN);
-        stop_syms.push_back(MON);
-        stop_syms.push_back(opencurly);
-        stop_syms.push_back(closecurly);
         stop_syms.push_back(semicol);
         stopped_at = stoppingSym(stop_syms);
         if(stopped_at == closecurly) endOfSection = 1;
@@ -420,11 +413,7 @@ bool parser::readin (void)
       if(stopped_at == eofsym) {error_count++;}
       else
       {
-        int num;
-        name id;
-        symbol sym;
         stop_syms.push_back(opencurly);
-        //stop_syms.push_back(closecurly);
         stop_syms.push_back(semicol);
         stopped_at = stoppingSym(stop_syms);
         if(stopped_at == closecurly) endOfSection = 1;
@@ -445,7 +434,6 @@ bool parser::readin (void)
         else
         {
           stop_syms.push_back(opencurly);
-          //stop_syms.push_back(closecurly);
           stop_syms.push_back(semicol);
           stopped_at = stoppingSym(stop_syms);
           if(stopped_at == closecurly) endOfSection = 1;
@@ -462,8 +450,6 @@ bool parser::readin (void)
         if(stopped_at == eofsym) {error_count++;}
         else
         {
-          stop_syms.push_back(opencurly);
-          //stop_syms.push_back(closecurly);
           stop_syms.push_back(semicol);
           stopped_at = stoppingSym(stop_syms);
           if(stopped_at == closecurly) endOfSection = 1;
@@ -480,8 +466,6 @@ bool parser::readin (void)
         if(stopped_at == eofsym) {error_count++;}
         else
         {
-          stop_syms.push_back(opencurly);
-          //stop_syms.push_back(closecurly);
           stop_syms.push_back(semicol);
           stopped_at = stoppingSym(stop_syms);
           if(stopped_at == closecurly) endOfSection = 1;
@@ -507,8 +491,6 @@ bool parser::readin (void)
         if(stopped_at == eofsym) {error_count++;}
         else
         {
-          stop_syms.push_back(opencurly);
-          //stop_syms.push_back(closecurly);
           stop_syms.push_back(semicol);
           stopped_at = stoppingSym(stop_syms);
           if(stopped_at == closecurly) endOfSection = 1;
@@ -537,7 +519,8 @@ bool parser::readin (void)
     errorHandling(unconnected_inputs);
   }
   
-  if(error_count) {
+  if(error_count) 
+  {
     cout << "\nError count is " << error_count << endl; 
     return PARSER_FAIL;
   }
@@ -545,14 +528,15 @@ bool parser::readin (void)
   return PARSER_PASS;
 }
 
-symbol parser::stoppingSym (vector <symbol> stopping_syms/*, int &num_skipped*/)
+/* ------------------------------------------------------------------ */
+
+symbol parser::stoppingSym (vector <symbol> stopping_syms)
 {
   int num;
   name id;
   symbol sym;
   int num_syms = stopping_syms.size();
-  //num_skipped = 0;
-  
+
   smz->getsymbol(sym,id,num);
   while(sym != eofsym)
   {
@@ -560,11 +544,9 @@ symbol parser::stoppingSym (vector <symbol> stopping_syms/*, int &num_skipped*/)
     {
       if (sym == stopping_syms[i])
       {
-        cout << "stopped_at == " << sym << endl;
         return stopping_syms[i];
       }
     }
-    //num_skipped++;
     smz->getsymbol(sym,id,num);
   }
   // If eof reached skip parsing
@@ -572,17 +554,13 @@ symbol parser::stoppingSym (vector <symbol> stopping_syms/*, int &num_skipped*/)
   return eofsym;
 }
 
+/* ------------------------------------------------------------------ */
+
 void parser::errorHandling (error error_num) 
 {
   switch(error_num) {
     case unknown:
       smz->printError("Unknown error"); 
-      break;
-    case no_opening_brace:
-      smz->printError("Expected opening brace");
-      break; 
-    case no_devices:
-      smz->printError("Expected \"devices\" section");
       break;
     case one_device_required:
       smz->printError("At least one device definition is required");
@@ -642,9 +620,11 @@ void parser::errorHandling (error error_num)
       cout << "Not all inputs are connected. \n";
       break;
     default:
-      cout << "You should never see this message\n";
+      cout << "Error in errorHandling\n";
   }
 }
+
+/* ------------------------------------------------------------------ */
 
 bool parser::parseToken (symbol token)
 {
@@ -662,7 +642,6 @@ bool parser::parseToken (symbol token)
         error_token = "'<='";
         break;
       case semicol:
-      	cout << sym << endl;
         error_token = "';'";
         break;
       case equals:
@@ -681,7 +660,7 @@ bool parser::parseToken (symbol token)
         error_token = "'}'";
         break;
       default:
-        error_token = "ERRRORR";
+        error_token = "Error in parseToken";
     }
     smz->printError("Expected " + error_token);
     // Stop parsing if eof is found
@@ -701,6 +680,8 @@ bool parser::parseToken (symbol token)
   
   return PARSER_PASS;
 }
+
+/* ------------------------------------------------------------------ */
 
 bool parser::parseSectionHeader (symbol header)
 {
@@ -727,7 +708,7 @@ bool parser::parseSectionHeader (symbol header)
         section_name = "\"MONITORS\"";
         break;      
       default:
-        section_name = "ERRRORR";
+        section_name = "Error in parseSectionHeader";
     }
     // Stop parsing if eof is found
     if (sym == eofsym) 
@@ -741,6 +722,8 @@ bool parser::parseSectionHeader (symbol header)
   
   return PARSER_PASS;
 }
+
+/* ------------------------------------------------------------------ */
 
 // Gives back (in id) the name location in the main nametable
 bool parser::parseDeviceName (name &id)
@@ -778,7 +761,9 @@ bool parser::parseDeviceName (name &id)
   return PARSER_PASS;
 }
 
-// Gives back (in id) the name location in the main nametable - should semantic error check for repeated names
+/* ------------------------------------------------------------------ */
+
+// Gives back (in id) the name location in the main nametable 
 bool parser::parseDeviceName (name &id, bool &endOfDevices)
 {
   symbol sym;
@@ -818,6 +803,8 @@ bool parser::parseDeviceName (name &id, bool &endOfDevices)
   }
   return PARSER_PASS;
 }
+
+/* ------------------------------------------------------------------ */
 
 // Converts strings of device type into an enumerated type
 bool parser::parseDeviceType (device_type &current_device_type)
@@ -873,6 +860,8 @@ bool parser::parseDeviceType (device_type &current_device_type)
   return PARSER_PASS;
 }
 
+/* ------------------------------------------------------------------ */
+
 bool parser::parseParam(int &param_value) 
 {
   symbol sym;
@@ -903,6 +892,8 @@ bool parser::parseParam(int &param_value)
   return PARSER_PASS;
 }
 
+/* ------------------------------------------------------------------ */
+
 // Parses parameter if necessary and then creates a device of give type and name
 // Semantic checking of parameters should occur here
 bool parser::createDevice (device_type current_device_type, name id)
@@ -926,7 +917,9 @@ bool parser::createDevice (device_type current_device_type, name id)
       devicet_id = dtz->lookup(nmz->getname(id),current_device_type,param_value);
       if(error_count == 0) 
       {
+        #ifdef verbose
         cout << "Created AND gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
+        #endif
         dmz->makedevice (andgate, id, param_value, ok); 
         if (!ok){cout <<"error creating and gate"<<endl;}
       }
@@ -944,7 +937,9 @@ bool parser::createDevice (device_type current_device_type, name id)
       devicet_id = dtz->lookup(nmz->getname(id),current_device_type,param_value);
       if(error_count == 0) 
       {
+        #ifdef verbose
         cout << "Created NAND gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
+        #endif
         dmz->makedevice (nandgate, id, param_value, ok); 
         if (!ok){cout <<"error creating nand gate"<<endl;}
       }
@@ -962,7 +957,9 @@ bool parser::createDevice (device_type current_device_type, name id)
       devicet_id = dtz->lookup(nmz->getname(id),current_device_type,param_value);
       if(error_count == 0) 
       {
+        #ifdef verbose
         cout << "Created OR gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
+        #endif
         dmz->makedevice (orgate, id, param_value, ok); 
         if (!ok){cout <<"error creating or gate"<<endl;}
       }
@@ -980,7 +977,9 @@ bool parser::createDevice (device_type current_device_type, name id)
       devicet_id = dtz->lookup(nmz->getname(id),current_device_type,param_value);
       if(error_count == 0) 
       {
+        #ifdef verbose
         cout << "Created NOR gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
+        #endif
         dmz->makedevice (norgate, id, param_value, ok); 
         if (!ok){cout <<"error creating nor gate"<<endl;}
       }
@@ -991,7 +990,9 @@ bool parser::createDevice (device_type current_device_type, name id)
       devicet_id = dtz->lookup(nmz->getname(id),current_device_type,0);
       if(error_count == 0) 
       {
+        #ifdef verbose
         cout << "Created XOR gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
+        #endif
         dmz->makedevice (xorgate, id, 2, ok);
         if (!ok){cout <<"error creating xor gate"<<endl;}
       }
@@ -1001,7 +1002,9 @@ bool parser::createDevice (device_type current_device_type, name id)
       devicet_id = dtz->lookup(nmz->getname(id),current_device_type,0);
       if(error_count == 0) 
       {
+        #ifdef verbose
         cout << "Created DTYPE, with name \"" << nmz->getname(id) << "\".\n";
+        #endif
         dmz->makedevice (dtype, id, 0, ok); 
         if (!ok){cout <<"error creating dtype"<<endl;}
       }
@@ -1017,8 +1020,10 @@ bool parser::createDevice (device_type current_device_type, name id)
       devicet_id = dtz->lookup(nmz->getname(id),current_device_type,0);
       if(error_count == 0) 
       {
+        #ifdef verbose
         cout << "Created CLK with period of " << param_value << " and name \"" << nmz->getname(id) << "\".\n";
-        dmz->makedevice (aclock, id, param_value, ok); //THIS IS PROBABLY INCORRECT. SECOND VALUE SHOULD BE FREQUENCY, NOT PERIOD.
+        #endif
+        dmz->makedevice (aclock, id, param_value, ok); 
         if (!ok){cout <<"error creating clock"<<endl;}
       }
       break;
@@ -1033,7 +1038,9 @@ bool parser::createDevice (device_type current_device_type, name id)
       devicet_id = dtz->lookup(nmz->getname(id),current_device_type,0);
       if(error_count == 0) 
       {
+        #ifdef verbose
         cout << "Created SW with initial state " << param_value << " and name \"" << nmz->getname(id) << "\".\n";
+        #endif
         signal = low;
         if (param_value){signal=high;}
         dmz->makedevice (aswitch, id, 0, ok);
@@ -1044,10 +1051,12 @@ bool parser::createDevice (device_type current_device_type, name id)
       break;
 
     default:
-      cout << "Something has gone really wrong.\n";
+      cout << "Error in createDevice\n";
   }
   return PARSER_PASS;
 }
+
+/* ------------------------------------------------------------------ */
 
 bool parser::parseConnInputName(name &devid, name &inpid, bool &endOfSection)
 {
@@ -1089,7 +1098,7 @@ bool parser::parseConnInputName(name &devid, name &inpid, bool &endOfSection)
       errorHandling(device_not_defined);
       return PARSER_FAIL;
     case NONE:
-      cout << "Device table error!!\n";
+      cout << "Device table error\n";
       return PARSER_FAIL;
     case CLK:
     case SW:
@@ -1103,7 +1112,7 @@ bool parser::parseConnInputName(name &devid, name &inpid, bool &endOfSection)
     case DTYPE:
       break;
     default:
-      cout << "Error in ConnInputName\n";
+      cout << "Error in parseConnInputName\n";
   }
   
   if(parseToken(fullstop)) return PARSER_FAIL;
@@ -1150,7 +1159,7 @@ bool parser::parseConnInputName(name &devid, name &inpid, bool &endOfSection)
       for (int i=1;i<=16;i++)
       {
         ss.str("");
-        ss << "i"<<i;
+        ss << "i" << i;
         // Only allow inputs up to the defined number
         if (i<=no_of_inputs)
         {
@@ -1171,6 +1180,8 @@ bool parser::parseConnInputName(name &devid, name &inpid, bool &endOfSection)
   return PARSER_PASS;
 }
 
+/* ------------------------------------------------------------------ */
+
 bool parser::parseNumber(int &num)
 {
   symbol sym;
@@ -1190,6 +1201,8 @@ bool parser::parseNumber(int &num)
   }
   return PARSER_PASS;
 }
+
+/* ------------------------------------------------------------------ */
 
 bool parser::parseConnOutputName(name &devid, name &outid)
 {
@@ -1237,7 +1250,7 @@ bool parser::parseConnOutputName(name &devid, name &outid)
     case DTYPE:
       break;
     default:
-      cout << "Error in ConnOutputName\n";
+      cout << "Error in parseConnOutputName\n";
   }
   
   // Semantic checking of dtype outputs
@@ -1275,19 +1288,25 @@ bool parser::parseConnOutputName(name &devid, name &outid)
   return PARSER_PASS;  
 }
 
+/* ------------------------------------------------------------------ */
+
 // Should just be a simple function call hopefully
 bool parser::createConn(name dev1id,name dev2id,name inid,name outid)
 {
   bool ok;
+  #ifdef verbose
   cout << "Connect " << nmz->getname(dev1id) << ", input " << nmz->getname(inid) << ", to " << nmz->getname(dev2id) << ", output " << nmz->getname(outid) << endl;
+  #endif
   netz->makeconnection(dev1id,inid,dev2id,outid,ok);
   if(!ok)
   {
-    cout << "ERROR: Couldn't make connection\n";
+    cout << "Error couldn't make connection\n";
     return PARSER_FAIL;
   }
   return PARSER_PASS;
 }
+
+/* ------------------------------------------------------------------ */
 
 // Gives back (in id) the name location in the main nametable
 bool parser::parseMonitorName (name &id)
@@ -1295,6 +1314,7 @@ bool parser::parseMonitorName (name &id)
   symbol sym;
   int num;
   name symid;
+  
   smz->getsymbol(sym,id,num);
   switch(sym) { 
     case namesym:	  // Check that monitor name is not already used - will return non-zero if already in use
@@ -1328,13 +1348,14 @@ bool parser::parseMonitorName (name &id)
   return PARSER_PASS;
 }
 
-// Gives back (in id) the name location in the main nametable - should semantic error check for repeated names
+/* ------------------------------------------------------------------ */
+
+// Gives back (in id) the name location in the main nametable 
 bool parser::parseMonitorName (name &id, bool &endOfSection)
 {
   symbol sym;
   int num;
   name symid;
-  endOfSection = 0;
   
   smz->getsymbol(sym,id,num);
   switch(sym) { 
@@ -1370,23 +1391,31 @@ bool parser::parseMonitorName (name &id, bool &endOfSection)
   return PARSER_PASS;
 }
 
+/* ------------------------------------------------------------------ */
+
 bool parser::createMonitor(name monitorName, name dev2id, name outid) 
 {
   bool ok;
+  #ifdef verbose
 	cout << "Create monitor " << nmz->getname(monitorName) << " monitoring " << nmz->getname(dev2id) << ", output " << nmz->getname(outid) << endl;
+  #endif
   mmz->makemonitor (dev2id,outid,ok,monitorName);
   if(!ok)
   {
-    cout << "ERROR: monitor not made\n";
+    cout << "Error monitor not made\n";
     return PARSER_FAIL;
   }
 	return PARSER_PASS
 }
 
+/* ------------------------------------------------------------------ */
+
 string parser::getswitch(int swnum)
 {
 	return dtz->getswitch(swnum);
 }
+
+/* ------------------------------------------------------------------ */
 
 parser::parser (
                 #ifndef PARSER_TEST
