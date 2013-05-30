@@ -21,7 +21,7 @@ struct devicestruct{
 class devicetable{
 	vector <devicestruct> device_table;
 
-public:
+ public:
 	string getswitch(int swnum);
 
   name lookup (namestring str, device_type type,numinputs numinput);

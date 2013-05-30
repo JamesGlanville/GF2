@@ -472,6 +472,6 @@ devices::devices (names* names_mod, network* net_mod, devicetable* dt_mod)
  */
 string devices::getswitch(int swnum)
 {
-	return dtz->getswitch(swnum);
+  return dtz->getswitch(swnum);
 }
 

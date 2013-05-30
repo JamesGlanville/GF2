@@ -375,14 +375,15 @@ void MyFrame::OnLoadButton(wxCommandEvent &event)
     }
   */
   // get switches method attempt 2...
-  /*
+
  int i = 0;  
   while (dmz->getswitch(i).compare("") != 0)
     {
       cout << dmz->getswitch(i) << " is a switch." << endl;
       switch_list->Append(wxString::FromAscii(dmz->getswitch(i).c_str()));
+      i++;
     }
-  */
+
 
   // get monitors and put them in the add monitors dialog box
   for (int i=0; i < mmz->moncount(); i++)
