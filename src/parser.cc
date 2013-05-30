@@ -3,12 +3,16 @@
 
 #include "parser.h"
 
+extern wxTextCtrl* text;
+
 using namespace std;
 
 /* The parser for the circuit definition files */
 
 bool parser::readin (void)
 {
+  wxStreamToTextRedirector redirect(text);
+  cout << "Hello" << endl;
   // Stores parsing function output
   name id;
   name dev1id;

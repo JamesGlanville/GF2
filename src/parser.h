@@ -1,13 +1,14 @@
 #ifndef parser_h
 #define parser_h
 
+#include <wx/wx.h>
 #include "names.h"
 #include "devicetable.h"
 #include "network.h"
 #include "devices.h"
 #include "monitor.h"
 //#define PARSER_TEST
-//#define verbose
+#define verbose
 #include <iostream>
 #include <sstream>
 #include "scanner.h"
