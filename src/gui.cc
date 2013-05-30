@@ -278,11 +278,13 @@ MyFrame::MyFrame(wxWindow *parent,
 						       wxDefaultSize,
 				   wxSUNKEN_BORDER | wxHSCROLL | wxVSCROLL);
 
-  wxBoxSizer *toptracesizer = new wxBoxSizer(wxVERTICAL);
+  toptracesizer = new wxBoxSizer(wxVERTICAL);
 
   disp_scroll->SetSizer(toptracesizer);
   disp_scroll->SetScrollRate(10, 10);
   disp_scroll->SetAutoLayout(true);
+
+
 
   topsizer->Add(disp_scroll, 1, wxEXPAND | wxALL, 10);
 
@@ -373,7 +375,8 @@ void MyFrame::OnLoadButton(wxCommandEvent &event)
 	}
     }
   cout << "Loaded devices from file." << endl;
-  //DrawTraces(nmz, dmz, mmz);
+  DrawTraces(nmz,dmz,mmz);
+  tracelabels[0]->SetLabel(wxT("updated this"));
 }
 
 void MyFrame::OnRunButton(wxCommandEvent &event)
@@ -470,7 +473,6 @@ void MyFrame::OnRemMonitor(wxCommandEvent& event)
   //cout << "Remove trace at monitor point: " << rem_monitor->GetValue().ToAscii() << endl;
 }
 
-/*
 void MyFrame::DrawTraces(names *names_mod, devices *devices_mod, monitor *monitor_mod)
 {
   for(int i = 0; i<10; i++)
@@ -484,12 +486,13 @@ void MyFrame::DrawTraces(names *names_mod, devices *devices_mod, monitor *monito
 					wxSize(-1,40)));
       tracesizer = wxT("m");
       tracename = tracesizer << i;
-      vtracesizers[i]->Add(new wxStaticText(disp_scroll, wxID_ANY, tracename),
-			   0,
-			   wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
-			   10);
+      tracelabels.push_back(new wxStaticText(disp_scroll, wxID_ANY, tracename));
+      vtracesizers[i]->Add(tracelabels[i], 0, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 10);
+      //vtracesizers[i]->Add(new wxStaticText(disp_scroll, wxID_ANY, tracename),
+      //			   0,
+      //			   wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
+      //			   10);
       vtracesizers[i]->Add(canvases[i], 1, wxALL | wxEXPAND, 10);
-      toptracesizer.Add(vtracesizers[i], 0, wxEXPAND | wxALL, 10);
+      toptracesizer->Add(vtracesizers[i], 0, wxEXPAND | wxALL, 10);
     }
 }
-*/
