@@ -373,7 +373,7 @@ void MyFrame::OnAbout(wxCommandEvent &event)
 void MyFrame::OnFileButton(wxCommandEvent &event)
 {
 
-  wxString filetooopenpath;
+  wxString filetoopenpath;
   wxFileDialog *loadNewFile = new wxFileDialog(this,
 					     wxT("Choose file to open"),
 					     wxEmptyString,

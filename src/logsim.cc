@@ -32,15 +32,16 @@ bool MyApp::OnInit()
   dmz = new devices(nmz, netz, dtz);
   mmz = new monitor(nmz, netz);
   smz = new scanner(nmz, inf);
+  MyFrame *frame = new MyFrame(NULL, wxT("Logic simulator"), wxDefaultPosition,  wxSize(800, 600), nmz, dmz, mmz);
 #ifdef PARSER_TEST  
   pmz = new parser(smz, nmz);
 #endif
 #ifndef PARSER_TEST
   pmz = new parser(netz,dmz,mmz,smz,nmz,dtz);
 #endif
-    MyFrame *frame = new MyFrame(NULL, wxT("Logic simulator"), wxDefaultPosition,  wxSize(800, 600), nmz, dmz, mmz);
+   
     wxStreamToTextRedirector redirect(textout);
-    if (!pmz->readin ()) { // check the logic file parsed correctly
+    pmz->readin () ; // check the logic file parsed correctly
 #ifdef USE_GUI
     // glutInit cannot cope with Unicode command line arguments, so we pass
     // it some fake ASCII ones instead
@@ -54,6 +55,6 @@ bool MyApp::OnInit()
     userint umz(nmz, dmz, mmz);
     umz.userinterface();
 #endif /* USE_GUI */
-  }
+  
   return(false); // exit the application
 }
