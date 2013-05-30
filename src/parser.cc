@@ -510,7 +510,7 @@ bool parser::readin (void)
     }
   }
   
-  //Check that all inputs are connected.
+  // Check that all inputs are connected.
   networkOK = 1;
   if (error_count == 0) netz->checknetwork(networkOK);
   if (!networkOK) 
