@@ -437,6 +437,14 @@ void MyFrame::runnetwork(int ncycles)
 
   //cout << "in run network function." << endl;
 
+  if (cyclescompleted + n >= 350)
+    {
+      cout << "Error: too many cycles." << endl;
+      cout << "All good things must come to an end." << endl;
+      cout << "(Maximum is 350.)" <<endl;
+      return;
+    }
+
   while ((n > 0) && ok) {
     dmz->executedevices (ok);
     if (ok)
