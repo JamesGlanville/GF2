@@ -258,7 +258,6 @@ MyFrame::MyFrame(wxWindow *parent,
       //cout << devname << endl;
     }
 
-
   switch_list->Append(wxT("option1"));
   switch_list->Append(wxT("option2"));
   switch_list->Append(wxT("option3"));
@@ -279,10 +278,13 @@ MyFrame::MyFrame(wxWindow *parent,
 		    10);
 
   add_monitor = new wxComboBox(this, MONITOR_ADD, wxEmptyString);
-
+  cout << "got to this bit" << endl;
+  cout << "number of monitors set is: " << mmz->moncount() << endl;
+  
   for (int i=0; i < mmz->moncount(); i++)
     {
       // get name as string, convert to char* then to wxstring
+      cout << "got here" << endl;
       add_monitor->Append(wxString::FromAscii(mmz->getmonprettyname(i).c_str()));
     }
   monitorsizer->Add(add_monitor, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
