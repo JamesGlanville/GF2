@@ -27,15 +27,16 @@ bool MyApp::OnInit()
 	
   // Construct the six classes required by the innards of the logic simulator
   nmz = new names();
+  dtz = new devicetable();
   netz = new network(nmz);
-  dmz = new devices(nmz, netz);
+  dmz = new devices(nmz, netz, dtz);
   mmz = new monitor(nmz, netz);
   smz = new scanner(nmz, inf);
 #ifdef PARSER_TEST  
   pmz = new parser(smz, nmz);
 #endif
 #ifndef PARSER_TEST
-  pmz = new parser(netz,dmz,mmz,smz,nmz);
+  pmz = new parser(netz,dmz,mmz,smz,nmz,dtz);
 #endif
     MyFrame *frame = new MyFrame(NULL, wxT("Logic simulator"), wxDefaultPosition,  wxSize(800, 600), nmz, dmz, mmz);
         wxStreamToTextRedirector redirect(text);

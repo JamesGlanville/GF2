@@ -525,6 +525,13 @@ bool parser::readin (void)
     return PARSER_FAIL;
   }
   
+  string dname;
+  devicekind dk;
+  dname = nmz->getname(20);
+  cout << dname << endl; 
+  dk = dmz->devkind(20);
+  cout << dk << endl;
+  
   return PARSER_PASS;
 }
 
@@ -1410,13 +1417,6 @@ bool parser::createMonitor(name monitorName, name dev2id, name outid)
 
 /* ------------------------------------------------------------------ */
 
-string parser::getswitch(int swnum)
-{
-	return dtz->getswitch(swnum);
-}
-
-/* ------------------------------------------------------------------ */
-
 parser::parser (
                 #ifndef PARSER_TEST
                 network* network_mod, 
@@ -1424,7 +1424,8 @@ parser::parser (
                 monitor* monitor_mod, 
                 #endif
                 scanner* scanner_mod, 
-                names* name_table)
+                names* name_table,
+                devicetable* dt_mod)
 {
   #ifndef PARSER_TEST
   netz = network_mod;  /* make internal copies of these class pointers */
@@ -1437,7 +1438,7 @@ parser::parser (
   /* any other initialisation you want to do? */
   nm_devicez = new names();
   nm_monitorz=new names();
-  dtz = new devicetable();
+  dtz = dt_mod;
 }
 
 
