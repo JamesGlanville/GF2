@@ -170,6 +170,8 @@ void MyGLCanvas::OnMouse(wxMouseEvent& event)
 BEGIN_EVENT_TABLE(MyFrame, wxFrame)
   EVT_MENU(wxID_EXIT,       MyFrame::OnExit)
   EVT_MENU(wxID_ABOUT,      MyFrame::OnAbout)
+  EVT_BUTTON(FILE_BUTTON, MyFrame::OnFileButton)
+  EVT_BUTTON(LOAD_BUTTON, MyFrame::OnLoadButton)
   EVT_BUTTON(RUN_BUTTON_ID, MyFrame::OnRunButton)
   EVT_BUTTON(CONT_BUTTON_ID, MyFrame::OnContButton)
   EVT_COMBOBOX(SWITCH_OPTION, MyFrame::OnSwitchOption)
@@ -210,22 +212,28 @@ MyFrame::MyFrame(wxWindow *parent,
 
   wxBoxSizer *topsizer = new wxBoxSizer(wxVERTICAL);
 
+  wxBoxSizer *filesizer = new wxBoxSizer(wxHORIZONTAL);
+  filesizer->Add(new wxButton(this, FILE_BUTTON, wxT("Select File")),
+		 0,
+		 wxALL | wxALIGN_CENTER_VERTICAL,
+		 10);
+  filesizer->Add(new wxButton(this, LOAD_BUTTON, wxT("Load Data")),
+		 0,
+		 wxALL | wxALIGN_CENTER_VERTICAL,
+		 10);
+  topsizer->Add(filesizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
+
   wxBoxSizer *ctrlsizer = new wxBoxSizer(wxHORIZONTAL);
   ctrlsizer->Add(new wxStaticText(this, wxID_ANY, wxT("Cycles:")),
 		 0,             /* make vertically unstrechable */
 		 wxALL | wxALIGN_CENTER_VERTICAL,         /* border all around */
 		 10);           /* border size */
-
   spin_cycles = new wxSpinCtrl(this, CYCLES_SPIN, wxString(wxT("10")));
   ctrlsizer->Add(spin_cycles, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
   ctrlsizer->Add(new wxButton(this, RUN_BUTTON_ID, wxT("Run")),
 		 0,
 		 wxALL | wxEXPAND,
 		 10);
-		 
-
-
-		 
   ctrlsizer->Add(new wxButton(this, CONT_BUTTON_ID, wxT("Continue")),
 		 0,
 		 wxALL | wxEXPAND,
@@ -240,28 +248,7 @@ MyFrame::MyFrame(wxWindow *parent,
 
   switch_list = new wxComboBox(this, SWITCH_LIST, wxEmptyString);
   
-  vector<string> switches;
-  string devname;
-  string devtype;
-  cout << endl;
-  cout << endl;
-  cout << "Beginning switch list:" << endl;
 
-  for (int i = 0; i < nmz->tablelength(); i++)
-    {
-      devname = nmz->getname(i);
-      cout << devname << " is a " << dmz->devkind(nmz->lookup(devname)) << endl;
-      if (dmz->devkind(nmz->lookup(devname)) == aswitch)
-	{
-	  cout << devname << " is a switch" << endl;;
-	}
-      //cout << devname << endl;
-    }
-
-  switch_list->Append(wxT("option1"));
-  switch_list->Append(wxT("option2"));
-  switch_list->Append(wxT("option3"));
-  switch_list->Append(wxT("option4"));
   switchsizer->Add(switch_list, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
 
   switch_option = new wxComboBox(this, SWITCH_OPTION, wxEmptyString);
@@ -278,14 +265,11 @@ MyFrame::MyFrame(wxWindow *parent,
 		    10);
 
   add_monitor = new wxComboBox(this, MONITOR_ADD, wxEmptyString);
-  cout << "got to this bit" << endl;
-  cout << "number of monitors set is: " << mmz->moncount() << endl;
   
   for (int i=0; i < mmz->moncount(); i++)
     {
       // get name as string, convert to char* then to wxstring
-      cout << "got here" << endl;
-      add_monitor->Append(wxString::FromAscii(mmz->getmonprettyname(i).c_str()));
+        add_monitor->Append(wxString::FromAscii(mmz->getmonprettyname(i).c_str()));
     }
   monitorsizer->Add(add_monitor, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
 
@@ -382,6 +366,38 @@ void MyFrame::OnAbout(wxCommandEvent &event)
 //   runnetwork(spin->GetValue());
 //   canvas->Render(wxT("Run button pressed"), cyclescompleted);
 // }
+
+void MyFrame::OnFileButton(wxCommandEvent &event)
+{
+
+}
+
+void MyFrame::OnLoadButton(wxCommandEvent &event)
+{
+  vector<string> switches;
+  string devname;
+  string devtype;
+  cout << endl;
+  cout << endl;
+  cout << "Beginning switch list:" << endl;
+
+  for (int i = 0; i < nmz->tablelength(); i++)
+    {
+      devname = nmz->getname(i);
+      cout << devname << " is a " << dmz->devkind(nmz->lookup(devname)) << endl;
+      if (dmz->devkind(nmz->lookup(devname)) == aswitch)
+	{
+	  cout << devname << " is a switch" << endl;;
+	}
+      //cout << devname << endl;
+    }
+    /*
+  switch_list->Append(wxT("option1"));
+  switch_list->Append(wxT("option2"));
+  switch_list->Append(wxT("option3"));
+  switch_list->Append(wxT("option4"));
+  */
+}
 
 void MyFrame::OnRunButton(wxCommandEvent &event)
 {

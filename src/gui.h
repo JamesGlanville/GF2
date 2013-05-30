@@ -11,6 +11,8 @@
 
 enum { 
   CYCLES_SPIN = wxID_HIGHEST + 1,
+  FILE_BUTTON,
+  LOAD_BUTTON,
   RUN_BUTTON_ID,
   CONT_BUTTON_ID,
   DISP_SCROLL,
@@ -54,6 +56,8 @@ class MyFrame: public wxFrame
   void runnetwork(int ncycles);           // function to run the logic network
   void OnExit(wxCommandEvent& event);     // callback for exit menu item
   void OnAbout(wxCommandEvent& event);    // callback for about menu item
+  void OnFileButton(wxCommandEvent &event);
+  void OnLoadButton(wxCommandEvent &event);
   void OnRunButton(wxCommandEvent &event);
   void OnContButton(wxCommandEvent &event);
   void OnSwitchOption(wxCommandEvent& event);
