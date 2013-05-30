@@ -43,6 +43,8 @@ class MyFrame: public wxFrame
   wxString tracesizer;
   wxString tracename;
   string devname;
+
+  wxBoxSizer *toptracesizer;
   
   wxSpinCtrl *spin_cycles;
   wxComboBox *switch_list;

@@ -278,7 +278,7 @@ MyFrame::MyFrame(wxWindow *parent,
 						       wxDefaultSize,
 				   wxSUNKEN_BORDER | wxHSCROLL | wxVSCROLL);
 
-  wxBoxSizer *toptracesizer = new wxBoxSizer(wxVERTICAL);
+  toptracesizer = new wxBoxSizer(wxVERTICAL);
 
   disp_scroll->SetSizer(toptracesizer);
   disp_scroll->SetScrollRate(10, 10);
@@ -303,6 +303,8 @@ MyFrame::MyFrame(wxWindow *parent,
       //			   10);
       vtracesizers[i]->Add(canvases[i], 1, wxALL | wxEXPAND, 10);
       toptracesizer->Add(vtracesizers[i], 0, wxEXPAND | wxALL, 10);
+      toptracesizer->Hide(vtracesizers[i], true);
+      toptracesizer->Layout();
     }
   
   topsizer->Add(disp_scroll, 1, wxEXPAND | wxALL, 10);
@@ -359,7 +361,7 @@ void MyFrame::OnAbout(wxCommandEvent &event)
 //   cyclescompleted = 0;
 //   mmz->resetmonitor ();
 //   runnetwork(spin->GetValue());
-//   canvas->Render(wxT("Run button pressed"), cyclescompleted);
+//   canvas->Render(wxT("Run button pressed"), cypppclescompleted);
 // }
 
 void MyFrame::OnFileButton(wxCommandEvent &event)
@@ -396,6 +398,10 @@ void MyFrame::OnLoadButton(wxCommandEvent &event)
   cout << "Loaded devices from file." << endl;
 
   tracelabels[0]->SetLabel(wxT("updated this"));
+  vtracesizers[0]->Layout();
+
+  toptracesizer->Show(vtracesizers[0], true, true);
+  toptracesizer->Layout();
 }
 
 void MyFrame::OnRunButton(wxCommandEvent &event)
