@@ -276,7 +276,7 @@ MyFrame::MyFrame(wxWindow *parent,
 						       -1,
 						       wxDefaultPosition,
 						       wxDefaultSize,
-				   wxSUNKEN_BORDER | wxHSCROLL | wxVSCROLL);
+				   wxSUNKEN_BORDER | wxHSCROLL | wxVSCROLL | wxFULL_REPAINT_ON_RESIZE);
 
   toptracesizer = new wxBoxSizer(wxVERTICAL);
 
@@ -397,11 +397,7 @@ void MyFrame::OnLoadButton(wxCommandEvent &event)
     }
   cout << "Loaded devices from file." << endl;
 
-  tracelabels[0]->SetLabel(wxT("updated this"));
-  vtracesizers[0]->Layout();
 
-  toptracesizer->Show(vtracesizers[0], true, true);
-  toptracesizer->Layout();
 }
 
 void MyFrame::OnRunButton(wxCommandEvent &event)
@@ -485,14 +481,37 @@ void MyFrame::OnSwitchOption(wxCommandEvent& event)
 void MyFrame::OnAddMonitor(wxCommandEvent& event)
 {
   rem_monitor->Append(add_monitor->GetValue());
+  //cout << "Add trace at monitor point: " <<
+  //add_monitor->GetValue().ToAscii() << endl;
+
+  int i=0;
+  while (toptracesizer->IsShown(vtracesizers[i]))
+    {
+      i++;
+    }
+  tracelabels[i]->SetLabel(add_monitor->GetValue());
+  vtracesizers[i]->Layout();
+  toptracesizer->Show(vtracesizers[i], true, true);
+  toptracesizer->Layout();
+
   add_monitor->Delete(add_monitor->FindString(add_monitor->GetValue()));
   add_monitor->SetValue(wxT(""));
-  //cout << "Add trace at monitor point: " << add_monitor->GetValue().ToAscii() << endl;
 }
 
 void MyFrame::OnRemMonitor(wxCommandEvent& event)
 {
   add_monitor->Append(rem_monitor->GetValue());
+
+  int i = 0;
+  while (tracelabels[i]->GetLabel() != rem_monitor->GetValue())
+    {
+      i++;
+    }
+  tracelabels[i]->SetLabel(wxT(""));
+  vtracesizers[i]->Layout();
+  toptracesizer->Hide(vtracesizers[i], true);
+  toptracesizer->Layout();
+
   rem_monitor->Delete(rem_monitor->FindString(rem_monitor->GetValue()));
   rem_monitor->SetValue(wxT(""));
   //cout << "Remove trace at monitor point: " << rem_monitor->GetValue().ToAscii() << endl;
