@@ -284,25 +284,6 @@ MyFrame::MyFrame(wxWindow *parent,
   disp_scroll->SetScrollRate(10, 10);
   disp_scroll->SetAutoLayout(true);
 
-  for(int i = 0; i<10; i++)
-    {
-      vtracesizers.push_back(new wxBoxSizer(wxHORIZONTAL));
-      canvases.push_back(new MyGLCanvas(disp_scroll,
-					wxID_ANY,
-					monitor_mod,
-					names_mod,
-					wxPoint(-1,-1),
-					wxSize(-1,40)));
-      tracesizer = wxT("m");
-      tracename = tracesizer << i;
-      vtracesizers[i]->Add(new wxStaticText(disp_scroll, wxID_ANY, tracename),
-			   0,
-			   wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
-			   10);
-      vtracesizers[i]->Add(canvases[i], 1, wxALL | wxEXPAND, 10);
-      toptracesizer->Add(vtracesizers[i], 0, wxEXPAND | wxALL, 10);
-    }
-
   topsizer->Add(disp_scroll, 1, wxEXPAND | wxALL, 10);
 
   wxBoxSizer *termwinsizer = new wxBoxSizer(wxVERTICAL);
@@ -312,7 +293,7 @@ MyFrame::MyFrame(wxWindow *parent,
 		    10);
   text = new wxTextCtrl(this,
 			wxID_ANY,
-			wxT("blah"),
+			wxT(""),
 			wxDefaultPosition,
 			wxSize(400,100),
 			wxTE_MULTILINE | wxHSCROLL);
@@ -320,9 +301,15 @@ MyFrame::MyFrame(wxWindow *parent,
   termwinsizer->Add(text, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
   topsizer->Add(termwinsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
 
+  /*
   cout << endl << "Lorem ipsum dolor sit amet, consectetur adipiscing elit." << endl;
   cout << "Morbi viverra purus nec leo blandit vel mattis turpis bibendum. Integer dictum eleifend tellus, sit amet commodo nibh scelerisque nec." << endl;
-  cout << " Vivamus malesuada sodales justo, ut luctus nulla molestie vitae. Nulla rutrum urna quis magna tristique rhoncus. Etiam auctor consequat ligula eget placerat. Integer vulputate, velit vitae venenatis convallis, nibh nibh euismod leo, in mollis quam massa sit amet ipsum." << endl;
+  cout << " Vivamus malesuada sodales justo, ut luctus nulla molestie
+  vitae. Nulla rutrum urna quis magna tristique rhoncus. Etiam auctor
+  consequat ligula eget placerat. Integer vulputate, velit vitae
+  venenatis convallis, nibh nibh euismod leo, in mollis quam massa sit
+  amet ipsum." << endl;
+  */
 
   SetSizeHints(400, 400);
   SetSizer(topsizer);
@@ -361,6 +348,7 @@ void MyFrame::OnFileButton(wxCommandEvent &event)
 
 void MyFrame::OnLoadButton(wxCommandEvent &event)
 {
+  wxStreamToTextRedirector redirect(text);
   // get switches and put in the switches dialog box
   int i = 0;  
   while (dmz->getswitch(i).compare("") != 0)
@@ -384,6 +372,8 @@ void MyFrame::OnLoadButton(wxCommandEvent &event)
 	  add_monitor->Append(wxString::FromAscii(mmz->getmonprettyname(i).c_str()));
 	}
     }
+  cout << "Loaded devices from file." << endl;
+  //DrawTraces(nmz, dmz, mmz);
 }
 
 void MyFrame::OnRunButton(wxCommandEvent &event)
@@ -479,3 +469,27 @@ void MyFrame::OnRemMonitor(wxCommandEvent& event)
   rem_monitor->SetValue(wxT(""));
   //cout << "Remove trace at monitor point: " << rem_monitor->GetValue().ToAscii() << endl;
 }
+
+/*
+void MyFrame::DrawTraces(names *names_mod, devices *devices_mod, monitor *monitor_mod)
+{
+  for(int i = 0; i<10; i++)
+    {
+      vtracesizers.push_back(new wxBoxSizer(wxHORIZONTAL));
+      canvases.push_back(new MyGLCanvas(disp_scroll,
+					wxID_ANY,
+					monitor_mod,
+					names_mod,
+					wxPoint(-1,-1),
+					wxSize(-1,40)));
+      tracesizer = wxT("m");
+      tracename = tracesizer << i;
+      vtracesizers[i]->Add(new wxStaticText(disp_scroll, wxID_ANY, tracename),
+			   0,
+			   wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
+			   10);
+      vtracesizers[i]->Add(canvases[i], 1, wxALL | wxEXPAND, 10);
+      toptracesizer.Add(vtracesizers[i], 0, wxEXPAND | wxALL, 10);
+    }
+}
+*/
