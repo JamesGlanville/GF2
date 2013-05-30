@@ -65,6 +65,7 @@ class MyFrame: public wxFrame
   void OnSwitchOption(wxCommandEvent& event);
   void OnAddMonitor(wxCommandEvent& event);
   void OnRemMonitor(wxCommandEvent& event);
+  //  void DrawTraces(names *names_mod, devices *devices_mod, monitor *monitor_mod);
   DECLARE_EVENT_TABLE()
 };
     
