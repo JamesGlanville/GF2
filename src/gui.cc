@@ -75,31 +75,6 @@ void MyGLCanvas::Render(int monren, int cycles)
     glEnd();
 
   }
-  /*
-  else { // draw an artificial trace
-
-    glColor3f(0.0, 1.0, 0.0);
-    glBegin(GL_LINE_STRIP);
-    for (i=0; i<5; i++) {
-      if (i%2) y = 10.0;
-      else y = 30.0;
-      glVertex2f(20*i+10.0, y);
-      glVertex2f(20*i+30.0, y);
-    }
-    glEnd();
-
-  }
-  */
-
-  /*
-  // Example of how to use GLUT to draw text on the canvas
-  glColor3f(0.0, 0.0, 1.0);
-  glRasterPos2f(10, 100);
-  for (i = 0; i < example_text.Len(); i++)
-    {
-      glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, example_text[i]);
-    }
-  */
 
   // We've been drawing to the back buffer, flush the graphics
   // pipeline and swap the back buffer to the front 
@@ -176,7 +151,7 @@ void MyGLCanvas::OnMouse(wxMouseEvent& event)
 BEGIN_EVENT_TABLE(MyFrame, wxFrame)
   EVT_MENU(wxID_EXIT,       MyFrame::OnExit)
   EVT_MENU(wxID_ABOUT,      MyFrame::OnAbout)
-  EVT_BUTTON(FILE_BUTTON, MyFrame::OnFileButton)
+//  EVT_BUTTON(FILE_BUTTON, MyFrame::OnFileButton)
   EVT_BUTTON(LOAD_BUTTON, MyFrame::OnLoadButton)
   EVT_BUTTON(RUN_BUTTON_ID, MyFrame::OnRunButton)
   EVT_BUTTON(CONT_BUTTON_ID, MyFrame::OnContButton)
@@ -220,10 +195,10 @@ MyFrame::MyFrame(wxWindow *parent,
   topsizer = new wxBoxSizer(wxVERTICAL);
 
   wxBoxSizer *filesizer = new wxBoxSizer(wxHORIZONTAL);
-  filesizer->Add(new wxButton(this, FILE_BUTTON, wxT("Select File")),
-		 0,
-		 wxALL | wxALIGN_CENTER_VERTICAL,
-		 10);
+  //  filesizer->Add(new wxButton(this, FILE_BUTTON, wxT("Select File")),
+  //		 0,
+  //		 wxALL | wxALIGN_CENTER_VERTICAL,
+  //		 10);
   filesizer->Add(new wxButton(this, LOAD_BUTTON, wxT("Load Data")),
 		 0,
 		 wxALL | wxALIGN_CENTER_VERTICAL,
@@ -359,17 +334,7 @@ void MyFrame::OnAbout(wxCommandEvent &event)
   about.ShowModal();
 }
 
-// void MyFrame::OnButton(wxCommandEvent &event)
-// // Callback for the push button
-// {
-//   int n, ncycles;
-
-//   cyclescompleted = 0;
-//   mmz->resetmonitor ();
-//   runnetwork(spin->GetValue());
-//   canvas->Render(wxT("Run button pressed"), cypppclescompleted);
-// }
-
+/*
 void MyFrame::OnFileButton(wxCommandEvent &event)
 {
 
@@ -391,6 +356,7 @@ void MyFrame::OnFileButton(wxCommandEvent &event)
 
   filetoopen = (string)filetoopenpath.mb_str();
 }
+*/
 
 void MyFrame::OnLoadButton(wxCommandEvent &event)
 {
