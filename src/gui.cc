@@ -367,7 +367,10 @@ void MyFrame::OnLoadButton(wxCommandEvent &event)
     {
       //wxStreamToTextRedirector redirect(text);
       //cout << dmz->getswitch(i) << " is a switch." << endl;
-      switch_list->Append(wxString::FromAscii(dmz->getswitch(i).c_str()));
+      if(switch_list->FindString(wxString::FromAscii(dmz->getswitch(i).c_str())) == -1)
+	{
+	  switch_list->Append(wxString::FromAscii(dmz->getswitch(i).c_str()));
+	}
       i++;
     }
 
@@ -375,8 +378,11 @@ void MyFrame::OnLoadButton(wxCommandEvent &event)
   // get monitors and put them in the add monitors dialog box
   for (int i=0; i < mmz->moncount(); i++)
     {
-      // get name as string, convert to char* then to wxstring
-      add_monitor->Append(wxString::FromAscii(mmz->getmonprettyname(i).c_str()));
+      if(add_monitor->FindString(wxString::FromAscii(mmz->getmonprettyname(i).c_str())) == -1)
+	{
+	  // get name as string, convert to char* then to wxstring
+	  add_monitor->Append(wxString::FromAscii(mmz->getmonprettyname(i).c_str()));
+	}
     }
 }
 
