@@ -39,8 +39,8 @@ bool MyApp::OnInit()
   pmz = new parser(netz,dmz,mmz,smz,nmz,dtz);
 #endif
     MyFrame *frame = new MyFrame(NULL, wxT("Logic simulator"), wxDefaultPosition,  wxSize(800, 600), nmz, dmz, mmz);
-        wxStreamToTextRedirector redirect(text);
-  if (!pmz->readin ()) { // check the logic file parsed correctly
+    wxStreamToTextRedirector redirect(text);
+    if (!pmz->readin ()) { // check the logic file parsed correctly
 #ifdef USE_GUI
     // glutInit cannot cope with Unicode command line arguments, so we pass
     // it some fake ASCII ones instead

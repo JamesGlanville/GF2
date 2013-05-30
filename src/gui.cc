@@ -362,24 +362,11 @@ void MyFrame::OnFileButton(wxCommandEvent &event)
 void MyFrame::OnLoadButton(wxCommandEvent &event)
 {
   // get switches and put in the switches dialog box
-  /*
-  for (int i = 0; i < nmz->tablelength(); i++)
-    {
-      devname = nmz->getname(i);
-      cout << devname << " is a " << dmz->devkind(nmz->lookup(devname)) << endl;
-      if (dmz->devkind(nmz->lookup(devname)) == aswitch)
-	{
-	  cout << devname << " is a switch" << endl;;
-	  switch_list->Append(wxString::FromAscii(devname.c_str()));
-	}
-    }
-  */
-  // get switches method attempt 2...
-
- int i = 0;  
+  int i = 0;  
   while (dmz->getswitch(i).compare("") != 0)
     {
-      cout << dmz->getswitch(i) << " is a switch." << endl;
+      //wxStreamToTextRedirector redirect(text);
+      //cout << dmz->getswitch(i) << " is a switch." << endl;
       switch_list->Append(wxString::FromAscii(dmz->getswitch(i).c_str()));
       i++;
     }
@@ -446,12 +433,29 @@ void MyFrame::OnSwitchSelect(wxCommandEvent& event)
 
 void MyFrame::OnSwitchOption(wxCommandEvent& event)
 {
-  cout << "switch: " << switch_list->GetValue().ToAscii() << " set to " << switch_option->GetValue().ToAscii() << endl;
-  //  cout << "got to OnSwitchOption callback" << endl;
-  //  cout << "switch selected: " << switch_list->GetValue().ToAscii() << endl;
-  //  cout << "switch value: " << switch_option->GetValue().ToAscii() << endl;
+  wxStreamToTextRedirector redirect(text);
 
-
+  bool ok;
+  if (switch_option->GetValue() == wxT("HIGH"))
+    {
+      dmz->setswitch(nmz->lookup((string)switch_list->GetValue().mb_str()), high, ok);
+      if (ok)
+	cout << "switch \"" << switch_list->GetValue().ToAscii()
+	     << "\" set to HIGH" << endl;
+      else
+	cout << "Error: switch \"" << switch_list->GetValue().ToAscii()
+	     << "\" not found." << endl;
+    }
+  else if (switch_option->GetValue() == wxT("LOW"))
+    {
+      dmz->setswitch(nmz->lookup((string)switch_list->GetValue().mb_str()), low, ok);
+      if (ok)
+	cout << "switch \"" << switch_list->GetValue().ToAscii()
+	     << "\" set to LOW" << endl;
+      else
+	cout << "Error: switch \"" << switch_list->GetValue().ToAscii()
+	     << "\" not found." << endl;
+    }
 }
 
 void MyFrame::OnAddMonitor(wxCommandEvent& event)
