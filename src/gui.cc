@@ -372,7 +372,13 @@ void MyFrame::OnAbout(wxCommandEvent &event)
 
 void MyFrame::OnFileButton(wxCommandEvent &event)
 {
-
+  wxFileDialog *loadNewFile = new wxFileDialog(this,
+					     wxT("Choose file to open"),
+					     wxEmptyString,
+					     wxEmptyString,
+					     _("DEF files (*.def)|*.def|TXT file (*.txt)|*.txt"),
+					     wxFD_OPEN,
+					     wxDefaultPosition);
 }
 
 void MyFrame::OnLoadButton(wxCommandEvent &event)
