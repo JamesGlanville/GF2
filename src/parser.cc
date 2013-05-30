@@ -525,7 +525,7 @@ bool parser::readin (void)
   
   if(error_count) 
   {
-    cout << "\nError count is " << error_count << endl; 
+    cout << "\nTotal error count is " << error_count << "." << endl; 
     return PARSER_FAIL;
   }
   
