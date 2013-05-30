@@ -7,7 +7,7 @@
 
 using namespace std;
 
-wxTextCtrl* text;
+wxTextCtrl* textout;
 
 // MyGLCanvas //////////////////////////////////////////////////////////////////
 
@@ -314,14 +314,14 @@ MyFrame::MyFrame(wxWindow *parent,
 		    0,
 		    wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
 		    10);
-  text = new wxTextCtrl(this,
+  textout = new wxTextCtrl(this,
 			wxID_ANY,
 			wxT(""),
 			wxDefaultPosition,
 			wxSize(400,100),
 			wxTE_MULTILINE | wxHSCROLL);
-  wxStreamToTextRedirector redirect(text);
-  termwinsizer->Add(text, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
+  wxStreamToTextRedirector redirect(textout);
+  termwinsizer->Add(textout, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
   topsizer->Add(termwinsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
 
   /*

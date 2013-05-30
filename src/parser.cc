@@ -3,7 +3,7 @@
 
 #include "parser.h"
 
-extern wxTextCtrl* text;
+extern wxTextCtrl* textout;
 
 using namespace std;
 
@@ -11,7 +11,7 @@ using namespace std;
 
 bool parser::readin (void)
 {
-  wxStreamToTextRedirector redirect(text);
+  wxStreamToTextRedirector redirect(textout);
   cout << "Hello" << endl;
   // Stores parsing function output
   name id;
