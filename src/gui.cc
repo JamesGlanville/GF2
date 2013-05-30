@@ -59,6 +59,7 @@ void MyGLCanvas::Render(wxString example_text, int cycles)
   }
   glClear(GL_COLOR_BUFFER_BIT);
 
+  
   if ((cyclesdisplayed >= 0) && (mmz->moncount() > 0)) {
     // draw the first monitor signal, get trace from monitor class
     glColor3f(1.0, 0.0, 0.0);
@@ -229,7 +230,7 @@ MyFrame::MyFrame(wxWindow *parent,
 		 0,             /* make vertically unstrechable */
 		 wxALL | wxALIGN_CENTER_VERTICAL,         /* border all around */
 		 10);           /* border size */
-  spin_cycles = new wxSpinCtrl(this, CYCLES_SPIN, wxString(wxT("10")));
+  spin_cycles = new wxSpinCtrl(this, CYCLES_SPIN, wxString(wxT("10")), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 50, 10);
   ctrlsizer->Add(spin_cycles, 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
   ctrlsizer->Add(new wxButton(this, RUN_BUTTON_ID, wxT("Run")),
 		 0,
@@ -371,7 +372,7 @@ void MyFrame::OnFileButton(wxCommandEvent &event)
 
 void MyFrame::OnLoadButton(wxCommandEvent &event)
 {
-  wxStreamToTextRedirector redirect(text);
+  wxStreamToTextRedirector redirect(textout);
   // get switches and put in the switches dialog box
   int i = 0;  
   while (dmz->getswitch(i).compare("") != 0)
@@ -406,6 +407,7 @@ void MyFrame::OnRunButton(wxCommandEvent &event)
   int n, ncycles;
   cyclescompleted = 0;
   mmz->resetmonitor();
+  //wxStreamToTextRedirector redirect(textout);
   //cout << "run network for " << spin_cycles->GetValue() << " cycles." << endl;
   runnetwork(spin_cycles->GetValue());
 }
@@ -414,6 +416,7 @@ void MyFrame::OnContButton(wxCommandEvent &event)
 {
   // continue simulation - same as OnRunButton but w/o resetting cyclescompleted
   int n, ncycles;
+  //wxStreamToTextRedirector redirect(textout);
   //cout << "network has run " << cyclescompleted << " cycles." << endl;
   //cout << "and will continue with " << spin_cycles->GetValue() << " more cycles." << endl;
   runnetwork(spin_cycles->GetValue());
@@ -423,8 +426,11 @@ void MyFrame::runnetwork(int ncycles)
 {
   // Function to run the network, derived from corresponding function
   // in userint.cc
+  wxStreamToTextRedirector redirect(textout);
   bool ok = true;
   int n = ncycles;
+
+  cout << "in run network function." << endl;
 
   while ((n > 0) && ok) {
     dmz->executedevices (ok);
@@ -436,6 +442,8 @@ void MyFrame::runnetwork(int ncycles)
     else
       cout << "Error: network is oscillating" << endl;
   }
+
+  cout << "finished while" << endl;
   if (ok)
     {
       cyclescompleted = cyclescompleted + ncycles;
@@ -444,6 +452,13 @@ void MyFrame::runnetwork(int ncycles)
     {
       cyclescompleted = 0;
     }
+  cout << "network has run " << cyclescompleted << " cycles." << endl;
+
+  for (int i=0; toptracesizer->IsShown(vtracesizers[i]); i++)
+    {
+        canvases[i]->Render(wxT(""), cyclescompleted);
+    }
+
 }
 
 void MyFrame::OnSwitchSelect(wxCommandEvent& event)
@@ -453,7 +468,7 @@ void MyFrame::OnSwitchSelect(wxCommandEvent& event)
 
 void MyFrame::OnSwitchOption(wxCommandEvent& event)
 {
-  wxStreamToTextRedirector redirect(text);
+  wxStreamToTextRedirector redirect(textout);
 
   bool ok;
   if (switch_option->GetValue() == wxT("HIGH"))
@@ -509,7 +524,8 @@ void MyFrame::OnRemMonitor(wxCommandEvent& event)
     }
   tracelabels[i]->SetLabel(wxT(""));
   vtracesizers[i]->Layout();
-  toptracesizer->Hide(vtracesizers[i], true);
+  toptracesizer->Hide(vtracesizers[i
+], true);
   toptracesizer->Layout();
 
   rem_monitor->Delete(rem_monitor->FindString(rem_monitor->GetValue()));
