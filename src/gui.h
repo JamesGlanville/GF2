@@ -35,6 +35,8 @@ class MyFrame: public wxFrame
 	  devices *devices_mod = NULL,
 	  monitor *monitor_mod = NULL, 
 	  long style = wxDEFAULT_FRAME_STYLE); // constructor
+
+  string filetoopen = "";
  private:
   vector<wxBoxSizer*> vtracesizers;       /* Vector to hold sizers for traces */
   vector<MyGLCanvas*> canvases;	          /* vector to hold canvases */

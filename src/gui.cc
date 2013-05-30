@@ -372,6 +372,8 @@ void MyFrame::OnAbout(wxCommandEvent &event)
 
 void MyFrame::OnFileButton(wxCommandEvent &event)
 {
+
+  wxString filetooopenpath;
   wxFileDialog *loadNewFile = new wxFileDialog(this,
 					     wxT("Choose file to open"),
 					     wxEmptyString,
@@ -379,6 +381,15 @@ void MyFrame::OnFileButton(wxCommandEvent &event)
 					     _("DEF files (*.def)|*.def|TXT file (*.txt)|*.txt"),
 					     wxFD_OPEN,
 					     wxDefaultPosition);
+  if (loadNewFile->ShowModal() == wxID_OK) // if click OPEN rather
+					   // than CANCEL
+    {
+      filetoopenpath = loadNewFile->GetPath();
+    }
+  
+  loadNewFile->Destroy();
+
+  filetoopen = (string)filetoopenpath.mb_str();
 }
 
 void MyFrame::OnLoadButton(wxCommandEvent &event)
