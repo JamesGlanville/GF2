@@ -441,6 +441,7 @@ void devices::executedevices (bool& ok)
         case nandgate: execgate (d, high, low);  break;
         case xorgate:  execxorgate (d);          break;
         case dtype:    execdtype (d);            break;     
+        case siggen:   execsigen (d);            break;     
       }
       if (debugging)
 	showdevice (d);
