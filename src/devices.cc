@@ -73,6 +73,23 @@ void devices::setswitch (name sid, asignal level, bool& ok)
   }
 }
 
+/***********************************************************************
+ *
+ * Gets the state of the named switch. 'ok' returns false if switch  
+ * not found.                                                        
+ *
+ */
+void devices::getswitchstate (name sid, asignal& level, bool& ok)
+{
+  devlink d;
+  d = netz->finddevice (sid);
+  ok = (d != NULL);
+  if (ok) {
+    ok = (d->kind == aswitch);
+    if (ok)
+       level = d->swstate;
+  }
+}
 
 /***********************************************************************
  *

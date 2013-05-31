@@ -38,6 +38,7 @@ public:
     /* variant is used with such things as gates where it specifies the    */
     /* number of inputs. 'ok' returns true if operation succeeds.          */
  
+  void getswitchstate (name sid, asignal& level, bool& ok);
   void setswitch (name sid, asignal level, bool& ok);
     /* Sets the state of the named switch. 'ok' returns false if switch    */
     /* not found.                                                          */
