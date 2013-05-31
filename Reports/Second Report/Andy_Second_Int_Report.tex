@@ -1,0 +1,105 @@
+% File name: Reports/Second Report/Andy_Second_Int_Report.tex
+% Second Interim Report for GF2 Software project.
+% Includes code listings/alterations and description, test definition
+% files and circuit diagrams and a single page user guide.
+% Author: adh
+% Date: Fri May 31 00:52:24 BST 2013
+
+\documentclass[a4paper,10pt]{article}  % Standard document class
+\usepackage[english]{babel}            % Set document language
+\usepackage{fullpage}                  % Set up page for small margins etc
+
+\usepackage{graphicx}                  % For including images in document
+\usepackage{placeins}                  % Allows use of \FloatBarrier
+% to avoid images or tables
+% moving into next section
+\usepackage{subfig}                    % For subfigures...
+
+\usepackage{amsmath}                   % For improving maths/formula typesetting
+%\usepackage{tabularx}                  % Table changing package
+
+%\usepackage{algpseudocode}             % For producing algorithms/flowcharts
+
+\usepackage{color}
+\definecolor{grey}{rgb}{0.5,0.5,0.5}
+
+\usepackage{listings}                  % For including source code in document
+\lstset{
+  basicstyle = \footnotesize\texttt,
+  commentstyle = \color{grey},
+  keepspaces = true,
+  keywordstyle = \color{blue},
+  language = C++,
+  numbers = left,
+  numbersep=5pt,
+  numberstyle=\tiny\color{grey},
+  stepnumber=5,
+  tabsize=2,
+}
+
+% Provide command for scientific notation
+\providecommand{\e}[1]{\ensuremath{\times10^{#1}}}
+\providecommand{\degrees}{\ensuremath{^{\circ}}}
+
+% Define title here:
+\title{Project GF2: Software\\ Second Interim Report\\ Software Design
+  Team 1}
+\author{George Ayris\\ gdwa2\\ Emmanuel \\ Parser \& Scanner \and James Glanville\\
+jg597\\ Emmanuel \\ Scanner \& Parser \and \textbf{Andrew Holt}\\
+\textbf{ah635}\\ \textbf{Emmanuel}\\ \textbf{GUI}}
+\date{31 May 2013}
+
+\begin{document}
+
+% generate title
+\maketitle
+
+\section{Introduction}
+\label{sec:introduction}
+
+This report gives a brief summary of the graphical user interface
+(gui) development for the GF2 Software Project. Version 1.0 of the
+logic simulation package has been produced and tested. In addition to
+the program file listings, test files for the software and the
+corresponding circuit diagrams are shown. Finally, a single page user
+guide describing the operation of the software package is given.
+
+\section{File Listings and Descriptions}
+\label{sec:file-list-descr}
+
+For the gui development, the vast majority of my code has been in the
+\texttt{gui.h} and \texttt{gui.cc} files, and primarily concerned with
+the \texttt{MyFrame} class, with some fairly minor modifications made
+to the \texttt{MyGLCanvas} class. These files are listed in full in
+appendix 
+
+The header file, \texttt{gui.h}, contains the class and function
+templates for \texttt{MyFrame} and \texttt{MyGLCanvas}. It also
+contains an \texttt{enum} type, defining the widgets used in the gui.
+
+The main file, \texttt{gui.cc}, contains the definitions for
+\texttt{MyFrame} and \texttt{MyGLCanvas}.
+
+\section{Test Files and Circuit Diagrams}
+\label{sec:test-files-circuit}
+
+\section{User Guide}
+\label{sec:user-guide}
+
+\newpage
+\appendix
+
+\section{Source Code}
+\label{sec:source-code}
+
+\subsection{gui.h}
+\label{sec:gui.h}
+
+\lstinputlisting{gui.cc}
+
+\subsection{gui.cc}
+\label{sec:gui.cc}
+
+\lstinputlisting{gui.cc}
+
+\end{document}
