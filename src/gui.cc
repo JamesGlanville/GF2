@@ -423,7 +423,7 @@ void MyFrame::runnetwork(int ncycles)
     {
       cyclescompleted = 0;
     }
-  cout << "Simulation has run for" << cyclescompleted << " cycles." << endl;
+  cout << "Simulation has run for " << cyclescompleted << " cycles." << endl;
 
   int mon;
 
