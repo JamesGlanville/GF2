@@ -7,7 +7,7 @@
 
 typedef enum {falling, low, rising, high} asignal;
 typedef enum {aswitch, aclock, andgate, nandgate, orgate,
-	      norgate, xorgate, dtype, baddevice} devicekind;
+	      norgate, xorgate, dtype, baddevice, siggen} devicekind;
 
 struct outputrec {
   name       id;
@@ -32,6 +32,8 @@ struct devicerec {
   int frequency;        // used when kind == aclock
   int counter;          // used when kind == aclock
   asignal memory;       // used when kind == dtype
+  vector <bool> data;   // used when kind == siggen
+  int dataloc;          // used when kind == siggen
 };
 typedef devicerec* devlink;
 

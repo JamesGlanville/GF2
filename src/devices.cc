@@ -1,6 +1,7 @@
 #include "devices.h"
 #include <iostream>
 #include <string>
+#include <cstdlib> 
 
 using namespace std;
 
@@ -306,29 +307,104 @@ void devices::execxorgate(devlink d)
  * nonzero setup time, and a zero hold time.
  *
  */
-void devices::execdtype (devlink d)
+void devices::execdtype (devlink d, int machinecycle)
 {
-  asignal datainput, clkinput, setinput, clrinput;
-  inplink i;
-  outplink qout, qbarout;
-  i = netz->findinput (d, datapin); datainput = i->connect->sig;
-  i = netz->findinput (d, clkpin);  clkinput  = i->connect->sig;
-  i = netz->findinput (d, clrpin);  clrinput  = i->connect->sig;
-  i = netz->findinput (d, setpin);  setinput  = i->connect->sig;
-  qout = netz->findoutput (d, qpin);
-  qbarout = netz->findoutput (d, qbarpin);
-  if ((clkinput == rising) && ((datainput == high) || (datainput == falling)))
-    d->memory = high;
-  if ((clkinput == rising) && ((datainput == low) || (datainput == rising)))
-    d->memory = low;
-  if (setinput == high)
-    d->memory = high;
-  if (clrinput == high)
-    d->memory = low;
+ static bool complete;
+ static bool hasrisen;
+ asignal RAND = low;
+ if (rand()&0x01){RAND=high;}
+ const int holdtime = 3; //Number of loops to try and get steadystate in.
+ asignal datainput, clkinput, setinput, clrinput;
+ inplink i;
+ outplink qout, qbarout;
+ i = netz->findinput (d, datapin); datainput = i->connect->sig;
+ i = netz->findinput (d, clkpin);  clkinput  = i->connect->sig;
+ i = netz->findinput (d, clrpin);  clrinput  = i->connect->sig;
+ i = netz->findinput (d, setpin);  setinput  = i->connect->sig;
+ qout = netz->findoutput (d, qpin);
+ qbarout = netz->findoutput (d, qbarpin);
+	   
+  if (machinecycle ==1) {complete = false;hasrisen=false;}
+  if (!complete)
+  {
+	  if (clkinput == rising) {hasrisen = true;}
+	  
+	  if (hasrisen && (datainput == falling || datainput == rising))
+	  {
+		signalupdate(RAND,qout->sig);
+		signalupdate(inv (RAND), qbarout->sig);
+		complete=true;
+		return;
+	  }
+	  
+	  if (hasrisen && datainput == high)
+	  {
+		d->memory = high;
+	  }
+	  if (hasrisen && datainput == low)
+	  {
+		d->memory = low;
+	  }
+	  if (setinput == high)
+		d->memory = high;
+	  if (clrinput == high)
+		d->memory = low;
+			  
+	  if (machinecycle <= holdtime)
+	  {
+		steadystate = false;
+	  }
+	  else
+	  {
+		  complete = true;
+	  }
+  }
+  else
+  {
   signalupdate (d->memory, qout->sig);
   signalupdate (inv (d->memory), qbarout->sig);
+  
+  }
 }
 
+/*******
+ * 
+ * Used to simulate the operation of SIGGEN devices.
+ * 
+ * 
+ */
+ 
+void devices::execsigen(devlink d)
+{
+	if (d->dataloc > d->data.size())
+	{
+		d->dataloc = 0;
+	}
+	else
+	{
+		d->dataloc++;
+	}
+	
+	if (d->data[d->dataloc])
+	{
+		signalupdate(high,d->olist->sig);
+	}
+	else
+	{
+		signalupdate(low,d->olist->sig);
+	}
+}
+
+void devices::makesiggen (name did, vector <bool> data, bool& ok)
+{
+  devlink d;
+  int n;
+  namestring iname;
+  netz->adddevice (siggen, did, d);
+  netz->addoutput (d, blankname);
+  d->dataloc = 0;
+  d->data = data;
+}
 
 /***********************************************************************
  *
@@ -402,7 +478,8 @@ void devices::executedevices (bool& ok)
         case andgate:  execgate (d, high, high); break;
         case nandgate: execgate (d, high, low);  break;
         case xorgate:  execxorgate (d);          break;
-        case dtype:    execdtype (d);            break;     
+        case dtype:    execdtype (d,machinecycle);            break;     
+        case siggen:   execsigen (d);            break;     
       }
       if (debugging)
 	showdevice (d);

@@ -27,7 +27,11 @@ class devices{
   void execswitch (devlink d);
   void execgate (devlink d, asignal x, asignal y);
   void execxorgate(devlink d);
-  void execdtype (devlink d);
+  void execdtype (devlink d, int machinecycle);
+  
+  void execsigen(devlink d);
+  void makesiggen (name did, vector <bool> data, bool& ok);
+  
   void execclock(devlink d);
   void updateclocks (void);
   void outsig (asignal s);
