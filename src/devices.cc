@@ -329,6 +329,44 @@ void devices::execdtype (devlink d)
   signalupdate (inv (d->memory), qbarout->sig);
 }
 
+/*******
+ * 
+ * Used to simulate the operation of SIGGEN devices.
+ * 
+ * 
+ */
+ 
+void devices::execsigen(devlink d)
+{
+	if (d->dataloc > d->data.size())
+	{
+		d->dataloc = 0;
+	}
+	else
+	{
+		d->dataloc++;
+	}
+	
+	if (d->data[d->dataloc])
+	{
+		signalupdate(high,d->olist->sig);
+	}
+	else
+	{
+		signalupdate(low,d->olist->sig);
+	}
+}
+
+void devices::makesiggen (name did, vector <bool> data, bool& ok)
+{
+  devlink d;
+  int n;
+  namestring iname;
+  netz->adddevice (siggen, did, d);
+  netz->addoutput (d, blankname);
+  d->dataloc = 0;
+  d->data = data;
+}
 
 /***********************************************************************
  *

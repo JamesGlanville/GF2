@@ -28,6 +28,10 @@ class devices{
   void execgate (devlink d, asignal x, asignal y);
   void execxorgate(devlink d);
   void execdtype (devlink d);
+  
+  void execsigen(devlink d);
+  void makesiggen (name did, vector <bool> data, bool& ok);
+  
   void execclock(devlink d);
   void updateclocks (void);
   void outsig (asignal s);
