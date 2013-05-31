@@ -5,7 +5,7 @@
 //#include "parser.h"
 #include <vector>
 #include <utility>
-enum device_type {NONE=-1,AND, NAND, OR, NOR, XOR, DTYPE, CLK, SW,UNDEFINED};
+enum device_type {NONE=-1,AND, NAND, OR, NOR, XOR, DTYPE, CLK, SIGGEN, SW,UNDEFINED};
 
 using namespace std;
 

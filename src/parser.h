@@ -38,7 +38,7 @@ class parser {
               not_valid_device, number_expected, device_not_defined, invalid_input,
               no_inputs, more_inputs_than_defined, invalid_output, one_monitor_required,
 			  monitor_name_expected, inputs_two_to_sixteen, clk_param, switch_param,
-              device_not_unique, monitor_not_unique, unconnected_inputs};
+              device_not_unique, monitor_not_unique, unconnected_inputs, zero_or_one_expected};
   
   /* put other stuff that the class uses internally here */
   /* also declare internal functions                     */
@@ -55,6 +55,7 @@ class parser {
   bool parseDeviceType(device_type &current_device_type);
   // Gives the value of the device definition parameter in the parameter
   bool parseParam(int &param_value);
+  bool parseParam(vector <bool> &signal);
   // Parses parameter if necessary and then creates a device of give type and name
   // For CLK and SW it stores the names
   bool createDevice(device_type current_device_type, name id);

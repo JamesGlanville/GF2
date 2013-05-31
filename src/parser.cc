@@ -620,6 +620,8 @@ void parser::errorHandling (error error_num)
     case unconnected_inputs:
       cout << "Not all inputs are connected. \n";
       break;
+    case zero_or_one_expected:
+      smz->printError("Signal generator waveform can only consist of 1s and 0s");
     default:
       cout << "Error in errorHandling\n";
   }
@@ -659,6 +661,9 @@ bool parser::parseToken (symbol token)
         break;
       case closecurly:
         error_token = "'}'";
+        break;
+      case comma:
+        error_token = "','";
         break;
       default:
         error_token = "Error in parseToken";
@@ -843,6 +848,10 @@ bool parser::parseDeviceType (device_type &current_device_type)
   {
     current_device_type = CLK;    
   }
+  else if(nmz->getname(id).compare("siggen") == 0)
+  {
+	  current_device_type = SIGGEN;
+  }
   else if(nmz->getname(id).compare("sw") == 0)
   {
     current_device_type = SW; 
@@ -879,6 +888,56 @@ bool parser::parseParam(int &param_value)
   else  
   {
     errorHandling(number_param_expected);
+    // Stop parsing if eof is found
+    if (sym == eofsym) 
+    {
+      stopped_at = eofsym;
+      endOfSection = 1;
+    }
+    return PARSER_FAIL;
+  }
+  
+  if(parseToken(closeparen)) return PARSER_FAIL;
+  
+  return PARSER_PASS;
+}
+
+/* ------------------------------------------------------------------ */
+// For the SIGGEN the parameter is stored as a boolean vector
+bool parser::parseParam(vector <bool> &signal) 
+{
+  symbol sym;
+  name id;
+  int num;
+  
+  if(parseToken(openparen)) return PARSER_FAIL;
+  
+  smz->getsymbol(sym,id,num);
+  if(sym == numsym && (num == 0 || num == 1))
+  {
+    signal.clear();
+    while(sym == numsym)
+    {
+      signal.push_back(num);
+      if(parseToken(comma)) return PARSER_FAIL;
+      
+      smz->getsymbol(sym,id,num);
+      if(sym == eofsym || !(num == 1 || num == 0))
+      {
+        errorHandling(zero_or_one_expected);
+        // Stop parsing if eof is found
+        if (sym == eofsym) 
+        {
+          stopped_at = eofsym;
+          endOfSection = 1;
+        }
+        return PARSER_FAIL;
+      } 
+    }
+  }
+  else  
+  {
+    errorHandling(zero_or_one_expected);
     // Stop parsing if eof is found
     if (sym == eofsym) 
     {
