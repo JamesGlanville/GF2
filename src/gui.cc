@@ -441,7 +441,29 @@ void MyFrame::runnetwork(int ncycles)
 
 void MyFrame::OnSwitchSelect(wxCommandEvent& event)
 {
-  
+    wxStreamToTextRedirector redirect(textout);
+
+  bool ok;
+  if (switch_option->GetValue() == wxT("HIGH"))
+    {
+      dmz->setswitch(nmz->lookup((string)switch_list->GetValue().mb_str()), high, ok);
+      if (ok)
+	cout << "switch \"" << switch_list->GetValue().ToAscii()
+	     << "\" set to HIGH" << endl;
+      else
+	cout << "Error: switch \"" << switch_list->GetValue().ToAscii()
+	     << "\" not found." << endl;
+    }
+  else if (switch_option->GetValue() == wxT("LOW"))
+    {
+      dmz->setswitch(nmz->lookup((string)switch_list->GetValue().mb_str()), low, ok);
+      if (ok)
+	cout << "switch \"" << switch_list->GetValue().ToAscii()
+	     << "\" set to LOW" << endl;
+      else
+	cout << "Error: switch \"" << switch_list->GetValue().ToAscii()
+	     << "\" not found." << endl;
+    }
 }
 
 void MyFrame::OnSwitchOption(wxCommandEvent& event)
