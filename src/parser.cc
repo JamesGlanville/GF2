@@ -1,6 +1,3 @@
-// TODO
-// Check whether clocks require period or frequency
-
 #include "parser.h"
 
 extern wxTextCtrl* textout;
