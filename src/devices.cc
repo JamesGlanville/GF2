@@ -374,7 +374,7 @@ void devices::execdtype (devlink d, int machinecycle)
  * 
  */
  
-void devices::execsigen(devlink d)
+void devices::execsiggen(devlink d)
 {
 	if (d->dataloc >= d->data.size())
 	{
@@ -479,7 +479,7 @@ void devices::executedevices (bool& ok)
         case nandgate: execgate (d, high, low);  break;
         case xorgate:  execxorgate (d);          break;
         case dtype:    execdtype (d,machinecycle);            break;     
-        case siggen:   execsigen (d);            break;     
+        case siggen:   execsiggen (d);            break;     
       }
       if (debugging)
 	showdevice (d);

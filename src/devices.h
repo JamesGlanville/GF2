@@ -29,7 +29,7 @@ class devices{
   void execxorgate(devlink d);
   void execdtype (devlink d, int machinecycle);
   
-  void execsigen(devlink d);
+  void execsiggen(devlink d);
   void makesiggen (name did, vector <bool> data, bool& ok);
   
   void execclock(devlink d);
