@@ -1,10 +1,10 @@
 {
 DEVICES
 {
+	D0 = DTYPE;
 	D1 = DTYPE;
 	D2 = DTYPE;
 	D3 = DTYPE;
-	D4 = DTYPE;
 	INPUT = SW(1);
 	RESET = SW(0);
 	ZERO  = SW(0);
