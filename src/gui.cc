@@ -495,7 +495,8 @@ void MyFrame::OnSwitchOption(wxCommandEvent& event)
 
 void MyFrame::OnAddMonitor(wxCommandEvent& event)
 {
-  rem_monitor->Append(add_monitor->GetValue());
+  wxStreamToTextRedirector redirect(textout);
+
   //cout << "Add trace at monitor point: " <<
   //add_monitor->GetValue().ToAscii() << endl;
 
@@ -504,12 +505,19 @@ void MyFrame::OnAddMonitor(wxCommandEvent& event)
     {
       i++;
     }
+  if (i >= 10) 
+    {
+      cout << "Error: more than 10 monitors selected" << endl;
+      cout << "Too much of a good thing!" << endl;
+      cout << "Try removing some monitor points first" << endl;
+    }
   tracelabels[i]->SetLabel(add_monitor->GetValue());
   vtracesizers[i]->Layout();
   toptracesizer->Show(vtracesizers[i], true, true);
   toptracesizer->Layout();
   topsizer->Layout();
 
+  rem_monitor->Append(add_monitor->GetValue());
   add_monitor->Delete(add_monitor->FindString(add_monitor->GetValue()));
   add_monitor->SetValue(wxT(""));
 }
