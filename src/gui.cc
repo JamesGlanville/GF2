@@ -395,11 +395,11 @@ void MyFrame::runnetwork(int ncycles)
 
   //cout << "in run network function." << endl;
 
-  if (cyclescompleted + n >= 350)
+  if (cyclescompleted + n >= 300)
     {
       cout << "Error: too many cycles." << endl;
       cout << "All good things must come to an end." << endl;
-      cout << "(Maximum is 350.)" <<endl;
+      cout << "(Maximum is 300.)" <<endl;
       return;
     }
 
