@@ -395,11 +395,11 @@ void MyFrame::runnetwork(int ncycles)
 
   //cout << "in run network function." << endl;
 
-  if (cyclescompleted + n >= 350)
+  if (cyclescompleted + n >= 300)
     {
       cout << "Error: too many cycles." << endl;
       cout << "All good things must come to an end." << endl;
-      cout << "(Maximum is 350.)" <<endl;
+      cout << "(Maximum is 300.)" <<endl;
       return;
     }
 
@@ -423,7 +423,7 @@ void MyFrame::runnetwork(int ncycles)
     {
       cyclescompleted = 0;
     }
-  cout << "network has run " << cyclescompleted << " cycles." << endl;
+  cout << "Simulation has run for" << cyclescompleted << " cycles." << endl;
 
   int mon;
 
@@ -441,7 +441,29 @@ void MyFrame::runnetwork(int ncycles)
 
 void MyFrame::OnSwitchSelect(wxCommandEvent& event)
 {
-  
+    wxStreamToTextRedirector redirect(textout);
+
+  bool ok;
+  if (switch_option->GetValue() == wxT("HIGH"))
+    {
+      dmz->setswitch(nmz->lookup((string)switch_list->GetValue().mb_str()), high, ok);
+      if (ok)
+	cout << "switch \"" << switch_list->GetValue().ToAscii()
+	     << "\" set to HIGH" << endl;
+      else
+	cout << "Error: switch \"" << switch_list->GetValue().ToAscii()
+	     << "\" not found." << endl;
+    }
+  else if (switch_option->GetValue() == wxT("LOW"))
+    {
+      dmz->setswitch(nmz->lookup((string)switch_list->GetValue().mb_str()), low, ok);
+      if (ok)
+	cout << "switch \"" << switch_list->GetValue().ToAscii()
+	     << "\" set to LOW" << endl;
+      else
+	cout << "Error: switch \"" << switch_list->GetValue().ToAscii()
+	     << "\" not found." << endl;
+    }
 }
 
 void MyFrame::OnSwitchOption(wxCommandEvent& event)
