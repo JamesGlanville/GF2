@@ -376,7 +376,7 @@ void devices::execdtype (devlink d, int machinecycle)
  
 void devices::execsigen(devlink d)
 {
-	if (d->dataloc > d->data.size())
+	if (d->dataloc >= d->data.size())
 	{
 		d->dataloc = 0;
 	}
