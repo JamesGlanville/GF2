@@ -327,6 +327,9 @@ void devices::execdtype (devlink d)
     d->memory = low;
   signalupdate (d->memory, qout->sig);
   signalupdate (inv (d->memory), qbarout->sig);
+  
+  
+  steadystate = false;
 }
 
 /*******

@@ -121,6 +121,7 @@ void scanner::getsymbol( symbol& s, name & id, int & num)
 				case '(': s = openparen; return;
 				case ')': s = closeparen; return;
 				case '.': s = fullstop; return;
+				case ',': s = comma; return;
 				case '/': nextChar(); if (curch =='*') {doComments();break;} if (curch == '/'){while(!nextChar());break;}else{s=badsym; return;}
 				default : s = badsym; return;}
 		}
