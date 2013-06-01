@@ -411,8 +411,6 @@ void devices::execsiggen(devlink d, int machinecycle)
 void devices::makesiggen (name did, vector <bool> data)
 {
   devlink d;
-  int n;
-  namestring iname;
   netz->adddevice (siggen, did, d);
   netz->addoutput (d, blankname);
   d->dataloc = 0;
