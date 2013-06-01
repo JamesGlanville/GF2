@@ -909,7 +909,6 @@ bool parser::parseParam(vector <bool> &signal)
   symbol sym;
   name id;
   int num;
-  
   if(parseToken(openparen)) return PARSER_FAIL;
   
   smz->getsymbol(sym,id,num);
@@ -919,9 +918,14 @@ bool parser::parseParam(vector <bool> &signal)
     while(sym == numsym)
     {
       signal.push_back(num);
-      if(parseToken(comma)) return PARSER_FAIL;
+     // if(parseToken(comma)) return PARSER_FAIL;
       
       smz->getsymbol(sym,id,num);
+      if (!(sym == comma || sym == closeparen)) return PARSER_FAIL;
+      if (sym == closeparen) break;
+      
+      smz->getsymbol(sym,id,num);
+      //cout << sym;
       if(sym == eofsym || !(num == 1 || num == 0))
       {
         errorHandling(zero_or_one_expected);
@@ -947,7 +951,7 @@ bool parser::parseParam(vector <bool> &signal)
     return PARSER_FAIL;
   }
   
-  if(parseToken(closeparen)) return PARSER_FAIL;
+ // if(parseToken(closeparen)) return PARSER_FAIL;
   
   return PARSER_PASS;
 }
@@ -962,6 +966,7 @@ bool parser::createDevice (device_type current_device_type, name id)
   bool ok;
   asignal signal;
   name devicet_id;
+  vector <bool> siggendata;
 
   switch(current_device_type)
   {
@@ -982,6 +987,28 @@ bool parser::createDevice (device_type current_device_type, name id)
         #endif
         dmz->makedevice (andgate, id, param_value, ok); 
         if (!ok){cout <<"error creating and gate"<<endl;}
+      }
+      break;
+      
+   case SIGGEN:
+   
+      if(parseParam(siggendata)) return PARSER_FAIL;
+      // Semantic check on parameter values
+  /*    if(param_value < 2 || param_value >16) 
+      {
+        errorHandling(inputs_two_to_sixteen);
+        return PARSER_FAIL;
+      }*/
+      // Adds device to device table
+      devicet_id = dtz->lookup(nmz->getname(id),current_device_type,param_value);
+      if(error_count == 0) 
+      {
+ /*       #ifdef verbose
+        cout << "Created SIGGEN gate with " << param_value << " inputs, with name \"" << nmz->getname(id) << "\".\n";
+        #endif*/
+        dmz->makesiggen (id, siggendata); 
+
+     //   if (!ok){cout <<"error creating SIGGEN"<<endl;}
       }
       break;
       
@@ -1162,6 +1189,7 @@ bool parser::parseConnInputName(name &devid, name &inpid, bool &endOfSection)
       return PARSER_FAIL;
     case CLK:
     case SW:
+    case SIGGEN:
       errorHandling(no_inputs);
       return PARSER_FAIL;
     case AND:
@@ -1308,6 +1336,7 @@ bool parser::parseConnOutputName(name &devid, name &outid)
     case NOR:
     case XOR:
     case DTYPE:
+    case SIGGEN:
       break;
     default:
       cout << "Error in parseConnOutputName\n";

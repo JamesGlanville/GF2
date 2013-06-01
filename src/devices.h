@@ -29,14 +29,14 @@ class devices{
   void execxorgate(devlink d);
   void execdtype (devlink d, int machinecycle);
   
-  void execsiggen(devlink d);
-  void makesiggen (name did, vector <bool> data, bool& ok);
+  void execsiggen(devlink d,int machinecycle);
   
   void execclock(devlink d);
   void updateclocks (void);
   void outsig (asignal s);
 
 public:
+  void makesiggen (name did, vector <bool> data);
   void makedevice (devicekind dkind, name did, int variant, bool& ok);
     /* Adds a device to the network of the specified kind and name.  The   */
     /* variant is used with such things as gates where it specifies the    */

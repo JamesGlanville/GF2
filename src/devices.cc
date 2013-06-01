@@ -374,28 +374,41 @@ void devices::execdtype (devlink d, int machinecycle)
  * 
  */
  
-void devices::execsiggen(devlink d)
+void devices::execsiggen(devlink d, int machinecycle)
 {
-	if (d->dataloc >= d->data.size())
+/*	cout << "EXECUTING" << endl;
+	cout << "START DATA" <<endl;
+	for (int i =0; i< d->data.size();i++)
+	{
+		if (d->data[i]) cout << "H";
+		else cout << "L";
+	}
+	cout << "END"<<endl;*/
+	//cout << d->dataloc<<endl;
+	if (machinecycle == 1){
+		
+	if (d->dataloc >= d->data.size()-1)
 	{
 		d->dataloc = 0;
 	}
 	else
 	{
 		d->dataloc++;
-	}
+	}cout << "dataloc = " << d->dataloc<<endl;}
 	
 	if (d->data[d->dataloc])
 	{
+		cout <<"HIGH" <<endl;
 		signalupdate(high,d->olist->sig);
 	}
 	else
 	{
+		cout << "LOW" <<endl;
 		signalupdate(low,d->olist->sig);
 	}
 }
 
-void devices::makesiggen (name did, vector <bool> data, bool& ok)
+void devices::makesiggen (name did, vector <bool> data)
 {
   devlink d;
   int n;
@@ -479,7 +492,7 @@ void devices::executedevices (bool& ok)
         case nandgate: execgate (d, high, low);  break;
         case xorgate:  execxorgate (d);          break;
         case dtype:    execdtype (d,machinecycle);            break;     
-        case siggen:   execsiggen (d);            break;     
+        case siggen:   execsiggen (d,machinecycle);            break;     
       }
       if (debugging)
 	showdevice (d);
@@ -549,6 +562,7 @@ devices::devices (names* names_mod, network* net_mod, devicetable* dt_mod)
   dtab[norgate]   =  nmz->lookup("nor");
   dtab[xorgate]   =  nmz->lookup("xor");
   dtab[dtype]     =  nmz->lookup("dtype");
+  dtab[siggen]     =  nmz->lookup("siggen");
   dtab[baddevice] =  blankname;
   debugging = false;
   datapin = nmz->lookup("data");
