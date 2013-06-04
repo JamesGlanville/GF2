@@ -264,7 +264,7 @@ MyFrame::MyFrame(wxWindow *parent,
 
   for(int i = 0; i<10; i++)
     {
-      vtracesizers.push_back(new wxBoxSizer(wxHORIZONTAL));
+      vtracesizers.push_back(new wxBoxSizer(wxVERTICAL));
       canvases.push_back(new MyGLCanvas(disp_scroll,
 					wxID_ANY,
 					monitor_mod,
@@ -274,12 +274,12 @@ MyFrame::MyFrame(wxWindow *parent,
       tracesizer = wxT("m");
       tracename = tracesizer << i;
       tracelabels.push_back(new wxStaticText(disp_scroll, wxID_ANY, tracename));
-      vtracesizers[i]->Add(tracelabels[i], 0, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 10);
+      vtracesizers[i]->Add(tracelabels[i], 0, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 0);
       //vtracesizers[i]->Add(new wxStaticText(disp_scroll, wxID_ANY, tracename),
       //			   0,
       //			   wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
       //			   10);
-      vtracesizers[i]->Add(canvases[i], 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 10);
+      vtracesizers[i]->Add(canvases[i], 0, wxALL | wxALIGN_LEFT, 10);
       //vtracesizers[i]->Add(new wxStaticText(disp_scroll, wxID_ANY, wxT("end here")), 0, wxALIGN_RIGHT, 0);
       toptracesizer->Add(vtracesizers[i], 0, wxEXPAND | wxALL, 10);
       toptracesizer->Hide(vtracesizers[i], true);
