@@ -8,7 +8,7 @@ using namespace std;
 
 bool parser::readin (void)
 {
-  wxStreamToTextRedirector redirect(textout);
+  //wxStreamToTextRedirector redirect(textout);
 
   // Stores parsing function output
   name id;
@@ -24,7 +24,9 @@ bool parser::readin (void)
   vector <symbol> stop_syms;
   stopped_at = none;
   error_count = 0;
-
+  
+  
+  
   // {
   if(parseToken(opencurly)) 
   {
@@ -46,6 +48,7 @@ bool parser::readin (void)
       error_count++;
     }
   }  
+  
   // DEVICES
   if(stopped_at == none) 
   {
@@ -567,7 +570,7 @@ void parser::errorHandling (error error_num)
       smz->printError("At least one device definition is required");
       break;
     case names_begin_letter:
-      smz->printError("Names must begin with a letter");
+      smz->printError("Expected device name (names must begin with a letter)");
       break;
     case device_name_expected:
       smz->printError("Expected device name");
@@ -621,7 +624,8 @@ void parser::errorHandling (error error_num)
       cout << "Not all inputs are connected. \n";
       break;
     case zero_or_one_expected:
-      smz->printError("Signal generator waveform can only consist of 1s and 0s");
+      smz->printError("Signal generator waveform can only be 1 or 0 (missing comma?)");
+      break;
     default:
       cout << "Error in errorHandling\n";
   }
@@ -671,7 +675,7 @@ bool parser::parseToken (symbol token)
     smz->printError("Expected " + error_token);
     // Stop parsing if eof is found
     if (sym == eofsym) 
-    {
+    {;
       stopped_at = eofsym;
       endOfSection = 1;
     }
@@ -924,8 +928,8 @@ bool parser::parseParam(vector <bool> &signal)
       if (!(sym == comma || sym == closeparen)) return PARSER_FAIL;
       if (sym == closeparen) break;
       
+      
       smz->getsymbol(sym,id,num);
-      //cout << sym;
       if(sym == eofsym || !(num == 1 || num == 0))
       {
         errorHandling(zero_or_one_expected);
