@@ -20,6 +20,8 @@ enum {
   LOAD_BUTTON,
   RUN_BUTTON_ID,
   CONT_BUTTON_ID,
+  CONT_MODE_START,
+  CONT_MODE_STOP,
   DISP_SCROLL,
   SWITCH_LIST,
   SWITCH_OPTION,
@@ -86,6 +88,8 @@ class MyFrame: public wxFrame
   void OnLoadButton(wxCommandEvent &event);
   void OnRunButton(wxCommandEvent &event);
   void OnContButton(wxCommandEvent &event);
+  void OnContStart(wxCommandEvent &event);
+  void OnContStop(wxCommandEvent &event);
   void OnSwitchSelect(wxCommandEvent& event);
   void OnSwitchOption(wxCommandEvent& event);
   void OnAddMonitor(wxCommandEvent& event);

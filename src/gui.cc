@@ -395,7 +395,7 @@ MyFrame::MyFrame(wxWindow *parent,
 
   toptracesizer = new wxBoxSizer(wxVERTICAL);
 
-  disp_scroll->SetSizer(toptracesizer);
+  //  disp_scroll->SetSizer(toptracesizer);
   disp_scroll->SetScrollRate(10, 10);
   disp_scroll->SetAutoLayout(true);
 
