@@ -2,6 +2,7 @@
 #define logsim_h
 
 #include <wx/wx.h>
+//#include "gui.h"
 #include "names.h"
 #include "devices.h"
 #include "monitor.h"

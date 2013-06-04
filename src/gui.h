@@ -8,6 +8,9 @@
 #include "names.h"
 #include "devices.h"
 #include "monitor.h"
+#include "scanner.h"
+#include "parser.h"
+#include "network.h"
 
 enum { 
   CYCLES_SPIN = wxID_HIGHEST + 1,
@@ -33,13 +36,17 @@ class MyFrame: public wxFrame
 	  const wxString& title,
 	  const wxPoint& pos,
 	  const wxSize& size, 
-	  names *names_mod = NULL,
-	  devices *devices_mod = NULL,
-	  monitor *monitor_mod = NULL, 
+	  names *names_mod=NULL,
+	  devices *devices_mod=NULL,
+	  monitor *monitor_mod=NULL,
+    network *network_mod=NULL, 
+    devicetable *dt_mod=NULL, 
 	  long style = wxDEFAULT_FRAME_STYLE); // constructor
+   
 
   string filetoopen;
  private:
+  bool correct_parse;
   vector<wxBoxSizer*> vtracesizers;       /* Vector to hold sizers for traces */
   vector<MyGLCanvas*> canvases;	          /* vector to hold canvases */
   vector<wxStaticText*> tracelabels;
@@ -62,6 +69,13 @@ class MyFrame: public wxFrame
   names *nmz;                             // pointer to names class
   devices *dmz;                           // pointer to devices class
   monitor *mmz;                           // pointer to monitor class
+  scanner *smz;
+  network *netz;
+  devicetable *dtz;
+  parser *pmz;
+  // scan and parse given filename. return whether parsing happened correctly.
+  void updateDependencies(names *names_mod, devices *devices_mod, monitor *monitor_mod, network *network_mod,devicetable *dt_mod,scanner* scanner_mod, parser* parser_mod);
+  bool ScanAndParse(string fileName);
   int cyclescompleted;                    // how many simulation cycles have been completed
   void runnetwork(int ncycles);           // function to run the logic network
 
