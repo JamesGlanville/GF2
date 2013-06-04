@@ -10,6 +10,8 @@ using namespace std;
 
 wxTextCtrl* textout;
 
+
+
 // MyGLCanvas //////////////////////////////////////////////////////////////////
 
 BEGIN_EVENT_TABLE(MyGLCanvas, wxGLCanvas)
@@ -55,9 +57,16 @@ void MyGLCanvas::Render(int monren, int cycles)
     init = true;
   }
   glClear(GL_COLOR_BUFFER_BIT);
-  
   if ((cyclesdisplayed >= 0) && (mmz->moncount() > 0)) {
     // draw the first monitor signal, get trace from monitor class
+    glColor3f(0.8, 0.8, 0.8);
+    glBegin(GL_LINES);
+    for (i=0; i<cyclesdisplayed + 1; i++) {
+      glVertex2f(20*i+10, 5);
+      glVertex2f(20*i+10, 35);
+    }
+    glEnd();
+
     glColor3f(1.0, 0.0, 0.0);
     glBegin(GL_LINE_STRIP);
     for (i=0; i<cyclesdisplayed; i++) {
@@ -71,17 +80,8 @@ void MyGLCanvas::Render(int monren, int cycles)
     glEnd();
 
     glColor3f(0.8, 0.8, 0.8);
-    glBegin(GL_LINES);
-    for (i=0; i<cyclesdisplayed + 1; i++) {
-      glVertex2f(20*i+10, 5);
-      glVertex2f(20*i+10, 35);
-
-    }
-    glEnd();
-
     for (i=0; i<cyclesdisplayed; i++) {
       if (i % 10 == 0) {
-	cout << "in number draw bit, i = " << i << endl;
 	tickno = wxT("");
 	tickno << i;
 	glRasterPos2f(20*i+3,20);
@@ -140,13 +140,73 @@ void MyGLCanvas::OnMouse(wxMouseEvent& event)
   // Callback function for mouse events inside the GL canvas
 {}
 
+void MyGLCanvas::updateDep(names* names_mod, monitor* monitor_mod)
+{
+  nmz = names_mod;
+  mmz = monitor_mod;
+  cyclesdisplayed = -1;
+  init = false;
+  return;
+}
+
 // MyFrame /////////////////////////////////////////////////////////////////////
 
+bool MyFrame::ScanAndParse(string fileName)
+{
+  nmz->~names();
+  dtz->~devicetable();
+  netz->~network();
+  dmz->~devices();
+  mmz->~monitor();
+  smz->~scanner();
+  pmz->~parser();
+
+  ifstream * inf=new ifstream;
+  inf->open(/*wxString(*/fileName.c_str()/*).fn_str()*/);
+	if (!inf) {
+		cout << "Error: cannot open file " << /*wxString(*/fileName.c_str()/*).fn_str()*/ << " for reading " << endl;
+		exit(1);
+	}
+  
+  nmz = new names();
+  dtz = new devicetable();
+  netz = new network(nmz);
+  dmz = new devices(nmz, netz, dtz);
+  mmz = new monitor(nmz, netz);
+  smz = new scanner(nmz, inf);
+  pmz = new parser(netz,dmz,mmz,smz,nmz,dtz);
+  
+  updateDependencies(nmz,dmz,mmz,netz,dtz,smz,pmz);
+  
+  wxStreamToTextRedirector redirect(textout);
+  return pmz->readin(); // check the logic file parsed correctly
+}
+
+void MyFrame::updateDependencies(names *names_mod, devices *devices_mod, 
+  monitor *monitor_mod, network *network_mod,devicetable *dt_mod,scanner* scanner_mod, parser* parser_mod)
+{
+  nmz = names_mod;
+  dmz = devices_mod;
+  mmz = monitor_mod;
+  netz = network_mod;
+  dtz = dt_mod;
+  smz=scanner_mod;
+  pmz = parser_mod;
+  
+  for (int i=0;i<canvases.size();i++)
+  {
+    canvases[i]->updateDep(nmz,mmz);
+  }
+  
+  return;
+}
 
 BEGIN_EVENT_TABLE(MyFrame, wxFrame)
   EVT_MENU(wxID_EXIT,       MyFrame::OnExit)
   EVT_MENU(wxID_ABOUT,      MyFrame::OnAbout)
-//  EVT_BUTTON(FILE_BUTTON, MyFrame::OnFileButton)
+  EVT_MENU(FILE_NEW,       MyFrame::OnAbout)
+  EVT_MENU(FILE_OPEN,     MyFrame::OnFileButton)
+  EVT_BUTTON(FILE_BUTTON, MyFrame::OnFileButton)
   EVT_BUTTON(LOAD_BUTTON, MyFrame::OnLoadButton)
   EVT_BUTTON(RUN_BUTTON_ID, MyFrame::OnRunButton)
   EVT_BUTTON(CONT_BUTTON_ID, MyFrame::OnContButton)
@@ -163,6 +223,8 @@ MyFrame::MyFrame(wxWindow *parent,
 		 names *names_mod,
 		 devices *devices_mod,
 		 monitor *monitor_mod,
+     network *network_mod,
+     devicetable *dt_mod,
 		 long style):
   wxFrame(parent, wxID_ANY, title, pos, size, style)
   // Constructor - initialises pointers to names, devices and monitor
@@ -173,14 +235,22 @@ MyFrame::MyFrame(wxWindow *parent,
   nmz = names_mod;
   dmz = devices_mod;
   mmz = monitor_mod;
+  netz = network_mod;
+  dtz = dt_mod;
+  ifstream * inf=new ifstream;
+  smz = new scanner(nmz, inf);
+  pmz = new parser(netz,dmz,mmz,smz,nmz,dtz);
   if (nmz == NULL || dmz == NULL || mmz == NULL)
     {
       cout << "Cannot operate GUI without names, devices and monitor classes" << endl;
       exit(1);
     }
-
+  
   wxMenu *fileMenu = new wxMenu;
+  fileMenu->Append(FILE_NEW, wxT("&New"));
+  fileMenu->Append(FILE_OPEN, wxT("&Open"));
   fileMenu->Append(wxID_EXIT, wxT("&Quit\tCtrl-Q"));
+  
   wxMenu *helpMenu = new wxMenu;
   helpMenu->Append(wxID_ABOUT, wxT("&About"));
   wxMenuBar *menuBar = new wxMenuBar;
@@ -191,10 +261,10 @@ MyFrame::MyFrame(wxWindow *parent,
   topsizer = new wxBoxSizer(wxVERTICAL);
 
   wxBoxSizer *filesizer = new wxBoxSizer(wxHORIZONTAL);
-  //  filesizer->Add(new wxButton(this, FILE_BUTTON, wxT("Select File")),
-  //		 0,
-  //		 wxALL | wxALIGN_CENTER_VERTICAL,
-  //		 10);
+  filesizer->Add(new wxButton(this, FILE_BUTTON, wxT("Open File")),
+  		 0,
+  		 wxALL | wxALIGN_CENTER_VERTICAL,
+  		 10);
   filesizer->Add(new wxButton(this, LOAD_BUTTON, wxT("Load Data")),
 		 0,
 		 wxALL | wxALIGN_CENTER_VERTICAL,
@@ -260,22 +330,23 @@ MyFrame::MyFrame(wxWindow *parent,
 
   for(int i = 0; i<10; i++)
     {
-      vtracesizers.push_back(new wxBoxSizer(wxHORIZONTAL));
+      vtracesizers.push_back(new wxBoxSizer(wxVERTICAL));
       canvases.push_back(new MyGLCanvas(disp_scroll,
 					wxID_ANY,
 					monitor_mod,
 					names_mod,
 					wxPoint(-1,-1),
-					wxSize(-1,40)));
+					wxSize(100,40)));
       tracesizer = wxT("m");
       tracename = tracesizer << i;
       tracelabels.push_back(new wxStaticText(disp_scroll, wxID_ANY, tracename));
-      vtracesizers[i]->Add(tracelabels[i], 0, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 10);
+      vtracesizers[i]->Add(tracelabels[i], 0, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 0);
       //vtracesizers[i]->Add(new wxStaticText(disp_scroll, wxID_ANY, tracename),
       //			   0,
       //			   wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
       //			   10);
-      vtracesizers[i]->Add(canvases[i], 1, wxALL | wxEXPAND, 10);
+      vtracesizers[i]->Add(canvases[i], 0, wxALL | wxALIGN_LEFT, 10);
+      //vtracesizers[i]->Add(new wxStaticText(disp_scroll, wxID_ANY, wxT("end here")), 0, wxALIGN_RIGHT, 0);
       toptracesizer->Add(vtracesizers[i], 0, wxEXPAND | wxALL, 10);
       toptracesizer->Hide(vtracesizers[i], true);
       toptracesizer->Layout();
@@ -330,10 +401,10 @@ void MyFrame::OnAbout(wxCommandEvent &event)
   about.ShowModal();
 }
 
-/*
+
 void MyFrame::OnFileButton(wxCommandEvent &event)
 {
-
+  filetoopen = "";
   wxString filetoopenpath;
   wxFileDialog *loadNewFile = new wxFileDialog(this,
 					     wxT("Choose file to open"),
@@ -349,15 +420,18 @@ void MyFrame::OnFileButton(wxCommandEvent &event)
     }
   
   loadNewFile->Destroy();
-
+  
   filetoopen = (string)filetoopenpath.mb_str();
+  
+  correct_parse = ScanAndParse(filetoopen);
 }
-*/
+
 
 void MyFrame::OnLoadButton(wxCommandEvent &event)
 {
   wxStreamToTextRedirector redirect(textout);
   // get switches and put in the switches dialog box
+  if (correct_parse==0) {
   int i = 0;  
   while (dmz->getswitch(i).compare("") != 0)
     {
@@ -407,9 +481,15 @@ void MyFrame::OnLoadButton(wxCommandEvent &event)
 	  // get name as string, convert to char* then to wxstring
 	  add_monitor->Append(wxString::FromAscii(mmz->getmonprettyname(i).c_str()));
 	}
+<<<<<<< HEAD
     }*/
-  cout << "Loaded devices from file." << endl;
 
+  cout << "Loaded data from file." << endl;
+}
+else
+{
+  cout << "Data cannot be loaded because the file has not been parsed correctly.\n";
+}
 
 }
 
@@ -419,7 +499,7 @@ void MyFrame::OnRunButton(wxCommandEvent &event)
   int n, ncycles;
   cyclescompleted = 0;
   mmz->resetmonitor();
-  //wxStreamToTextRedirector redirect(textout);
+  wxStreamToTextRedirector redirect(textout);
   //cout << "run network for " << spin_cycles->GetValue() << " cycles." << endl;
   runnetwork(spin_cycles->GetValue());
 }
@@ -428,7 +508,7 @@ void MyFrame::OnContButton(wxCommandEvent &event)
 {
   // continue simulation - same as OnRunButton but w/o resetting cyclescompleted
   int n, ncycles;
-  //wxStreamToTextRedirector redirect(textout);
+  wxStreamToTextRedirector redirect(textout);
   //cout << "network has run " << cyclescompleted << " cycles." << endl;
   //cout << "and will continue with " << spin_cycles->GetValue() << " more cycles." << endl;
   runnetwork(spin_cycles->GetValue());
@@ -484,6 +564,7 @@ void MyFrame::runnetwork(int ncycles)
 	{
 	  mon++;
 	}
+      canvases[i]->SetSize(20*cyclescompleted + 20, 40);
       canvases[i]->Render(mon, cyclescompleted);
     }
 }
@@ -566,6 +647,7 @@ void MyFrame::OnAddMonitor(wxCommandEvent& event)
 	mmz->makemonitor(dev,outp,ok,nmz->lookup((namestring)monitor_name.mb_str()));
 	if (!ok) {cout << "Error adding monitor." <<endl;return;}
 
+
   int i=0;
   while (toptracesizer->IsShown(vtracesizers[i]))
     {
@@ -647,3 +729,14 @@ void MyFrame::OnRemMonitor(wxCommandEvent& event)
   //cout << "Remove trace at monitor point: " << rem_monitor->GetValue().ToAscii() << endl;
 }
 
+/*
+void MyFrame::LabelResize(void);
+{
+  int i = 0;
+  int maxnamelen = 0;
+  while (toptracesizer->IsShown(vtracesizers[i])) 
+    {
+      
+    }
+}
+*/

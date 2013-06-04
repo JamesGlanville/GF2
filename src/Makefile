@@ -6,7 +6,7 @@ SRC = logsim.cc names.cc scanner.cc network.cc parser.cc monitor.cc devices.cc u
 
 L_OBJECTS = logsim.o names.o scanner.o network.o parser.o monitor.o devices.o userint.o gui.o devicetable.o
 
-G_OBJECTS = guitest.o names.o network.o monitor.o devices.o gui.o devicetable.o
+G_OBJECTS = guitest.o names.o network.o monitor.o devices.o gui.o devicetable.o scanner.o parser.o
 
 # implementation
 
@@ -39,7 +39,7 @@ parser.o: parser.h names.h network.h devices.h monitor.h
 monitor.o: monitor.h names.h network.h devices.h
 devices.o: devices.h names.h network.h devicetable.h
 userint.o: userint.h names.h network.h devices.h monitor.h
-gui.o: gui.h names.h devices.h network.h monitor.h
+gui.o: gui.h names.h devices.h network.h monitor.h scanner.h parser.h devicetable.h
 guitest.o: guitest.h names.h devices.h network.h monitor.h gui.h
 scanner.o: scanner.h network.h devices.h monitor.h names.h
 devicetable.o: devicetable.h parser.h
