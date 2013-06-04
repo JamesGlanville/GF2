@@ -313,7 +313,8 @@ void devices::execdtype (devlink d, int machinecycle)
  static bool hasrisen;
  asignal RAND = low;
  if (rand()&0x01){RAND=high;}
- const int holdtime = 3; //Number of loops to try and get steadystate in.
+ //cout << "RAND: " << RAND <<endl;
+ const int holdtime = 10; //Number of loops to try and get steadystate in.
  asignal datainput, clkinput, setinput, clrinput;
  inplink i;
  outplink qout, qbarout;
@@ -327,28 +328,35 @@ void devices::execdtype (devlink d, int machinecycle)
   if (machinecycle ==1) {complete = false;hasrisen=false;}
   if (!complete)
   {
+	  //cout <<"cycle: " << machinecycle << " id: " << d->id<<endl;
 	  if (clkinput == rising) {hasrisen = true;}
 	  
 	  if (hasrisen && (datainput == falling || datainput == rising))
 	  {
 		signalupdate(RAND,qout->sig);
 		signalupdate(inv (RAND), qbarout->sig);
+		cout << "Warning: DTYPE output is random." <<endl;
 		complete=true;
 		return;
 	  }
 	  
 	  if (hasrisen && datainput == high)
 	  {
+		   //cout << "MEMORY SET HIGH" << endl;
 		d->memory = high;
 	  }
 	  if (hasrisen && datainput == low)
 	  {
+		  // cout << "MEMORY SET LOW" << endl;
 		d->memory = low;
 	  }
 	  if (setinput == high)
-		d->memory = high;
+		{d->memory = high;
+		/*cout << "MEMORY SET HIGHby setinput" << endl;*/}
+
 	  if (clrinput == high)
-		d->memory = low;
+		{//cout << "MEMORY SET LOWby setinput" << endl;
+		d->memory = low;}
 			  
 	  if (machinecycle <= holdtime)
 	  {
@@ -361,10 +369,11 @@ void devices::execdtype (devlink d, int machinecycle)
   }
   else
   {
-  signalupdate (d->memory, qout->sig);
-  signalupdate (inv (d->memory), qbarout->sig);
   
   }
+	//  cout << "DOING SIGNAL UPDATE WITH MEM= " << d->memory <<" for dev: "<<d->id<<endl;
+  signalupdate (d->memory, qout->sig);
+  signalupdate (inv (d->memory), qbarout->sig);
 }
 
 /*******
@@ -376,15 +385,6 @@ void devices::execdtype (devlink d, int machinecycle)
  
 void devices::execsiggen(devlink d, int machinecycle)
 {
-/*	cout << "EXECUTING" << endl;
-	cout << "START DATA" <<endl;
-	for (int i =0; i< d->data.size();i++)
-	{
-		if (d->data[i]) cout << "H";
-		else cout << "L";
-	}
-	cout << "END"<<endl;*/
-	//cout << d->dataloc<<endl;
 	if (machinecycle == 1){
 		
 	if (d->dataloc >= d->data.size()-1)
@@ -394,9 +394,9 @@ void devices::execsiggen(devlink d, int machinecycle)
 	else
 	{
 		d->dataloc++;
-	}cout << "dataloc = " << d->dataloc<<endl;}
+	}}
 	
-	if (d->data[d->dataloc])
+	if (!d->data[d->dataloc])
 	{
 		cout <<"HIGH" <<endl;
 		signalupdate(high,d->olist->sig);
