@@ -80,7 +80,7 @@ void MyGLCanvas::Render(int monren, int cycles)
     glEnd();
 
     glColor3f(0.8, 0.8, 0.8);
-    for (i=0; i<cyclesdisplayed; i++) {
+    for (i=0; i<=cyclesdisplayed; i++) {
       if (i % 10 == 0) {
 	tickno = wxT("");
 	tickno << i;
@@ -124,7 +124,7 @@ void MyGLCanvas::OnPaint(wxPaintEvent& event)
   wxPaintDC dc(this); // required for correct refreshing under MS windows
   GetClientSize(&w, &h);
   //text.Printf(wxT("Canvas redrawn by OnPaint callback, canvas size is %d by %d"), w, h);
-  Render();
+
 }
 
 void MyGLCanvas::OnSize(wxSizeEvent& event)
