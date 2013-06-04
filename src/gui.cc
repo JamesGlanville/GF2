@@ -276,6 +276,7 @@ BEGIN_EVENT_TABLE(MyFrame, wxFrame)
   EVT_COMBOBOX(SWITCH_OPTION, MyFrame::OnSwitchOption)
   EVT_COMBOBOX(MONITOR_ADD, MyFrame::OnAddMonitor)
   EVT_COMBOBOX(MONITOR_REM, MyFrame::OnRemMonitor)
+  EVT_TIMER(CONT_TIMER, MyFrame::OnTimer)
 END_EVENT_TABLE()
 
 MyFrame::MyFrame(wxWindow *parent,
@@ -456,6 +457,8 @@ MyFrame::MyFrame(wxWindow *parent,
   SetSizeHints(400, 400);
   SetSizer(topsizer);
 
+  MyTimer = new wxTimer(this, CONT_TIMER);
+
 }
 
 void MyFrame::OnExit(wxCommandEvent &event)
@@ -557,12 +560,20 @@ void MyFrame::OnContButton(wxCommandEvent &event)
 
 void MyFrame::OnContStart(wxCommandEvent &event)
 {
-  
+  cyclescompleted = 0;
+  mmz->resetmonitor();
+  contrunnetwork(10);
+  MyTimer->Start(1000,false);
 }
 
 void MyFrame::OnContStop(wxCommandEvent &event)
 {
+  MyTimer->Stop();
+}
 
+void MyFrame::OnTimer(wxTimerEvent &event)
+{
+  contrunnetwork(1);
 }
 
 void MyFrame::runnetwork(int ncycles)
@@ -633,10 +644,8 @@ void MyFrame::contrunnetwork(int ncycles)
 
   if (cyclescompleted + n >= 300)
     {
-      cout << "Error: too many cycles." << endl;
-      cout << "All good things must come to an end." << endl;
-      cout << "(Maximum is 300.)" <<endl;
-      return;
+      cout << "Returning to cycle 0!" << endl;
+      cyclescompleted=0;
     }
 
   while ((n > 0) && ok) {
@@ -659,7 +668,7 @@ void MyFrame::contrunnetwork(int ncycles)
     {
       cyclescompleted = 0;
     }
-  cout << "Simulation has run for " << cyclescompleted << " cycles." << endl;
+  //  cout << "Simulation has run for " << cyclescompleted << " cycles." << endl;
 
   int mon;
 
@@ -814,3 +823,5 @@ void MyFrame::LabelResize(void);
     }
 }
 */
+
+

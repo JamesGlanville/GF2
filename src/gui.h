@@ -27,6 +27,7 @@ enum {
   SWITCH_OPTION,
   MONITOR_ADD,
   MONITOR_REM,
+  CONT_TIMER,
 }; // widget identifiers
 
 class MyGLCanvas;
@@ -44,7 +45,6 @@ class MyFrame: public wxFrame
     network *network_mod=NULL, 
     devicetable *dt_mod=NULL, 
 	  long style = wxDEFAULT_FRAME_STYLE); // constructor
-   
 
   string filetoopen;
  private:
@@ -57,6 +57,7 @@ class MyFrame: public wxFrame
   wxString tracename;
   string devname;
 
+  wxTimer *MyTimer;
 
   wxBoxSizer *topsizer;
   wxBoxSizer *toptracesizer;
@@ -94,6 +95,7 @@ class MyFrame: public wxFrame
   void OnSwitchOption(wxCommandEvent& event);
   void OnAddMonitor(wxCommandEvent& event);
   void OnRemMonitor(wxCommandEvent& event);
+  void OnTimer(wxTimerEvent &event);
   DECLARE_EVENT_TABLE()
 };
     
@@ -118,5 +120,5 @@ class MyGLCanvas: public wxGLCanvas
   void OnMouse(wxMouseEvent& event); // callback for mouse events inside canvas
   DECLARE_EVENT_TABLE()
 };
-    
+
 #endif /* gui_h */
