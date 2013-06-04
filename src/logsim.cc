@@ -41,7 +41,7 @@ bool MyApp::OnInit()
 #endif
    
     wxStreamToTextRedirector redirect(textout);
-     cout << pmz->readin () << endl ; // check the logic file parsed correctly
+    pmz->readin (); // check the logic file parsed correctly
 #ifdef USE_GUI
     // glutInit cannot cope with Unicode command line arguments, so we pass
     // it some fake ASCII ones instead
