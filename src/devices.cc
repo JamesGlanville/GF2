@@ -492,17 +492,16 @@ void devices::executedevices (bool& ok)
  //   for (d = netz->devicelist (); d != NULL; d = d->next) {
 		
 //	}
-	std::random_shuffle ( d_vector.begin(), d_vector.end() ); //This shuffles the order of exectuion to satisfy dtype randommness.
+	//std::random_shuffle ( d_vector.begin(), d_vector.end() ); //This shuffles the order of exectuion to satisfy dtype randommness.
 	for (int i=0;i<d_vector.size();i++){
 		d = d_vector[i];
       switch (d->kind) {
-		  cout << d->kind <<endl;
         case orgate:   execgate (d, low, low);   break;
         case norgate:  execgate (d, low, high);  break;
         case andgate:  execgate (d, high, high); break;
         case nandgate: execgate (d, high, low);  break;
         case xorgate:  execxorgate (d);          break;
-        case dtype:    execdtype (d,machinecycle);            break;     
+        case dtype:    execdtype (d,machinecycle); break;     
         case siggen:   execsiggen (d,machinecycle);            break;     
      } 
       if (debugging) {showdevice (d);}       
