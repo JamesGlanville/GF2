@@ -81,7 +81,6 @@ void MyGLCanvas::Render(int monren, int cycles)
 
     for (i=0; i<cyclesdisplayed; i++) {
       if (i % 10 == 0) {
-	cout << "in number draw bit, i = " << i << endl;
 	tickno = wxT("");
 	tickno << i;
 	glRasterPos2f(20*i+3,20);
@@ -255,7 +254,7 @@ MyFrame::MyFrame(wxWindow *parent,
 						       -1,
 						       wxDefaultPosition,
 						       wxDefaultSize,
-						       wxSUNKEN_BORDER | wxVSCROLL | wxFULL_REPAINT_ON_RESIZE);
+						       wxSUNKEN_BORDER | wxHSCROLL | wxVSCROLL | wxFULL_REPAINT_ON_RESIZE);
 
   toptracesizer = new wxBoxSizer(wxVERTICAL);
 
@@ -281,6 +280,7 @@ MyFrame::MyFrame(wxWindow *parent,
       //			   wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
       //			   10);
       vtracesizers[i]->Add(canvases[i], 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 10);
+      //vtracesizers[i]->Add(new wxStaticText(disp_scroll, wxID_ANY, wxT("end here")), 0, wxALIGN_RIGHT, 0);
       toptracesizer->Add(vtracesizers[i], 0, wxEXPAND | wxALL, 10);
       toptracesizer->Hide(vtracesizers[i], true);
       toptracesizer->Layout();
@@ -461,6 +461,7 @@ void MyFrame::runnetwork(int ncycles)
 	{
 	  mon++;
 	}
+      canvases[i]->SetSize(20*cyclescompleted + 20, 40);
       canvases[i]->Render(mon, cyclescompleted);
     }
 }
