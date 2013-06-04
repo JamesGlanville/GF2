@@ -8,6 +8,7 @@
 #include "names.h"
 #include "devices.h"
 #include "monitor.h"
+#include <algorithm>
 
 enum { 
   CYCLES_SPIN = wxID_HIGHEST + 1,

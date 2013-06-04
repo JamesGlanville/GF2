@@ -373,18 +373,33 @@ void MyFrame::OnLoadButton(wxCommandEvent &event)
 
   // get monitors and put them in the add monitors dialog box
   
-  
+
+	namestring str;
+	numinputs numinput;
+	device_type type;
+	
   for (int i=0;i<nmz->tablelength();i++)
   {
-	  if (dmz->devkind(i)!=baddevice)
-	  {
-		//	  add_monitor->Append(wxString::FromAscii(nmz->getname(i)).c_str());		  
-	  add_monitor->Append(wxString::FromAscii(dmz->gettype(namestring str).c_str()));
 
+	if (!dmz->lookup(i,str,type,numinput)){
+		switch (type)
+		{
+			case AND:
+			case NAND:
+			case OR:
+			case NOR:
+			case XOR:
+			case CLK:
+			case SIGGEN:
+			case SW:
+				add_monitor->Append(wxString::FromAscii(str.c_str())); break;
+			case DTYPE:
+				add_monitor->Append(wxString::FromAscii((str+string(".Q")).c_str()));
+				add_monitor->Append(wxString::FromAscii((str+string(".QBAR")).c_str()));
 		}
-	  
-	  
-	}
+				
+	}  
+  }
   /*for (int i=0; i < mmz->moncount(); i++)
     {
       if(add_monitor->FindString(wxString::FromAscii(mmz->getmonprettyname(i).c_str())) == -1)
@@ -533,6 +548,23 @@ void MyFrame::OnAddMonitor(wxCommandEvent& event)
 
   //cout << "Add trace at monitor point: " <<
   //add_monitor->GetValue().ToAscii() << endl;
+	wxString monitor_name = wxGetTextFromUser(wxT("Enter monitor name"),wxT(""));
+	bool ok;
+	name dev;
+	name outp;
+	string tempstring;
+	
+	tempstring = string(add_monitor->GetValue().mb_str()).substr(0,add_monitor->GetValue().find('.',0));
+	transform(tempstring.begin(), tempstring.end(),tempstring.begin(), ::tolower);
+	dev = nmz->lookup(tempstring);
+	
+	tempstring = string(add_monitor->GetValue().mb_str()).substr(add_monitor->GetValue().find('.',0)+1,string::npos);
+	transform(tempstring.begin(), tempstring.end(),tempstring.begin(), ::tolower);
+	outp = nmz->lookup(tempstring);
+	if (dev == outp) {outp=-1;}
+
+	mmz->makemonitor(dev,outp,ok,nmz->lookup((namestring)monitor_name.mb_str()));
+	if (!ok) {cout << "Error adding monitor." <<endl;return;}
 
   int i=0;
   while (toptracesizer->IsShown(vtracesizers[i]))
@@ -545,14 +577,14 @@ void MyFrame::OnAddMonitor(wxCommandEvent& event)
       cout << "Too much of a good thing!" << endl;
       cout << "Try removing some monitor points first" << endl;
     }
-  tracelabels[i]->SetLabel(add_monitor->GetValue());
+  tracelabels[i]->SetLabel(monitor_name);
   vtracesizers[i]->Layout();
   toptracesizer->Show(vtracesizers[i], true, true);
   toptracesizer->Layout();
   topsizer->Layout();
 
-  rem_monitor->Append(add_monitor->GetValue());
-  add_monitor->Delete(add_monitor->FindString(add_monitor->GetValue()));
+  rem_monitor->Append(monitor_name);
+  add_monitor->Delete(add_monitor->FindString(monitor_name));
   add_monitor->SetValue(wxT(""));
 }
 
@@ -592,6 +624,22 @@ void MyFrame::OnRemMonitor(wxCommandEvent& event)
   toptracesizer->Layout();
   topsizer->Layout();
   */
+
+	bool ok;
+	name dev;
+	name outp;
+	string tempstring;
+	
+	tempstring = string(add_monitor->GetValue().mb_str()).substr(0,add_monitor->GetValue().find('.',0));
+	transform(tempstring.begin(), tempstring.end(),tempstring.begin(), ::tolower);
+	dev = nmz->lookup(tempstring);
+	
+	tempstring = string(add_monitor->GetValue().mb_str()).substr(add_monitor->GetValue().find('.',0)+1,string::npos);
+	transform(tempstring.begin(), tempstring.end(),tempstring.begin(), ::tolower);
+	outp = nmz->lookup(tempstring);
+	if (dev == outp) {outp=-1;}
+	
+	mmz->remmonitor(dev,outp,ok);
 
   rem_monitor->Delete(rem_monitor->FindString(rem_monitor->GetValue()));
   rem_monitor->SetValue(wxT(""));
