@@ -11,7 +11,9 @@
 
 enum { 
   CYCLES_SPIN = wxID_HIGHEST + 1,
-  //  FILE_BUTTON,
+  FILE_BUTTON,
+  FILE_NEW,
+  FILE_OPEN,
   LOAD_BUTTON,
   RUN_BUTTON_ID,
   CONT_BUTTON_ID,
@@ -36,7 +38,7 @@ class MyFrame: public wxFrame
 	  monitor *monitor_mod = NULL, 
 	  long style = wxDEFAULT_FRAME_STYLE); // constructor
 
-  //  string filetoopen = "";
+  string filetoopen;
  private:
   vector<wxBoxSizer*> vtracesizers;       /* Vector to hold sizers for traces */
   vector<MyGLCanvas*> canvases;	          /* vector to hold canvases */
@@ -65,7 +67,7 @@ class MyFrame: public wxFrame
 
   void OnExit(wxCommandEvent& event);     // callback for exit menu item
   void OnAbout(wxCommandEvent& event);    // callback for about menu item
-  //  void OnFileButton(wxCommandEvent &event);
+  void OnFileButton(wxCommandEvent &event);
   void OnLoadButton(wxCommandEvent &event);
   void OnRunButton(wxCommandEvent &event);
   void OnContButton(wxCommandEvent &event);

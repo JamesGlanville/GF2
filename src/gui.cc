@@ -146,7 +146,9 @@ void MyGLCanvas::OnMouse(wxMouseEvent& event)
 BEGIN_EVENT_TABLE(MyFrame, wxFrame)
   EVT_MENU(wxID_EXIT,       MyFrame::OnExit)
   EVT_MENU(wxID_ABOUT,      MyFrame::OnAbout)
-//  EVT_BUTTON(FILE_BUTTON, MyFrame::OnFileButton)
+  EVT_MENU(FILE_NEW,       MyFrame::OnAbout)
+  EVT_MENU(FILE_OPEN,     MyFrame::OnFileButton)
+  EVT_BUTTON(FILE_BUTTON, MyFrame::OnFileButton)
   EVT_BUTTON(LOAD_BUTTON, MyFrame::OnLoadButton)
   EVT_BUTTON(RUN_BUTTON_ID, MyFrame::OnRunButton)
   EVT_BUTTON(CONT_BUTTON_ID, MyFrame::OnContButton)
@@ -178,9 +180,12 @@ MyFrame::MyFrame(wxWindow *parent,
       cout << "Cannot operate GUI without names, devices and monitor classes" << endl;
       exit(1);
     }
-
+  
   wxMenu *fileMenu = new wxMenu;
+  fileMenu->Append(FILE_NEW, wxT("&New"));
+  fileMenu->Append(FILE_OPEN, wxT("&Open"));
   fileMenu->Append(wxID_EXIT, wxT("&Quit\tCtrl-Q"));
+  
   wxMenu *helpMenu = new wxMenu;
   helpMenu->Append(wxID_ABOUT, wxT("&About"));
   wxMenuBar *menuBar = new wxMenuBar;
@@ -191,10 +196,10 @@ MyFrame::MyFrame(wxWindow *parent,
   topsizer = new wxBoxSizer(wxVERTICAL);
 
   wxBoxSizer *filesizer = new wxBoxSizer(wxHORIZONTAL);
-  //  filesizer->Add(new wxButton(this, FILE_BUTTON, wxT("Select File")),
-  //		 0,
-  //		 wxALL | wxALIGN_CENTER_VERTICAL,
-  //		 10);
+  filesizer->Add(new wxButton(this, FILE_BUTTON, wxT("Open File")),
+  		 0,
+  		 wxALL | wxALIGN_CENTER_VERTICAL,
+  		 10);
   filesizer->Add(new wxButton(this, LOAD_BUTTON, wxT("Load Data")),
 		 0,
 		 wxALL | wxALIGN_CENTER_VERTICAL,
@@ -330,10 +335,10 @@ void MyFrame::OnAbout(wxCommandEvent &event)
   about.ShowModal();
 }
 
-/*
+
 void MyFrame::OnFileButton(wxCommandEvent &event)
 {
-
+  filetoopen = "";
   wxString filetoopenpath;
   wxFileDialog *loadNewFile = new wxFileDialog(this,
 					     wxT("Choose file to open"),
@@ -352,7 +357,7 @@ void MyFrame::OnFileButton(wxCommandEvent &event)
 
   filetoopen = (string)filetoopenpath.mb_str();
 }
-*/
+
 
 void MyFrame::OnLoadButton(wxCommandEvent &event)
 {
