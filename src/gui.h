@@ -78,6 +78,7 @@ class MyFrame: public wxFrame
   bool ScanAndParse(string fileName);
   int cyclescompleted;                    // how many simulation cycles have been completed
   void runnetwork(int ncycles);           // function to run the logic network
+  void contrunnetwork(int ncycles);
 
   void OnExit(wxCommandEvent& event);     // callback for exit menu item
   void OnAbout(wxCommandEvent& event);    // callback for about menu item
@@ -98,7 +99,9 @@ class MyGLCanvas: public wxGLCanvas
   MyGLCanvas(wxWindow *parent, wxWindowID id = wxID_ANY, monitor* monitor_mod = NULL, names* names_mod = NULL,
 	     const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0,
 	     const wxString& name = wxT("MyGLCanvas")); // constructor
-  void Render(int monren = 0, int cycles = -1); // function to draw canvas contents
+  void Render(int monren = 0, int cycles = -1); // function to draw
+						// canvas contents
+  void ContinuousRender(int monren, int cycles);
   void updateDep(names* names_mod, monitor* monitor_mod);
  private:
   bool init;                         // has the GL context been initialised?

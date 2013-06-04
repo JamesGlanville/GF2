@@ -98,6 +98,62 @@ void MyGLCanvas::Render(int monren, int cycles)
   SwapBuffers();
 }
 
+void MyGLCanvas::ContinuousRender(int monren, int cycles)
+{
+  float y;
+  unsigned int i, j;
+  asignal s;
+  wxString tickno;
+
+  if (cycles >= 0) cyclesdisplayed = cycles;
+
+  SetCurrent();
+  if (!init) {
+    InitGL();
+    init = true;
+  }
+  glClear(GL_COLOR_BUFFER_BIT);
+  if ((cyclesdisplayed >= 0) && (mmz->moncount() > 0)) {
+    // draw the first monitor signal, get trace from monitor class
+    glColor3f(0.8, 0.8, 0.8);
+    glBegin(GL_LINES);
+    for (i=cyclesdisplayed-10; i<cyclesdisplayed + 1; i++) {
+      glVertex2f(20*(i-cyclesdisplayed+10)+10, 5);
+      glVertex2f(20*(i-cyclesdisplayed+10)+10, 35);
+    }
+    glEnd();
+
+    glColor3f(1.0, 0.0, 0.0);
+    glBegin(GL_LINE_STRIP);
+    for (i=cyclesdisplayed-10; i<cyclesdisplayed; i++) {
+      if (mmz->getsignaltrace(monren, i, s)) {
+	if (s==low) y = 10.0;
+	if (s==high) y = 30.0;
+	glVertex2f(20*(i-cyclesdisplayed+10)+10.0, y);
+	glVertex2f(20*(i-cyclesdisplayed+10)+30.0, y);
+      }
+    }
+    glEnd();
+
+    glColor3f(0.8, 0.8, 0.8);
+    for (i=cyclesdisplayed-10; i<cyclesdisplayed; i++) {
+      if (i % 10 == 0) {
+	tickno = wxT("");
+	tickno << i;
+	glRasterPos2f(20*(i-cyclesdisplayed+10)+3,20);
+	for (j=0; j < tickno.Len(); j++) {
+	  glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, tickno[j]);
+	}
+      }
+    }
+  }
+
+  // We've been drawing to the back buffer, flush the graphics
+  // pipeline and swap the back buffer to the front 
+  glFlush();
+  SwapBuffers();
+}
+
 void MyGLCanvas::InitGL()
   // Function to initialise the GL context
 {
@@ -536,6 +592,61 @@ void MyFrame::runnetwork(int ncycles)
 	}
       canvases[i]->SetSize(20*cyclescompleted + 20, 40);
       canvases[i]->Render(mon, cyclescompleted);
+    }
+}
+
+void MyFrame::contrunnetwork(int ncycles)
+{
+  // Function to run the network, derived from corresponding function
+  // in userint.cc
+  wxStreamToTextRedirector redirect(textout);
+  bool ok = true;
+  int n = ncycles;
+
+  //cout << "in run network function." << endl;
+
+  if (cyclescompleted + n >= 300)
+    {
+      cout << "Error: too many cycles." << endl;
+      cout << "All good things must come to an end." << endl;
+      cout << "(Maximum is 300.)" <<endl;
+      return;
+    }
+
+  while ((n > 0) && ok) {
+    dmz->executedevices (ok);
+    if (ok)
+      {
+	n--;
+	mmz->recordsignals ();
+      }
+    else
+      cout << "Error: network is oscillating" << endl;
+  }
+
+  //cout << "finished while" << endl;
+  if (ok)
+    {
+      cyclescompleted = cyclescompleted + ncycles;
+    }
+  else
+    {
+      cyclescompleted = 0;
+    }
+  cout << "Simulation has run for " << cyclescompleted << " cycles." << endl;
+
+  int mon;
+
+  // draw each trace
+  for (int i=0; toptracesizer->IsShown(vtracesizers[i]); i++)
+    {
+      mon = 0;
+      while (mmz->getmonprettyname(mon) != (string)tracelabels[i]->GetLabel().mb_str() && mon < 5)
+	{
+	  mon++;
+	}
+      canvases[i]->SetSize(220, 40);
+      canvases[i]->ContinuousRender(mon, cyclescompleted);
     }
 }
 
