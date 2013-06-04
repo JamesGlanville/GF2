@@ -99,6 +99,7 @@ class MyGLCanvas: public wxGLCanvas
 	     const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0,
 	     const wxString& name = wxT("MyGLCanvas")); // constructor
   void Render(int monren = 0, int cycles = -1); // function to draw canvas contents
+  void updateDep(names* names_mod, monitor* monitor_mod);
  private:
   bool init;                         // has the GL context been initialised?
   int cyclesdisplayed;               // how many simulation cycles have been displayed

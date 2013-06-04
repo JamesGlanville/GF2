@@ -57,7 +57,6 @@ void MyGLCanvas::Render(int monren, int cycles)
     init = true;
   }
   glClear(GL_COLOR_BUFFER_BIT);
-  
   if ((cyclesdisplayed >= 0) && (mmz->moncount() > 0)) {
     // draw the first monitor signal, get trace from monitor class
     glColor3f(1.0, 0.0, 0.0);
@@ -141,6 +140,15 @@ void MyGLCanvas::OnMouse(wxMouseEvent& event)
   // Callback function for mouse events inside the GL canvas
 {}
 
+void MyGLCanvas::updateDep(names* names_mod, monitor* monitor_mod)
+{
+  nmz = names_mod;
+  mmz = monitor_mod;
+  cyclesdisplayed = -1;
+  init = false;
+  return;
+}
+
 // MyFrame /////////////////////////////////////////////////////////////////////
 
 bool MyFrame::ScanAndParse(string fileName)
@@ -184,6 +192,12 @@ void MyFrame::updateDependencies(names *names_mod, devices *devices_mod,
   dtz = dt_mod;
   smz=scanner_mod;
   pmz = parser_mod;
+  
+  for (int i=0;i<canvases.size();i++)
+  {
+    canvases[i]->updateDep(nmz,mmz);
+  }
+  
   return;
 }
 
@@ -417,6 +431,7 @@ void MyFrame::OnLoadButton(wxCommandEvent &event)
 {
   wxStreamToTextRedirector redirect(textout);
   // get switches and put in the switches dialog box
+  if (correct_parse==0) {
   int i = 0;  
   while (dmz->getswitch(i).compare("") != 0)
     {
@@ -439,8 +454,12 @@ void MyFrame::OnLoadButton(wxCommandEvent &event)
 	  add_monitor->Append(wxString::FromAscii(mmz->getmonprettyname(i).c_str()));
 	}
     }
-  cout << "Loaded devices from file." << endl;
-
+  cout << "Loaded data from file." << endl;
+}
+else
+{
+  cout << "Data cannot be loaded because the file has not been parsed correctly.\n";
+}
 
 }
 
