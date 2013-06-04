@@ -178,9 +178,13 @@ void MyGLCanvas::OnPaint(wxPaintEvent& event)
   wxString text;
 
   wxPaintDC dc(this); // required for correct refreshing under MS windows
+
   GetClientSize(&w, &h);
+  cout << "size is: " << w << " by " << h << endl;
   //text.Printf(wxT("Canvas redrawn by OnPaint callback, canvas size is %d by %d"), w, h);
   Render();
+  Refresh();
+  Update();
 }
 
 void MyGLCanvas::OnSize(wxSizeEvent& event)
@@ -266,6 +270,8 @@ BEGIN_EVENT_TABLE(MyFrame, wxFrame)
   EVT_BUTTON(LOAD_BUTTON, MyFrame::OnLoadButton)
   EVT_BUTTON(RUN_BUTTON_ID, MyFrame::OnRunButton)
   EVT_BUTTON(CONT_BUTTON_ID, MyFrame::OnContButton)
+  EVT_BUTTON(CONT_MODE_START, MyFrame::OnContStart)
+  EVT_BUTTON(CONT_MODE_STOP, MyFrame::OnContStop)
   EVT_COMBOBOX(SWITCH_LIST, MyFrame::OnSwitchSelect)
   EVT_COMBOBOX(SWITCH_OPTION, MyFrame::OnSwitchOption)
   EVT_COMBOBOX(MONITOR_ADD, MyFrame::OnAddMonitor)
@@ -343,6 +349,15 @@ MyFrame::MyFrame(wxWindow *parent,
 		 wxALL | wxEXPAND,
 		 10);
   topsizer->Add(ctrlsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
+
+  wxBoxSizer *contsizer = new wxBoxSizer(wxHORIZONTAL);
+  contsizer->Add(new wxStaticText(this, wxID_ANY, wxT("Continuous Mode:")),
+		 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
+  contsizer->Add(new wxButton(this, CONT_MODE_START, wxT("Start")),
+		 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
+  contsizer->Add(new wxButton(this, CONT_MODE_STOP, wxT("Stop")),
+		 0, wxALL | wxALIGN_CENTER_VERTICAL, 10);
+  topsizer->Add(contsizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
 
   wxBoxSizer *switchsizer = new wxBoxSizer(wxHORIZONTAL);
   switchsizer->Add(new wxStaticText(this, wxID_ANY, wxT("Switches:")),
@@ -540,6 +555,16 @@ void MyFrame::OnContButton(wxCommandEvent &event)
   runnetwork(spin_cycles->GetValue());
 }
 
+void MyFrame::OnContStart(wxCommandEvent &event)
+{
+  
+}
+
+void MyFrame::OnContStop(wxCommandEvent &event)
+{
+
+}
+
 void MyFrame::runnetwork(int ncycles)
 {
   // Function to run the network, derived from corresponding function
@@ -591,6 +616,7 @@ void MyFrame::runnetwork(int ncycles)
 	  mon++;
 	}
       canvases[i]->SetSize(20*cyclescompleted + 20, 40);
+      //      cout << "canvas size is: " << canvases[i]->GetSize() << endl;
       canvases[i]->Render(mon, cyclescompleted);
     }
 }
