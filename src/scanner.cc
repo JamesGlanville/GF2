@@ -122,34 +122,38 @@ void scanner::getsymbol( symbol& s, name & id, int & num)
 				case ')': s = closeparen; return;
 				case '.': s = fullstop; return;
 				case ',': s = comma; return;
-				case '/': nextChar(); if (curch =='*') {doComments();break;} if (curch == '/'){while(!nextChar());break;}else{s=badsym; return;}
+				case '/': nextChar(); if (curch =='*') {doComments(s);break;} if (curch == '/'){while(!nextChar()){if (eofile){s=eofsym;return;}}break;}else{s=badsym; return;}
 				default : s = badsym; return;}
 		}
 	}
 } 
 
-void scanner::doComments()
+void scanner::doComments(symbol& s)
 {
 	//This method just skips through the code waiting for comments to end. It is called when the / * has already been read.
 	commentnest=1;
 	char prevchar;
 	nextChar();
+	if (eofile) {cout << "Unexpected end of file, comments are not terminated...." << endl;s=eofsym;return;}
+
 	while (commentnest > 0)
 	{
 		prevchar = curch;
 		nextChar();
 		
-		if (eofile) {cout << "Unexpected end of file, comments are not terminated...." << endl;}
+		if (eofile) {cout << "Unexpected end of file, comments are not terminated...." << endl;s=eofsym;return;}
 		
 		if (curch == '*' && prevchar == '/')
 		{
 			commentnest++;
 			nextChar();
+		if (eofile) {cout << "Unexpected end of file, comments are not terminated...." << endl;s=eofsym;return;}
 		}
 		else if (curch == '/' && prevchar == '*')
 		{
 			commentnest--;
 			nextChar();
+		if (eofile) {cout << "Unexpected end of file, comments are not terminated...." << endl;s=eofsym;return;}
 		}
 	}
 }
