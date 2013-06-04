@@ -293,7 +293,7 @@ MyFrame::MyFrame(wxWindow *parent,
 			wxT(""),
 			wxDefaultPosition,
 			wxDefaultSize,
-			wxTE_MULTILINE | wxHSCROLL);
+			wxTE_MULTILINE | wxHSCROLL | wxTE_READONLY);
   //textout->SetDefaultStyle(wxTextAttr(wxFONTFAMILY_TELETYPE));
   wxFont * monofont = new wxFont(10,wxFONTFAMILY_TELETYPE,wxFONTSTYLE_NORMAL,wxFONTWEIGHT_NORMAL,false,wxEmptyString,wxFONTENCODING_DEFAULT);
   textout->SetFont(*monofont);
