@@ -250,7 +250,7 @@ MyFrame::MyFrame(wxWindow *parent,
 						       -1,
 						       wxDefaultPosition,
 						       wxDefaultSize,
-						       wxSUNKEN_BORDER | wxHSCROLL | wxVSCROLL | wxFULL_REPAINT_ON_RESIZE);
+						       wxSUNKEN_BORDER | wxVSCROLL | wxFULL_REPAINT_ON_RESIZE);
 
   toptracesizer = new wxBoxSizer(wxVERTICAL);
 
@@ -266,7 +266,7 @@ MyFrame::MyFrame(wxWindow *parent,
 					monitor_mod,
 					names_mod,
 					wxPoint(-1,-1),
-					wxSize(-1,40)));
+					wxSize(100,40)));
       tracesizer = wxT("m");
       tracename = tracesizer << i;
       tracelabels.push_back(new wxStaticText(disp_scroll, wxID_ANY, tracename));
@@ -275,7 +275,7 @@ MyFrame::MyFrame(wxWindow *parent,
       //			   0,
       //			   wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
       //			   10);
-      vtracesizers[i]->Add(canvases[i], 1, wxALL | wxEXPAND, 10);
+      vtracesizers[i]->Add(canvases[i], 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 10);
       toptracesizer->Add(vtracesizers[i], 0, wxEXPAND | wxALL, 10);
       toptracesizer->Hide(vtracesizers[i], true);
       toptracesizer->Layout();
@@ -586,3 +586,14 @@ void MyFrame::OnRemMonitor(wxCommandEvent& event)
   //cout << "Remove trace at monitor point: " << rem_monitor->GetValue().ToAscii() << endl;
 }
 
+/*
+void MyFrame::LabelResize(void);
+{
+  int i = 0;
+  int maxnamelen = 0;
+  while (toptracesizer->IsShown(vtracesizers[i])) 
+    {
+      
+    }
+}
+*/
