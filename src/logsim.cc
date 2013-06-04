@@ -12,18 +12,14 @@ IMPLEMENT_APP(MyApp)
 bool MyApp::OnInit()
   // This function is automatically called when the application starts
 {
-	ifstream * inf=new ifstream;
 	
-	if (argc != 2) { // check we have one command line argument
+	
+/*	if (argc != 2) { // check we have one command line argument
 		wcout << "Usage:      " << argv[0] << " [filename]" << endl;
 	exit(1);
-	}
+	}*/
   
-	inf->open(wxString(argv[1]).fn_str());
-	if (!inf) {
-		cout << "Error: cannot open file " << wxString(argv[1]).fn_str() << " for reading " << endl;
-		exit(1);
-	}
+
 	
   // Construct the six classes required by the innards of the logic simulator
   nmz = new names();
@@ -31,17 +27,16 @@ bool MyApp::OnInit()
   netz = new network(nmz);
   dmz = new devices(nmz, netz, dtz);
   mmz = new monitor(nmz, netz);
-  smz = new scanner(nmz, inf);
-  MyFrame *frame = new MyFrame(NULL, wxT("Logic simulator"), wxDefaultPosition,  wxSize(800, 600), nmz, dmz, mmz);
+  //smz = new scanner(nmz, inf);
+  MyFrame *frame = new MyFrame(NULL, wxT("Logic simulator"), wxDefaultPosition,  wxSize(800, 600), nmz, dmz, mmz, netz, dtz);
 #ifdef PARSER_TEST  
-  pmz = new parser(smz, nmz);
+  //pmz = new parser(smz, nmz);
 #endif
 #ifndef PARSER_TEST
-  pmz = new parser(netz,dmz,mmz,smz,nmz,dtz);
+  //pmz = new parser(netz,dmz,mmz,smz,nmz,dtz);
 #endif
    
-    wxStreamToTextRedirector redirect(textout);
-    pmz->readin(); // check the logic file parsed correctly
+
 #ifdef USE_GUI
     // glutInit cannot cope with Unicode command line arguments, so we pass
     // it some fake ASCII ones instead
@@ -58,3 +53,6 @@ bool MyApp::OnInit()
   
   return(false); // exit the application
 }
+
+
+

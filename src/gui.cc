@@ -10,6 +10,8 @@ using namespace std;
 
 wxTextCtrl* textout;
 
+
+
 // MyGLCanvas //////////////////////////////////////////////////////////////////
 
 BEGIN_EVENT_TABLE(MyGLCanvas, wxGLCanvas)
@@ -55,7 +57,6 @@ void MyGLCanvas::Render(int monren, int cycles)
     init = true;
   }
   glClear(GL_COLOR_BUFFER_BIT);
-  
   if ((cyclesdisplayed >= 0) && (mmz->moncount() > 0)) {
     // draw the first monitor signal, get trace from monitor class
     glColor3f(0.8, 0.8, 0.8);
@@ -139,8 +140,66 @@ void MyGLCanvas::OnMouse(wxMouseEvent& event)
   // Callback function for mouse events inside the GL canvas
 {}
 
+void MyGLCanvas::updateDep(names* names_mod, monitor* monitor_mod)
+{
+  nmz = names_mod;
+  mmz = monitor_mod;
+  cyclesdisplayed = -1;
+  init = false;
+  return;
+}
+
 // MyFrame /////////////////////////////////////////////////////////////////////
 
+bool MyFrame::ScanAndParse(string fileName)
+{
+  nmz->~names();
+  dtz->~devicetable();
+  netz->~network();
+  dmz->~devices();
+  mmz->~monitor();
+  smz->~scanner();
+  pmz->~parser();
+
+  ifstream * inf=new ifstream;
+  inf->open(/*wxString(*/fileName.c_str()/*).fn_str()*/);
+	if (!inf) {
+		cout << "Error: cannot open file " << /*wxString(*/fileName.c_str()/*).fn_str()*/ << " for reading " << endl;
+		exit(1);
+	}
+  
+  nmz = new names();
+  dtz = new devicetable();
+  netz = new network(nmz);
+  dmz = new devices(nmz, netz, dtz);
+  mmz = new monitor(nmz, netz);
+  smz = new scanner(nmz, inf);
+  pmz = new parser(netz,dmz,mmz,smz,nmz,dtz);
+  
+  updateDependencies(nmz,dmz,mmz,netz,dtz,smz,pmz);
+  
+  wxStreamToTextRedirector redirect(textout);
+  return pmz->readin(); // check the logic file parsed correctly
+}
+
+void MyFrame::updateDependencies(names *names_mod, devices *devices_mod, 
+  monitor *monitor_mod, network *network_mod,devicetable *dt_mod,scanner* scanner_mod, parser* parser_mod)
+{
+  nmz = names_mod;
+  dmz = devices_mod;
+  mmz = monitor_mod;
+  netz = network_mod;
+  dtz = dt_mod;
+  smz=scanner_mod;
+  pmz = parser_mod;
+  
+  for (int i=0;i<canvases.size();i++)
+  {
+    canvases[i]->updateDep(nmz,mmz);
+  }
+  
+  return;
+}
 
 BEGIN_EVENT_TABLE(MyFrame, wxFrame)
   EVT_MENU(wxID_EXIT,       MyFrame::OnExit)
@@ -164,6 +223,8 @@ MyFrame::MyFrame(wxWindow *parent,
 		 names *names_mod,
 		 devices *devices_mod,
 		 monitor *monitor_mod,
+     network *network_mod,
+     devicetable *dt_mod,
 		 long style):
   wxFrame(parent, wxID_ANY, title, pos, size, style)
   // Constructor - initialises pointers to names, devices and monitor
@@ -174,6 +235,11 @@ MyFrame::MyFrame(wxWindow *parent,
   nmz = names_mod;
   dmz = devices_mod;
   mmz = monitor_mod;
+  netz = network_mod;
+  dtz = dt_mod;
+  ifstream * inf=new ifstream;
+  smz = new scanner(nmz, inf);
+  pmz = new parser(netz,dmz,mmz,smz,nmz,dtz);
   if (nmz == NULL || dmz == NULL || mmz == NULL)
     {
       cout << "Cannot operate GUI without names, devices and monitor classes" << endl;
@@ -354,8 +420,10 @@ void MyFrame::OnFileButton(wxCommandEvent &event)
     }
   
   loadNewFile->Destroy();
-
+  
   filetoopen = (string)filetoopenpath.mb_str();
+  
+  correct_parse = ScanAndParse(filetoopen);
 }
 
 
@@ -363,6 +431,7 @@ void MyFrame::OnLoadButton(wxCommandEvent &event)
 {
   wxStreamToTextRedirector redirect(textout);
   // get switches and put in the switches dialog box
+  if (correct_parse==0) {
   int i = 0;  
   while (dmz->getswitch(i).compare("") != 0)
     {
@@ -385,8 +454,12 @@ void MyFrame::OnLoadButton(wxCommandEvent &event)
 	  add_monitor->Append(wxString::FromAscii(mmz->getmonprettyname(i).c_str()));
 	}
     }
-  cout << "Loaded devices from file." << endl;
-
+  cout << "Loaded data from file." << endl;
+}
+else
+{
+  cout << "Data cannot be loaded because the file has not been parsed correctly.\n";
+}
 
 }
 
@@ -396,7 +469,7 @@ void MyFrame::OnRunButton(wxCommandEvent &event)
   int n, ncycles;
   cyclescompleted = 0;
   mmz->resetmonitor();
-  //wxStreamToTextRedirector redirect(textout);
+  wxStreamToTextRedirector redirect(textout);
   //cout << "run network for " << spin_cycles->GetValue() << " cycles." << endl;
   runnetwork(spin_cycles->GetValue());
 }
@@ -405,7 +478,7 @@ void MyFrame::OnContButton(wxCommandEvent &event)
 {
   // continue simulation - same as OnRunButton but w/o resetting cyclescompleted
   int n, ncycles;
-  //wxStreamToTextRedirector redirect(textout);
+  wxStreamToTextRedirector redirect(textout);
   //cout << "network has run " << cyclescompleted << " cycles." << endl;
   //cout << "and will continue with " << spin_cycles->GetValue() << " more cycles." << endl;
   runnetwork(spin_cycles->GetValue());
@@ -526,6 +599,7 @@ void MyFrame::OnAddMonitor(wxCommandEvent& event)
 
   //cout << "Add trace at monitor point: " <<
   //add_monitor->GetValue().ToAscii() << endl;
+
 
   int i=0;
   while (toptracesizer->IsShown(vtracesizers[i]))
