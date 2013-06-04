@@ -28,7 +28,7 @@ class scanner {
 	
 	bool nextChar();
 	void rewind();
-	void doComments();	
+	void doComments(symbol& s);	
 
 //#ifndef SCANNERMETHODSPUBLIC
  public:
