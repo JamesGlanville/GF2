@@ -46,6 +46,7 @@ class MyFrame: public wxFrame
   wxString tracename;
   string devname;
 
+
   wxBoxSizer *topsizer;
   wxBoxSizer *toptracesizer;
   

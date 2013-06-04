@@ -43,8 +43,9 @@ MyGLCanvas::MyGLCanvas(wxWindow *parent,
 void MyGLCanvas::Render(int monren, int cycles)
 {
   float y;
-  unsigned int i;
+  unsigned int i, j;
   asignal s;
+  wxString tickno;
 
   if (cycles >= 0) cyclesdisplayed = cycles;
 
@@ -69,6 +70,26 @@ void MyGLCanvas::Render(int monren, int cycles)
     }
     glEnd();
 
+    glColor3f(0.8, 0.8, 0.8);
+    glBegin(GL_LINES);
+    for (i=0; i<cyclesdisplayed + 1; i++) {
+      glVertex2f(20*i+10, 5);
+      glVertex2f(20*i+10, 35);
+
+    }
+    glEnd();
+
+    for (i=0; i<cyclesdisplayed; i++) {
+      if (i % 10 == 0) {
+	cout << "in number draw bit, i = " << i << endl;
+	tickno = wxT("");
+	tickno << i;
+	glRasterPos2f(20*i+3,20);
+	for (j=0; j < tickno.Len(); j++) {
+	  glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, tickno[j]);
+	}
+      }
+    }
   }
 
   // We've been drawing to the back buffer, flush the graphics
