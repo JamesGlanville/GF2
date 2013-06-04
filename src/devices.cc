@@ -492,7 +492,7 @@ void devices::executedevices (bool& ok)
     for (d = netz->devicelist (); d != NULL; d = d->next) {
 		d_vector.push_back(d);
 	}
-	std::random_shuffle ( d_vector.begin(), d_vector.end() );
+	std::random_shuffle ( d_vector.begin(), d_vector.end() ); //This shuffles the order of exectuion to satisfy dtype randommness.
 	for (int i=0;i<d_vector.size();i++){
 		d = d_vector[i];
       switch (d->kind) {
