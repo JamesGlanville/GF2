@@ -164,7 +164,7 @@ void scanner::printError(string errordesc)
 	int errorloc=currentline.size()-1;
 	//For now:
 	cout << "Error: " << errordesc << " on line " << linenum << " at location (startat0) " << max((int)currentline.size()-1,0) << ":" << endl;
-	if (currentline.size()>0&&currentline.size()<=80)
+	if (currentline.size()>1&&currentline.size()<=80)
 	{
 		cout << currentline;
 		currentline.clear();
