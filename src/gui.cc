@@ -58,6 +58,14 @@ void MyGLCanvas::Render(int monren, int cycles)
   
   if ((cyclesdisplayed >= 0) && (mmz->moncount() > 0)) {
     // draw the first monitor signal, get trace from monitor class
+    glColor3f(0.8, 0.8, 0.8);
+    glBegin(GL_LINES);
+    for (i=0; i<cyclesdisplayed + 1; i++) {
+      glVertex2f(20*i+10, 5);
+      glVertex2f(20*i+10, 35);
+    }
+    glEnd();
+
     glColor3f(1.0, 0.0, 0.0);
     glBegin(GL_LINE_STRIP);
     for (i=0; i<cyclesdisplayed; i++) {
@@ -71,14 +79,6 @@ void MyGLCanvas::Render(int monren, int cycles)
     glEnd();
 
     glColor3f(0.8, 0.8, 0.8);
-    glBegin(GL_LINES);
-    for (i=0; i<cyclesdisplayed + 1; i++) {
-      glVertex2f(20*i+10, 5);
-      glVertex2f(20*i+10, 35);
-
-    }
-    glEnd();
-
     for (i=0; i<cyclesdisplayed; i++) {
       if (i % 10 == 0) {
 	tickno = wxT("");
