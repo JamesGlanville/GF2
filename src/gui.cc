@@ -372,14 +372,27 @@ void MyFrame::OnLoadButton(wxCommandEvent &event)
 
 
   // get monitors and put them in the add monitors dialog box
-  for (int i=0; i < mmz->moncount(); i++)
+  
+  
+  for (int i=0;i<nmz->tablelength();i++)
+  {
+	  if (dmz->devkind(i)!=baddevice)
+	  {
+		//	  add_monitor->Append(wxString::FromAscii(nmz->getname(i)).c_str());		  
+	  add_monitor->Append(wxString::FromAscii(dmz->gettype(namestring str).c_str()));
+
+		}
+	  
+	  
+	}
+  /*for (int i=0; i < mmz->moncount(); i++)
     {
       if(add_monitor->FindString(wxString::FromAscii(mmz->getmonprettyname(i).c_str())) == -1)
 	{
 	  // get name as string, convert to char* then to wxstring
 	  add_monitor->Append(wxString::FromAscii(mmz->getmonprettyname(i).c_str()));
 	}
-    }
+    }*/
   cout << "Loaded devices from file." << endl;
 
 

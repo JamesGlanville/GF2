@@ -581,3 +581,8 @@ string devices::getswitch(int swnum)
   return dtz->getswitch(swnum);
 }
 
+
+bool devices::lookup(int id, namestring& str, device_type& type, numinputs& numinput)
+{
+	return lookup( id,  str,  type,  numinput);
+}

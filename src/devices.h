@@ -55,6 +55,7 @@ public:
   devicekind devkind (name id);
     /* Returns the kind of device corresponding to the given name.         */
     /* 'baddevice' is returned if the name is not a legal device.          */
+    bool lookup(int id, namestring& str, device_type& type, numinputs& numinput);
  
   void writedevice (devicekind k);
     /* Prints out the given device kind.                                   */
