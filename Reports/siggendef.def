@@ -1,0 +1,18 @@
+{
+DEVICES
+{
+	S = SIGGEN(1,0,0,1,1,0,0,0);
+	N = NAND(2);
+}
+
+CONNECTIONS
+{
+	N.I1 <= S;
+	N.I2 <= S;
+}
+
+MONITORS
+{
+	SIGNAL <= S;
+	INVSIG <= N;
+}
