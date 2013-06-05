@@ -14,6 +14,15 @@ using namespace std;
   /* over to you */
 //}
 
+bool devicetable::lookup(int id, namestring& str, device_type& type, numinputs& numinput)
+{
+	if (id>device_table.size()-1) {return 1;}
+	str = device_table[id].ns;
+	type = device_table[id].dt;
+	numinput = device_table[id].ni;
+	return 0;
+}
+
 name devicetable::lookup (namestring str,device_type type,numinputs numinput)
 {
 	devicestruct ds;

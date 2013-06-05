@@ -8,6 +8,7 @@
 #include "names.h"
 #include "devices.h"
 #include "monitor.h"
+#include <algorithm>
 #include "scanner.h"
 #include "parser.h"
 #include "network.h"

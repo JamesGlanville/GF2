@@ -1493,6 +1493,7 @@ bool parser::createMonitor(name monitorName, name dev2id, name outid)
 	cout << "Create monitor " << nmz->getname(monitorName) << " monitoring " << nmz->getname(dev2id) << ", output " << nmz->getname(outid) << endl;
   #endif
   mmz->makemonitor (dev2id,outid,ok,monitorName);
+  
   if(!ok)
   {
     cout << "Error monitor not made\n";

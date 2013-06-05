@@ -31,27 +31,7 @@ class devicetable{
     
 	device_type gettype(namestring str);
 	numinputs getinputs(namestring str);
-
-#ifdef GOAWAY 
- name cvtname (namestring str);
-    /* Returns the internal representation of the name given in character  */
-    /* form.  If the name is not in the name table then 'blankname' is     */
-    /* returned.                                                           */
-
-  void writename (name id);
-    /* Prints out the given name on the console                            */
-    
-  string getname (name id);
-    /* Returns the string */
-
-  int namelength (name id);
-    /* Returns length ie number of characters in given name                */
-
- // devicetable ();
-    /* names initialises the name table.  This procedure is called at      */
-    /* system initialisation before any of the above procedures/functions  */
-    /* are used.                                                           */
-#endif
+bool lookup(int id, namestring& str, device_type& type, numinputs& numinput);
 };
 
 #endif /* names_h */

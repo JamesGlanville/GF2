@@ -4,6 +4,11 @@
 #include "names.h"
 #include "network.h"
 #include "devicetable.h"
+#include <iostream>     // std::cout
+#include <algorithm>    // std::random_shuffle
+#include <vector>       // std::vector
+#include <ctime>        // std::time
+#include <cstdlib>      // std::rand, std::srand
 
 class devices{
   names* nmz;      // the version of the names module we use.
@@ -55,6 +60,7 @@ public:
   devicekind devkind (name id);
     /* Returns the kind of device corresponding to the given name.         */
     /* 'baddevice' is returned if the name is not a legal device.          */
+    bool lookup(int id, namestring& str, device_type& type, numinputs& numinput);
  
   void writedevice (devicekind k);
     /* Prints out the given device kind.                                   */
