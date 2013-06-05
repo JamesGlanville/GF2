@@ -483,19 +483,16 @@ void devices::executedevices (bool& ok)
     steadystate = true;
     for (d = netz->devicelist (); d != NULL; d = d->next) {
 		d_vector.push_back(d);
-      switch (d->kind) {
-        case aswitch:  execswitch (d);           break; //Switches and clocks should be updated first?
-        case aclock:   execclock (d);            break;
-       }
-      if (debugging) {showdevice (d);}
   }
  //   for (d = netz->devicelist (); d != NULL; d = d->next) {
 		
 //	}
-	//std::random_shuffle ( d_vector.begin(), d_vector.end() ); //This shuffles the order of exectuion to satisfy dtype randommness.
+	std::random_shuffle ( d_vector.begin(), d_vector.end() ); //This shuffles the order of exectuion to satisfy dtype randommness.
 	for (int i=0;i<d_vector.size();i++){
 		d = d_vector[i];
       switch (d->kind) {
+        case aswitch:  execswitch (d);           break; //Switches and clocks should be updated first?
+        case aclock:   execclock (d);            break;
         case orgate:   execgate (d, low, low);   break;
         case norgate:  execgate (d, low, high);  break;
         case andgate:  execgate (d, high, high); break;
