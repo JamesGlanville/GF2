@@ -16,6 +16,8 @@
 \usepackage{amsmath}                   % For improving maths/formula typesetting
 \usepackage{tabularx}                  % Table changing package
 
+\usepackage{url}
+
 \usepackage{algpseudocode}             % For producing algorithms/flowcharts
 \usepackage{listings}                  % For including source code in document
 
@@ -137,8 +139,8 @@ modifications to the circuit as the user specifies using the graphical
 options.
 
 The whole project follows the object oriented programming
-methodology. This means that the code is very modular, and the
-different classes are not dependant on the other ones. For example, a
+methodology. This means that the code is very modular, and that
+different classes are not dependant on the specifics of other classes. For example, a
 completely different interface could be developed and use the same
 back-end software. Equally, a different parser could be implemented
 and, provided all the features were implemented in some way or
@@ -524,6 +526,10 @@ and other concepts from the 3F6 course have become apparent.
 \section{Software Listings}
 \label{sec:software-listings}
 
+Please see attached Interim Report for code listings. The updated
+versions are available in our shared team code repository, or online
+at {\url{https://github.com/JamesGlanville/GF2/tree/master/src}}
+
 \section{Example Circuits}
 \label{sec:example-circuits}
 
@@ -684,5 +690,18 @@ display until the \textbf{Stop} button is pressed.
 
 \section{File Description}
 \label{sec:file-description}
+
+The important files in the shared directory are:
+\begin{description}
+\item[\texttt{logsim}] The executable file to run the logic simulator.
+\item[\texttt{shift\_register.def}] Definition file for running the
+  shift register example.
+\item[\texttt{siggen.def}] Definition file for running the
+  signal generator example.
+\item[\texttt{testgates.def}] Definition file for running the
+  logic gate array example.
+\item[\texttt{test/}] Directory containing test files for the names
+  class, parser and scanner.
+\end{description}
 
 \end{document}
