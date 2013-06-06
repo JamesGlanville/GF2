@@ -19,6 +19,23 @@
 \usepackage{algpseudocode}             % For producing algorithms/flowcharts
 \usepackage{listings}                  % For including source code in document
 
+\usepackage{color}
+\definecolor{grey}{rgb}{0.5,0.5,0.5}
+
+\usepackage{listings}                  % For including source code in document
+\lstset{
+  basicstyle = \footnotesize\ttfamily,
+  commentstyle = \color{grey},
+  keepspaces = true,
+  keywordstyle = \color{blue},
+  language = C++,
+  numbers = left,
+  numbersep=5pt,
+  numberstyle=\tiny\color{grey},
+  stepnumber=5,
+  tabsize=2,
+}
+
 
 % Provide command for scientific notation
 \providecommand{\e}[1]{\ensuremath{\times10^{#1}}}
@@ -424,18 +441,83 @@ fully implemented so testing of these was not possible.
 \section{Known Bugs}
 \label{sec:known-bugs}
 
+I have outlined most of the known bugs relating the graphical user
+interface as I have detailed the design and development. These all
+apply at the time of writing but this does not guarantee that they
+will not be fixed by the time of the hand in. This section is much
+longer and the bugs far more serious than I'd like.
+\begin{enumerate}
+\item The defined monitors from the specification file do not appear
+  in the monitors to add list as they should. This worked until the
+  option to add monitors at any point in the circuit was implemented
+  by another team member.
+\item There are several issues with the scrolling window. It does not
+  scroll horizontally due to issues with wx sizers and GL
+  canvases. Vertical scrolling has also broken, at the same time as
+  the monitor fault occurred.
+\item It does not seem to be possible to allow resizing of the trace
+  window at the same time as actually showing valid traces in the
+  cavases, due to an issue with the \texttt{onPaint} function.
+\item Sometimes the traces just aren't drawn as they should be. This
+  is under investigation alongside the previous issue.
+\end{enumerate}
+
+
 \section{Conclusions and Further Work}
 \label{sec:concl-furth-work}
 
-concls:
-more time planning 
+Only a partially operating logic simulation system has been delivered,
+and this would be unacceptable for a product release. One of the major
+causes of this was a lack of proper planning at the beginning of the
+project. Developers' lack of familiarity with the whole system also
+cost us highly when all working on bug fixes in the closing stages.
 
-further work:
-more intuative switch method
-addition of defined monitors
-grid sizer
-scrolling
-dispaly traces and allow resizing
+I do think that the project was on a good trajectory until the final
+week of the project, but there was too much left to do with
+insufficient time at the end.
+
+Given further development time, which would be necessary to deliver a
+usable product, the following should be completed:
+\begin{enumerate}
+\item Develop a more intuitive method for setting switch values. This
+  should provide a better metaphor for switching than the current
+  system. This will require some gui modifications, but also back-end
+  development to allow access to the current state of a switch.
+\item The issues highlighted with the monitor points must be
+  addressed. This would require investigating the changes to the
+  relevant parts of the system in the last commit to break the
+  software. The Git version control system that has been used
+  throughout the project would make this fairly straightforward, but
+  time has not been adequate to do this.
+\item The method of displaying the traces in the scrolled window
+  should be rewritten to make use of the more suitable grid sizer
+  class. This would allow arbitrarily long names while ensuring
+  correct alignment of the trace drawings.
+\item The issues surrounding the scrolling problems should be
+  thoroughly investigated and a solution found. This may involve a
+  large increase in complexity of the user defined scrolling features
+  instead of having wxWidgets take care of the scrolling.
+\item The reason for the trace displays showing either the wrong trace
+  or not resizing should also be thoroughly investigated and a
+  solution found.
+\item Further develop the continuous display mode to allow selection
+  of both the speed and number of past cycles that are displayed.
+\end{enumerate}
+So far, neither students or demonstrators have found an adaquate
+solution to the scrolling or trace display/resizing issues.
+
+As a project, this has been challenging but enjoyable. It has been
+very useful to gain experience of writing user interface software as
+this is a very different ball game to any programming I had previously
+done. While this has been a steep learning curve (clearly too steep
+for me to deliver a working product in the time allowed), the skills
+have already come in useful for my other project and probably will
+continue to be useful in the future.
+
+It has also been good to gain experience of programming in a team on a
+larger project than I had previously done. It is in this setting that
+the advantages of object oriented programming, version control systems
+and other concepts from the 3F6 course have become apparent.
 
 \appendix
 
@@ -445,11 +527,160 @@ dispaly traces and allow resizing
 \section{Example Circuits}
 \label{sec:example-circuits}
 
+\subsection{Logic Gate Array}
+
+The first example test file defines a logic gate array. The circuit
+diagram is shown in figure \ref{fig:testlgcct}.
+\begin{figure}[!htb]
+  \begin{center}
+    \includegraphics[width=0.6\textwidth]{testgates_schem.png}
+  \end{center}
+  \caption{Logic gate array test circuit.}
+  \label{fig:testlgcct}
+\end{figure}
+This circuit is defined for the logic simulator using the following
+definition file:
+\lstinputlisting[language=VHDL,keywordstyle=\color{black}]{testgates.def}
+
+The test result obtained from the logsim package is shown in figure \ref{fig:testlgss}.
+\begin{figure}[!htb]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{testgates_screenshot.png}
+  \end{center}
+  \caption{Screenshot showing running of logic gate array test case.}
+  \label{fig:testlgss}
+\end{figure}
+The outputs are correct according to the values of the switches set at
+different points in the simulation.
+
+\subsection{Shift Register}
+
+A common sequential logic circuit is the shift register. It is
+frequently used for driving a serial bus from a parallel device. The
+circuit diagram is shown in figure \ref{fig:testsrcct}.
+\begin{figure}[!htb]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{shiftregister_schem.png}
+  \end{center}
+  \caption{Shift register test circuit.}
+  \label{fig:testsrcct}
+\end{figure}
+The definition file is as follows:
+\lstinputlisting[language=VHDL,keywordstyle=\color{black}]{shift_register.def}
+
+The test result obtained from the logsim package is shown in figure
+\ref{fig:testsrss}.
+\begin{figure}[!htb]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{shift_register_screenshot.png}
+  \end{center}
+  \caption{Screenshot showing running of shift register test case.}
+  \label{fig:testsrss}
+\end{figure}
+The output shown does not correspond to the expected output. This is
+due to the update to the d-type specification in the maintainance
+phase, where the output of the gate is random due to the input changing.
+
+\subsection{Signal Generator}
+
+The final test case considered here displays the added functionality
+from the maintainance case of the signal generator and the continuous
+output mode. The circuit is a simply signal generator feeding an
+inverter, as shown in figure \ref{fig:testsgcct}.
+\begin{figure}[!htb]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{siggen_schem.png}
+  \end{center}
+  \caption{Signal generator test circuit.}
+  \label{fig:testsgcct}
+\end{figure}
+The definition file is:
+\lstinputlisting[language=VHDL,keywordstyle=\color{black}]{siggen.def}
+
+The test case is shown in figure \ref{fig:testsgss}.
+\begin{figure}[!htb]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{siggen_screenshot.png}
+  \end{center}
+  \caption{Screenshot showing running of signal generator test case.}
+  \label{fig:testsgss}
+\end{figure}
+The output can be seen to be the same as the inverted signal defined
+in the definition file. The continuous mode is also seen to be
+working, the tenth period is shown near the start of the trace.
+
+\FloatBarrier
 \section{Definition File Specification}
 \label{sec:defin-file-spec}
 
+The EBNF specification for the test definition case is:
+\lstinputlisting{ebnf}
+
+
 \section{System User Guide}
 \label{sec:system-user-guide}
+
+The user interface is shown in figure \ref{fig:ugimage}. Everything in
+this guide apart from the starting of the program relates to
+interaction with this screen.
+\begin{figure}[!htb]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{GUI_Screenshot.png}
+  \end{center}
+  \caption{Main Screen on logic simulator.}
+  \label{fig:ugimage}
+\end{figure}
+
+\subsection*{Starting the Program}
+
+The logic simulation package may be run by running the command
+\texttt{./logsim} in the directory of the compiled file. To load a
+definition file, click on the \textbf{Open File} button. This will
+bring up a standard file selection window. After selecting the desired
+file, click \textbf{OK} to return to the main screen.
+
+\subsection*{Definition Errors}
+
+Any errors in the definition file will be highlighted in the message
+display at the bottom of the program window. This will give detailed
+information about the cause and location of the error, making
+debugging fast and efficient. Once all errors have been corrected the
+program may be run fully.
+
+\subsection*{Setting up Monitors and Switches}
+
+Once the definition file has been loaded, the \textbf{load} button
+should be pressed. This populates the drop down menus with the
+relevant devices for selection. To add a monitor point, simply select
+the desired point from the list in the \textbf{add monitor}
+drop-down menu, then enter a name for this monitor in the pop-up
+window. They may be removed by selecting the monitor from the
+\textbf{remove monitor} menu. To ensure all required information is
+visible together, without many distracting and irrelevant output
+traces, up to 10 monitors may be observed at once. The value of a
+switch may be set at any time during the simulation by selecting the
+desired switch from the \textbf{switches} drop-down menu, followed by
+the level to be set from the \textbf{switch value} menu.
+
+\subsection*{Running and Continuing the Simulation}
+
+To run the simulation, simply select the number of clock cycles to
+simulate in a single run (between 1 and 50), then press the
+\textbf{run} button. The traces for all defined monitors will be
+shown. The simulation may be \textbf{continued}, to observe the long
+term behaviour or to investigate the effect of a changed switch level
+on the circuit. The simulation may be run for up to 350 clock
+cycles. If the simulation is run for a large number of cycles, the
+traces may no longer be visible. In this case, simply drag the window
+to become wider and the traces will increase in size so that more
+clock cycles are visible.
+
+\subsection*{Continuous Display Mode}
+
+In order to run the circuit continually and observe the changing
+signal levels, press the \textbf{Start} button. The monitors will show
+the values for the 10 previous clock cycles in a continually updating
+display until the \textbf{Stop} button is pressed.
 
 \section{File Description}
 \label{sec:file-description}
