@@ -180,9 +180,9 @@ void MyGLCanvas::OnPaint(wxPaintEvent& event)
   wxPaintDC dc(this); // required for correct refreshing under MS windows
 
   GetClientSize(&w, &h);
-  cout << "size is: " << w << " by " << h << endl;
+  //cout << "size is: " << w << " by " << h << endl;
   //text.Printf(wxT("Canvas redrawn by OnPaint callback, canvas size is %d by %d"), w, h);
-  Render();
+  //Render();
   Refresh();
   Update();
 }
